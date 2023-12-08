@@ -1,0 +1,14 @@
+{
+  "name": "playwright-framework-template",
+  "version": "1.0.0",
+  "description": "<div id=\"top\"></div>\r <!--\r *** Thanks for checking out the Best-README-Template. If you have a suggestion\r *** that would make this better, please fork the repo and create a pull request\r *** or simply open an issue with the tag \"enhancement\".\r *** Don't forget to give the project a star!\r *** Thanks again! Now go create something AMAZING! :D\r -->",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.4"
+  }
+}
