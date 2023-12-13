@@ -23,5 +23,9 @@
     "eslint-plugin-playwright": "^0.19.0",
     "prettier": "3.1.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "artillery": "^2.0.3",
+    "artillery-engine-playwright": "^1.1.0"
   }
 }

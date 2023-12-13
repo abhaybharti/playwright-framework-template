@@ -1,0 +1,16 @@
+config:
+  target: http://localhost:8080
+  phases:
+    - duration: 10s
+      arrivalRate: 100
+      maxVusers: 1
+  engines:
+    playwright:
+      aggregateByName: true
+      launchOptions:
+        headless: true
+  processor: ./test/load/basicload.spec.js
+scenarios:
+  - name: "Basic Load"
+    engine: playwright
+    flowFunction: "basicloadtest"
