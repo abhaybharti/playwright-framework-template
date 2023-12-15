@@ -40,6 +40,11 @@ In my career having vast experience in automating Api, Web Browsers and mobile a
 
 ### Sample Web Test
 
+`test('Navigate to Google @smoke', async({page}) => {
+    await page.goto('https://www.google.com/')
+    await expect(page).toHaveTitle('Google')
+})`
+
 ### Sample Web Load Test
 
 ### Sample Api Test
