@@ -1,16 +1,18 @@
 config:
-  target: http://localhost:8080
+  target: https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
   phases:
-    - duration: 10s
-      arrivalRate: 100
+    - duration: 100
+      arrivalRate: 1
       maxVusers: 1
   engines:
     playwright:
+      showAllPageMetrics: true,
+      extendedMetrics: true
       aggregateByName: true
       launchOptions:
-        headless: true
-  processor: ./test/load/basicload.spec.js
+        headless: false
+  processor: ./tests/load/BrowerLoadTest.spec.js
 scenarios:
   - name: "Basic Load"
     engine: playwright
-    flowFunction: "basicloadtest"
+    flowFunction: "browserloadTest"
