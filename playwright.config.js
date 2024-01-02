@@ -12,6 +12,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 module.exports = defineConfig({
   testDir: "./tests",
+
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -28,7 +29,20 @@ module.exports = defineConfig({
     // baseURL: 'http://127.0.0.1:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
+    
+    /* Run tests in headless or browser mode */
+    headless: false,    
+
+    /* Capture screenshot */
+    screenshot: "on",
+
+    /* Timeout in 180 seconds */
+    navigationTimeout: 180*1000,
+
+    /* Launch browser in maximized mode */
+    launchOptions:{
+      args:["--start-maximized"]
   },
 
   /* Configure projects for major browsers */
