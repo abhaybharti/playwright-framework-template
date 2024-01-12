@@ -1,17 +1,26 @@
-// @ts-check
 import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from "dotenv";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+switch (process.env.NODE_ENV) {
+  case "local":
+    dotenv.config({ path: "./environments/local.env" });
+    break;
+  case "dev":
+    dotenv.config({ path: "./environments/local.env" });
+    break;
+  case "qa":
+    dotenv.config({ path: "./environments/qa.env" });
+    break;
+  case "prod":
+    dotenv.config({ path: "./environments/prod.env" });
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
-module.exports = defineConfig({
-  testDir: "./tests",
+    break;
+
+  default:
+    break;
+}
+export default defineConfig({
+  testDir: "./src",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -60,8 +69,8 @@ module.exports = defineConfig({
 
     /* Test against branded browsers. */
     {
-      name: 'Microsoft Edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      name: "Microsoft Edge",
+      use: { ...devices["Desktop Edge"], channel: "msedge" },
     },
     // {
     //   name: 'Google Chrome',
