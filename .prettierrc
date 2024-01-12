@@ -1,10 +1,16 @@
 {
-  "semi": true,
-  "trailingComma": "all",
-  "singleQuote": false,
-  "printWidth": 120,
+  "printWidth": 80,
   "tabWidth": 2,
+  "userTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
   "arrowParens": "always",
+  "proseWrap": "never",
+  "htmlWhitespaceSensitivity": "strict",
+  "endOfLine": "lf",
   "overrides": [
     {
       "files": "*.json",

@@ -23,13 +23,22 @@ In my career having vast experience in automating Api, Web Browsers and mobile a
 - Supports Allure report generation
 - Support running functional test for load testing using Artillery
 
-## Libraries Used
+## Libraries Used For Test
 
 - PlayWright for web automation
 - PlayWright for Api automation
 - Artillery for load testing
 - Allure for reporting
 - Appium for mobile app automation
+
+## Libraries Used For Code Consistency
+
+- `ESLint` it's a linting tool, designed to analyze your code, pinpoint issues and guide you in rectifying potential problems in both JavaScript and TypeScript.
+- `Prettier` is a tool for formatting code & maintain consistent style throughout codebase.
+
+## Libraries Used For Enviornment Variable and Secrets
+- `Dotenv` to load environment variables from .env file
+- `Secrets` to load secrets from AWS Secrets Manager
 
 ## How to use
 

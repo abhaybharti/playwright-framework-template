@@ -1,33 +1,28 @@
 {
   "name": "playwright-framework-template",
   "version": "1.0.0",
-  "description": "<div id=\"top\"></div>\r <!--\r *** Thanks for checking out the Best-README-Template. If you have a suggestion\r *** that would make this better, please fork the repo and create a pull request\r *** or simply open an issue with the tag \"enhancement\".\r *** Don't forget to give the project a star!\r *** Thanks again! Now go create something AMAZING! :D\r -->",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "prettier": "prettier . --check",
-    "prettier:fix": "prettier . --write"
+    "test": "echo %NODE_ENV% && npx playwright test --headed --config=playwright.config.ts",
+    "test:local": "cross-env NODE_ENV='local' npm run test",
+    "test:dev": "cross-env NODE_ENV='dev' npm run test",
+    "test:sit": "cross-env NODE_ENV='sit' npm run test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
-    "@types/node": "^20.10.4",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "eslint": "^8.55.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-playwright": "^0.19.0",
-    "prettier": "3.1.0",
-    "typescript": "^5.3.3",
-    "webdriverio": "^8.26.1"
-  },
-  "dependencies": {
-    "artillery": "^2.0.3",
-    "artillery-engine-playwright": "^1.1.0",
-    "dotenv": "^16.3.1"
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
   }
 }
