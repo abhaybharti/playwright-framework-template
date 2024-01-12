@@ -1,5 +1,5 @@
+// @ts-check
 import { defineConfig, devices } from "@playwright/test";
-import * as dotenv from "dotenv";
 
 /**
  * Read environment variables from file.
@@ -7,25 +7,11 @@ import * as dotenv from "dotenv";
  */
 // require('dotenv').config();
 
-switch (process.env.NODE_ENV) {
-  case "local":
-    dotenv.config({ path: "./environments/local.env" });
-    break;
-  case "prod":
-    dotenv.config({ path: "./environments/prod.env" });
-    break;
-  case "sit":
-    dotenv.config({ path: "./environments/sit.env" });
-    break;
-  case "uat":
-    dotenv.config({ path: "./environments/uat.env" });
-    break;
-}
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
-  testDir: "./src",
+module.exports = defineConfig({
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -47,20 +33,20 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
+    // {
+    //   name: "chromium",
+    //   use: { ...devices["Desktop Chrome"] },
+    // },
 
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
+    // {
+    //   name: "firefox",
+    //   use: { ...devices["Desktop Firefox"] },
+    // },
 
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
+    // {
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"] },
+    // },
 
     /* Test against mobile viewports. */
     // {
@@ -73,10 +59,10 @@ export default defineConfig({
     // },
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
+    {
+      name: 'Microsoft Edge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    },
     // {
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
