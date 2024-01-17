@@ -14,7 +14,7 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.11.5",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "eslint": "^8.2.0",
@@ -26,6 +26,12 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "@types/mocha": "^10.0.6",
+    "@types/webdriverio": "^5.0.0",
+    "dotenv": "^16.3.1",
+    "mocha": "^10.2.0",
+    "ts-node": "^10.9.2",
+    "webdriverio": "^8.28.0",
+    "appium": "^2.4.1"
   }
 }
