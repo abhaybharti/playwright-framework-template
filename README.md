@@ -1,10 +1,6 @@
-## Playwright-Framework-Template
+# Playwright-Framework-Template
 
-Ultimate test automation for testing any application on any platform
-
-> [!NOTE] Don't forget to \* the repository if you like it!
-
-## Why was PlayWright-Framework-Template created?
+## Introduction
 
 In my career having vast experience in automating Api, Web Browsers and mobile apps, I have seen that people had to use different frameworks for automation Api, Web and Mobile applications which created a lot of chaos with respect to maintenance of dependencies and their respective code for test automation.
 
@@ -22,23 +18,17 @@ In my career having vast experience in automating Api, Web Browsers and mobile a
 - Supports Allure report generation
 - Support running functional test for load testing using Artillery
 
-## Libraries Used For Test
+## Tech Stack/Libraries Used
 
-- PlayWright for web automation
-- PlayWright for Api automation
-- Artillery for load testing
-- Allure for reporting
-- Appium for mobile app automation
-
-## Libraries Used For Code Consistency
-
-- `ESLint` it's a linting tool, designed to analyze your code, pinpoint issues and guide you in rectifying potential problems in both JavaScript and TypeScript.
-- `Prettier` is a tool for formatting code & maintain consistent style throughout codebase.
-
-## Libraries Used For Enviornment Variable and Secrets
-
-- `Dotenv` to load environment variables from .env file
-- `Secrets` to load secrets from AWS Secrets Manager
+- [PlayWright](https://playwright.dev/) - for web automation
+- [PlayWright](https://playwright.dev/) - for Api automation
+- [Artillery](https://www.artillery.io/) - for load testing
+- [Allure](https://allurereport.org/) - Allure for reporting
+- [Appium](https://appium.io/docs/en/2.4/) - for mobile app automation
+- [ESLint](https://eslint.org/) - pinpoint issues and guide you in rectifying potential problems in both JavaScript and TypeScript.
+- [Prettier](https://prettier.io/) - for formatting code & maintain consistent style throughout codebase
+- [Dotenv](https://www.dotenv.org/) - to load environment variables from .env file
+- [Secrets](https://github.com/du5rte/secrets) - to load secrets from AWS Secrets Manager
 
 ## How to use
 
@@ -106,6 +96,14 @@ This will start running script in debug mode & open PlayWright inspector
 
 #### Run & Generate Report
 
-### Further Reading
+## Contributing
 
-https://medium.com/@oroz.askarov/building-a-robust-automation-framework-in-playwright-typescript-version-b13be4e4bf56 https://github.com/alapanme/Playwright-Automation/blob/master/tests/2-checkBox.spec.ts
+We love our contributors! Here's how you can contribute:
+
+- [Open an issue](https://github.com/abhaybharti/playwright-framework-template/issues) if you believe you've encountered a bug.
+- Make a [pull request](https://github.com/abhaybharti/playwright-framework-template/pulls) to add new features/make quality-of-life improvements/fix bugs.
+
+<a href="https://github.com/abhaybharti/playwright-framework-template/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=abhaybharti/playwright-framework-template" />
+</a>
+

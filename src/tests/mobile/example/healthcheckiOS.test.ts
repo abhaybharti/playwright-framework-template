@@ -1,4 +1,4 @@
-import { AppiumHelper } from "./utils/appiumHelper";
+import { AppiumHelper } from "../../../helper/mobile/appiumHelper";
 
 const iOSVersion = "16.4";
 
