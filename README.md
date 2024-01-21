@@ -1,4 +1,4 @@
-# Playwright-Framework-Template
+<h1 text-align="center">Playwright-Framework-Template</h1>
 
 ## Introduction
 
@@ -106,4 +106,3 @@ We love our contributors! Here's how you can contribute:
 <a href="https://github.com/abhaybharti/playwright-framework-template/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=abhaybharti/playwright-framework-template" />
 </a>
-
