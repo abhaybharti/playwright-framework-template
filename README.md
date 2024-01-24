@@ -2,21 +2,24 @@
 
 ## Introduction
 
-In my career having vast experience in automating Api, Web Browsers and mobile apps, I have seen that people had to use different frameworks for automation Api, Web and Mobile applications which created a lot of chaos with respect to maintenance of dependencies and their respective code for test automation.
+Playwright-Framework-Template - This project is based on Microsoft Playwright, Appium, Artillery which enables reliable end-to-end testing, Web testing, API testing, Mobile testing, load testing.
 
 ## Features
 
-- Zero boilerplate code
-- Support Rest Api automation with schema validations and response body verification
+- Easy to Configure
+- Auto wait for all elements & checks
+- Generate HTML report
+- Generate detailed trace file which helps to debug
+- Generate snapshot for each step
+- Record video for test case execution
 - Support Web automation with support for chrome, Edge, Firefox and Safari
 - Support Mobile automation with support for Android native, web and hybrid apps automation
 - Support iOS native, web and hybrid apps automation
-- Support execution of Web tests on Microsoft Azure
-- Support execution of Mobile tests on cloud platform like LambdaTest & BrowserStack
-- Micro logging to log events of the test execution
+- Support execution of Web tests on Microsoft Azure (can scale on demand)
+- Support API testing
 - Support taking screenshots
-- Supports Allure report generation
-- Support running functional test for load testing using Artillery
+- Run functional test for load testing using Artillery
+- Support Serial and Parallel execution
 
 ## Tech Stack/Libraries Used
 
@@ -30,10 +33,32 @@ In my career having vast experience in automating Api, Web Browsers and mobile a
 - [Dotenv](https://www.dotenv.org/) - to load environment variables from .env file
 - [Secrets](https://github.com/du5rte/secrets) - to load secrets from AWS Secrets Manager
 
-## How to use
+## Getting Started
 
-- clone repo
-- run `npm install` command
+### Prerequisite
+
+- `nodejs`: Download and install Node JS from
+  > `https://nodejs.org/en/download`
+
+### Installation
+
+- clone the repo using below URL
+
+  > `https://github.com/abhaybharti/playwright-framework-template.git`
+
+- Navigate to folder and install npm packages using:
+
+  > `npm install`
+
+- For first time installation use below command to download required browsers:
+  > `npx playwright install`
+
+## Usage
+
+- For browser configuration, change required parameters in playwright.config.ts
+- To run your suite on MS Azure, copy the below code in `azure-pipeline.yml` and `playwright.service.config.ts` to root folder, update following key & run your suite
+  - PLAYWRIGHT_SERVICE_ACCESS_TOKEN
+  - PLAYWRIGHT_SERVICE_URL=XXX
 
 ## Sample Test
 
