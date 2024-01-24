@@ -1,4 +1,5 @@
 // @ts-check
+
 import { test, expect } from "@playwright/test";
 
 test("has title", async ({ page }) => {
@@ -15,5 +16,12 @@ test("get started link", async ({ page }) => {
   await page.getByRole("link", { name: "Get started" }).click();
 
   // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole("heading", { name: "Installation" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Installation" })
+  ).toBeVisible();
+});
+
+test(`Generate HAR file`, async ({ page: Page }) => {
+  // To record HAR file, use "update:true", below code will create a directory named har and store all the har related files in it
+  await Page.routeFromHAR("har/example.har", { update: true });
 });
