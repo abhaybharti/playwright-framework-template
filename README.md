@@ -26,7 +26,6 @@ Playwright-Framework-Template - This project is based on Microsoft Playwright, A
 - [PlayWright](https://playwright.dev/) - for web automation
 - [PlayWright](https://playwright.dev/) - for Api automation
 - [Artillery](https://www.artillery.io/) - for load testing
-- [Allure](https://allurereport.org/) - Allure for reporting
 - [Appium](https://appium.io/docs/en/2.4/) - for mobile app automation
 - [ESLint](https://eslint.org/) - pinpoint issues and guide you in rectifying potential problems in both JavaScript and TypeScript.
 - [Prettier](https://prettier.io/) - for formatting code & maintain consistent style throughout codebase
