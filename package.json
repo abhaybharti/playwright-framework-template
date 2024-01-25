@@ -28,10 +28,12 @@
   "dependencies": {
     "@types/mocha": "^10.0.6",
     "@types/webdriverio": "^5.0.0",
+    "appium": "^2.4.1",
     "dotenv": "^16.3.1",
     "mocha": "^10.2.0",
+    "nodejs-nodemailer-outlook": "^1.2.4",
     "ts-node": "^10.9.2",
     "webdriverio": "^8.28.0",
-    "appium": "^2.4.1"
+    "winston": "^3.11.0"
   }
 }

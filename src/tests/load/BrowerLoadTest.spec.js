@@ -7,7 +7,9 @@ const withTransactionTimer = async (transactionName, events, userActions) => {
 
 async function browserloadTest(page, userContext, events) {
   await withTransactionTimer("login", events, async () => {
-    await page.goto("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+    await page.goto(
+      "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
+    );
     await page.getByPlaceholder("Username").click();
     await page.getByPlaceholder("Username").fill("Admin");
     await page.getByPlaceholder("Password").fill("admin123");
