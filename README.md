@@ -4,6 +4,8 @@
 
 Playwright-Framework-Template - This project is based on Microsoft Playwright, Appium, Artillery which enables reliable end-to-end testing, Web testing, API testing, Mobile testing, load testing.
 
+_☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/abhaybharti/playwright-framework-template). It will motivate me to add more such project._
+
 ## Features
 
 - Easy to Configure
