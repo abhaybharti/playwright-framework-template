@@ -83,4 +83,30 @@ export class WebHelper {
   async verifyNestedFrame(): Promise<void> {
     //TBD
   }
+
+  async assertPageURL(url: string): Promise<void> {
+    console.log("Assertion for Page URL");
+    await expect(this.webPage).toHaveURL(url);
+  }
+
+  async assertPageTitle(title: string): Promise<void> {
+    console.log("Assertion for Page Title");
+    await expect(this.webPage).toHaveTitle(title);
+  }
+  async openNewTab(url: string): Promise<Page> {
+    const pageOne = await this.browserContext.newPage();
+    await pageOne.goto(url);
+    return pageOne;
+  }
+  async takeScreenshot(imageName: string = `screenshot.png`): Promise<void> {
+    await this.webPage.screenshot({ path: `${imageName}`, fullPage: true });
+  }
+
+  async takeScreenshotOfElement(
+    locator: string,
+    imageName: string = `screenshot.png`
+  ): Promise<void> {
+    const el = await this.webPage.locator(locator);
+    await el.screenshot({ path: `${imageName}` });
+  }
 }

@@ -1,5 +1,6 @@
 import { request, expect, APIResponse } from "@playwright/test";
 import exp from "constants";
+import { StringLiteral } from "typescript";
 export class ApiHelper {
   private apiContext: any;
   constructor(apiContext: any) {
@@ -9,20 +10,21 @@ export class ApiHelper {
   async hitApiEndPoint(
     operationType: string,
     endPoint: string,
-    payload: object
+    payload: object,
+    statusCode: number
   ) {
     switch (operationType.toLowerCase()) {
       case "get":
-        await this.invokeGetApi(endPoint);
+        await this.invokeGetApi(endPoint, statusCode);
         break;
       case "post":
-        await this.invokePostApi(endPoint, payload);
+        await this.invokePostApi(endPoint, payload, statusCode);
         break;
       case "delete":
-        await this.invokeDeleteApi();
+        await this.invokeDeleteApi(endPoint, statusCode);
         break;
       case "put":
-        await this.invokePutApi(endPoint, payload);
+        await this.invokePutApi(endPoint, payload, statusCode);
         break;
 
       default:
@@ -30,18 +32,28 @@ export class ApiHelper {
     }
   }
 
-  async invokeGetApi(endPoint: string) {
+  async invokeGetApi(endPoint: string, statusCode: number = 200) {
     let response;
     try {
       console.log(`endPoint: , ${endPoint} `);
       response = await this.apiContext.get(endPoint);
-      expect(response.status()).toBe(200);
+      expect(response.status()).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;
     }
   }
-  async invokeDeleteApi() {}
+  async invokeDeleteApi(endPoint: string, statusCode: number = 200) {
+    let response;
+    try {
+      console.log(`endPoint: , ${endPoint} `);
+      response = await this.apiContext.delete(endPoint);
+      expect(response.status()).toBe(statusCode);
+      return await response.json();
+    } catch (error) {
+      return error;
+    }
+  }
 
   /**
    * The function `invokePostApi` is an asynchronous function that sends a POST request to an API
@@ -54,7 +66,11 @@ export class ApiHelper {
    * @returns the response data as a JSON object if the response status is 200. If there is an error, it
    * will return the error object.
    */
-  async invokePostApi(endPoint: string, payload: object) {
+  async invokePostApi(
+    endPoint: string,
+    payload: object,
+    statusCode: number = 200
+  ) {
     let response;
     try {
       console.log(`endPoint: , ${endPoint} payload :${payload} `);
@@ -64,13 +80,17 @@ export class ApiHelper {
           "Content-Type": "application/json",
         },
       });
-      expect(response.status()).toBe(200);
+      expect(response.status()).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;
     }
   }
-  async invokePutApi(endPoint: string, payload: object) {
+  async invokePutApi(
+    endPoint: string,
+    payload: object,
+    statusCode: number = 200
+  ) {
     let response;
     try {
       console.log(`endPoint: , ${endPoint} payload :${payload} `);
@@ -80,7 +100,7 @@ export class ApiHelper {
           "Content-Type": "application/json",
         },
       });
-      expect(response.status()).toBe(200);
+      expect(response.status()).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;
