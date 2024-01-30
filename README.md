@@ -65,7 +65,7 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
 
 ### Sample Web Test
 
-`test('Navigate to Google @smoke', async({page}) => {     await page.goto('https://www.google.com/')     await expect(page).toHaveTitle('Google') })`
+> Note: Refer to [sample-web-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/web/example)
 
 ### Sample Web Load Test
 
