@@ -1,12 +1,36 @@
 import { request, expect, APIResponse } from "@playwright/test";
 import exp from "constants";
 import { StringLiteral } from "typescript";
+
 export class ApiHelper {
   private apiContext: any;
+
+/**
+ * The constructor function initializes a new context for the API.
+ * @param {any} apiContext - The `apiContext` parameter is an object that represents the context of an
+ * API. It is used to store and manage information related to the API, such as authentication
+ * credentials, request headers, and other configuration settings.
+ */
   constructor(apiContext: any) {
     this.apiContext = apiContext.newContext();
   }
 
+/**
+ * The function `hitApiEndPoint` is an asynchronous function that takes in an operation type, an
+ * endpoint, a payload, and a status code, and then invokes the corresponding API method based on the
+ * operation type.
+ * @param {string} operationType - The `operationType` parameter is a string that specifies the type of
+ * operation to be performed on the API endpoint. It can have one of the following values: "get",
+ * "post", "delete", or "put".
+ * @param {string} endPoint - The `endPoint` parameter is a string that represents the URL or endpoint
+ * of the API that you want to hit. It specifies the location where the API is hosted and the specific
+ * resource or action you want to perform.
+ * @param {object} payload - The `payload` parameter is an object that contains the data to be sent in
+ * the request body for POST and PUT operations. It can include any relevant information that needs to
+ * be sent to the API endpoint.
+ * @param {number} statusCode - The `statusCode` parameter is the expected HTTP status code that the
+ * API endpoint should return.
+ */
   async hitApiEndPoint(
     operationType: string,
     endPoint: string,
