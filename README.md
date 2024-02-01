@@ -61,15 +61,27 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
   - PLAYWRIGHT_SERVICE_ACCESS_TOKEN
   - PLAYWRIGHT_SERVICE_URL=XXX
 
+## How to generate Playwright code
+
+- run command `npx playwright codegen`
+- Browser gets opened
+- navigate to your web app & perform test actions
+
 ## Sample Test
 
 ### Sample Web Test
 
 > Note: Refer to [sample-web-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/web/example)
 
+Pls go through different `\*.ts` file, which has tests example for different purpose.
+
 ### Sample Web Load Test
 
 ### Sample Api Test
+
+> Note: Refer to [sample-api-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/api/example)
+
+Pls go through different `\*.ts` files, which has tests example for different api tests.
 
 ### Sample API Load Test
 
@@ -78,6 +90,11 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
 ## Run Test
 
 ### To Run Web Test
+
+- `npx playwright test (name-of-file.spec.ts) --headed` to run test in ui mode
+- `npx playwright test (name-of-file.spec.ts) --headed --config=playwright.config.chrome.ts` to run test in ui mode on chrome browser
+- `npx playwright test (name-of-file.spec.ts) --headed --config=playwright.config.firefox.ts` to run test in ui mode on firefox browser
+- `npx playwright test (name-of-file.spec.ts) --headed --config=playwright.config.edge.ts` to run test in ui mode on edge browser
 
 ### To Run Api Test
 
