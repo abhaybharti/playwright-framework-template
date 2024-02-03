@@ -21,7 +21,8 @@ switch (process.env.NODE_ENV) {
     break;
 }
 export default defineConfig({
-  testDir: "./src",
+  testDir: "./src/tests",
+  testMatch: ["**/*.ts", "**/*.js"],
   timeout: 180 * 1000,
   expect: { timeout: 180 * 1000 },
   /* Run tests in files in parallel */
@@ -86,18 +87,18 @@ export default defineConfig({
         viewport: { width: 1920, height: 1080 },
       },
     },
-    {
-      name: "Chrome",
-      use: {
-        ...devices["Desktop Chrome"],
-        channel: "chrome",
-        screenshot: "on",
-        trace: "on",
-        video: "on",
-        headless: false,
-        viewport: { width: 1920, height: 1080 },
-      },
-    },
+    // {
+    //   name: "Chrome",
+    //   use: {
+    //     ...devices["Desktop Chrome"],
+    //     channel: "chrome",
+    //     screenshot: "on",
+    //     trace: "on",
+    //     video: "on",
+    //     headless: false,
+    //     viewport: { width: 1920, height: 1080 },
+    //   },
+    // },
   ],
 
   /* Run your local dev server before starting the tests */

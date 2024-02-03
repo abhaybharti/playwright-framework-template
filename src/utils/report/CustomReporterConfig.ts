@@ -50,7 +50,7 @@ export default class CustomReporterConfig implements Reporter {
   }
 
   onError(error: TestError): void {
-    logger.error(error.message);
+    logger.error("TestError : ", error.message);
   }
 
   onEnd(

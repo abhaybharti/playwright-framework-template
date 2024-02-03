@@ -4,7 +4,7 @@
 
 Playwright-Framework-Template - This project is based on Microsoft Playwright, Appium, Artillery which enables reliable end-to-end testing, Web testing, API testing, Mobile testing, load testing.
 
-_☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/abhaybharti/playwright-framework-template). It will motivate me to add more such project._
+_☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/abhaybharti/playwright-framework-template). It will motivate me to add more such project._
 
 ## Features
 
@@ -40,6 +40,7 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
 
 - `nodejs`: Download and install Node JS from
   > `https://nodejs.org/en/download`
+- `Visual Studio Code/Aqua/IntelliJ`: Download and install code editor
 
 ### Installation
 
@@ -52,7 +53,12 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
   > `npm install`
 
 - For first time installation use below command to download required browsers:
+
   > `npx playwright install`
+
+- In case you want to do fresh setup of playwright
+  - Create a folder & run command `npm init playwright@latest`
+  - select `TypeScript` & select default for other options
 
 ## Usage
 
@@ -74,6 +80,10 @@ _☝ If you like the project, please give a ⭐ on [GitHub](https://github.com/a
 > Note: Refer to [sample-web-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/web/example)
 
 Pls go through different `\*.ts` file, which has tests example for different purpose.
+
+#### Locator Example
+
+> Note: Refer to [sample-web-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/web/example/locator.spec.ts)
 
 ### Sample Web Load Test
 
