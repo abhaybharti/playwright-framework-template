@@ -67,11 +67,14 @@ _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/
   - PLAYWRIGHT_SERVICE_ACCESS_TOKEN
   - PLAYWRIGHT_SERVICE_URL=XXX
 
-## How to generate Playwright code
+## How to generate Playwright code (Playwright Test Generator)
 
 - run command `npx playwright codegen`
-- Browser gets opened
-- navigate to your web app & perform test actions
+- Browser gets opened & navigate to web app & perform test actions
+
+Playwright test generator generates tests and pick locator for you. It uses role,text and test ID locators.
+
+To pick a locator, run the `codegen` command followed by URL, `npx playwright codegen https://opensource-demo.orangehrmlive.com/web/index.php/auth/login`
 
 ## Sample Test
 

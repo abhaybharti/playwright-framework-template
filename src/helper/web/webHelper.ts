@@ -204,6 +204,24 @@ export class WebHelper {
       `Asserts that '${target}' has a specific attribute '${attribute}' with the expected value '${attributeVal}'.`
     );
     //expect(await (target).toHaveAttribute(attribute, attributeVal));
-    
+  }
+
+  /**
+   * The `blockRequest` function blocks all requests in a given browser context that do not start with a
+   * specified request name.
+   * @param {BrowserContext} context - The `context` parameter is an instance of a `BrowserContext`
+   * object. It represents a browser context in Puppeteer, which is a container for a set of pages and
+   * allows for fine-grained control over browser behavior.
+   * @param {string} requestName - The `requestName` parameter is a string that represents the name of
+   * the request you want to block.
+   * Call this method in your tests
+   */
+  async blockRequest(context: BrowserContext, requestName: string) {
+    await context.route("**/*", (request) => {
+      request.request().url().startsWith(`${requestName}`)
+        ? request.abort()
+        : request.continue();
+      return;
+    });
   }
 }
