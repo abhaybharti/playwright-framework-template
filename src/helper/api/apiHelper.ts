@@ -2,6 +2,7 @@ import { request, expect, APIResponse } from "@playwright/test";
 import exp from "constants";
 import { StringLiteral } from "typescript";
 
+const BASE_URL = "https://jsonplaceholder.typicode.com";
 export class ApiHelper {
   private apiContext: any;
 
@@ -12,7 +13,12 @@ export class ApiHelper {
    * credentials, request headers, and other configuration settings.
    */
   constructor(apiContext: any) {
-    this.apiContext = apiContext.newContext();
+    this.apiContext = apiContext.newContext({
+      extraHTTPHeaders: {
+        Authorization: `Bearer 12345`,
+        "Content-Type": `application/json`,
+      },
+    });
   }
 
   /**
@@ -59,8 +65,8 @@ export class ApiHelper {
   async invokeGetApi(endPoint: string, statusCode: number = 200) {
     let response;
     try {
-      console.log(`endPoint: , ${endPoint} `);
-      response = await this.apiContext.get(endPoint);
+      console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
+      response = await this.apiContext.get(`${BASE_URL}${endPoint}`);
       expect(response.status()).toBe(statusCode);
       return await response.json();
     } catch (error) {
@@ -70,8 +76,10 @@ export class ApiHelper {
   async invokeDeleteApi(endPoint: string, statusCode: number = 200) {
     let response;
     try {
-      console.log(`endPoint: , ${endPoint} `);
-      response = await this.apiContext.delete(endPoint);
+      console.log(
+        `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
+      );
+      response = await this.apiContext.delete(`${BASE_URL}${endPoint}`);
       expect(response.status()).toBe(statusCode);
       return await response.json();
     } catch (error) {
@@ -97,12 +105,11 @@ export class ApiHelper {
   ) {
     let response;
     try {
-      console.log(`endPoint: , ${endPoint} payload :${payload} `);
-      response = await this.apiContext.post(endPoint, {
+      console.log(
+        `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
+      );
+      response = await this.apiContext.post(`${BASE_URL}${endPoint}`, {
         data: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
       expect(response.status()).toBe(statusCode);
       return await response.json();
@@ -117,12 +124,11 @@ export class ApiHelper {
   ) {
     let response;
     try {
-      console.log(`endPoint: , ${endPoint} payload :${payload} `);
-      response = await this.apiContext.put(endPoint, {
+      console.log(
+        `Making PUT request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
+      );
+      response = await this.apiContext.put(`${BASE_URL}${endPoint}`, {
         data: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
       expect(response.status()).toBe(statusCode);
       return await response.json();

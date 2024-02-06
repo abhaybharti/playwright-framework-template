@@ -18,10 +18,12 @@ _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/
 - Support Mobile automation with support for Android native, web and hybrid apps automation
 - Support iOS native, web and hybrid apps automation
 - Support execution of Web tests on Microsoft Azure (can scale on demand)
-- Support API testing
+- Support API testing (GET, POST, PUT, DELETE HTTP methods)
+- Dynamic data handling using external JSON files
 - Support taking screenshots
 - Run functional test for load testing using Artillery
 - Support Serial and Parallel execution
+- Environment configuration using .env files
 
 ## Tech Stack/Libraries Used
 
@@ -35,6 +37,10 @@ _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/
 - [Secrets](https://github.com/du5rte/secrets) - to load secrets from AWS Secrets Manager
 
 ## Getting Started
+
+## Project Structure
+- `apiHelper.ts` contains functions for making HTTP requests
+- `utils` contains utility functions
 
 ### Prerequisite
 
@@ -75,6 +81,10 @@ _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/
 Playwright test generator generates tests and pick locator for you. It uses role,text and test ID locators.
 
 To pick a locator, run the `codegen` command followed by URL, `npx playwright codegen https://opensource-demo.orangehrmlive.com/web/index.php/auth/login`
+
+## Writing Tests
+
+- Create test files in `src/tests` folder
 
 ## Sample Test
 
