@@ -1,4 +1,5 @@
 import { BrowserContext, Page, expect } from "@playwright/test";
+import fs from "fs";
 
 export class WebHelper {
   readonly webPage: Page;
@@ -223,5 +224,132 @@ export class WebHelper {
         : request.continue();
       return;
     });
+  }
+
+  /**
+   * The function will setup a listener for alert box, if dialog appears during the test then automatically accepting them.
+   * Alert box contains only Ok button
+   */
+  async acceptAlertBox(): Promise<void> {
+    console.log(`Handle Alert Box by clicking on Ok button`);
+    this.webPage.on("dialog", async (dialog) => dialog.dismiss());
+  }
+
+  /**
+   * The function will setup a listener for Confirm box, if dialog appears during the test then automatically call accept/dismiss method.
+   * Confirm box contains Ok/Cancel button
+   */
+  async acceptConfirmBox(): Promise<void> {
+    console.log(`Accept Confirm Box by clicking on Ok button`);
+    this.webPage.on("dialog", async (dialog) => dialog.accept());
+  }
+
+  async dismissConfirmBox(): Promise<void> {
+    console.log(`Dismiss Confirm Box by clicking on Cancel button`);
+    this.webPage.on("dialog", async (dialog) => dialog.dismiss());
+  }
+
+  /**
+   * The function will setup a listener for Prompt box, if dialog appears during the test then automatically call accept/dismiss method.
+   * Prompt box contains text box where user can enter text and submit (using Ok/Cancel button) it.
+   */
+  async handlePromptBox(txtVal: string): Promise<void> {
+    console.log(`Enter text message in Prompt Box and click on Ok button`);
+    this.webPage.on("dialog", async (dialog) => dialog.accept(txtVal));
+  }
+
+  waitForDialogMessage(page: Page) {
+    return new Promise((resolve) => {
+      page.on("dialog", (dialog) => {
+        resolve(dialog.message());
+      });
+    });
+  }
+
+  /**
+   * The function will read text message from Alert and return.
+   */
+  async getAlertText(): Promise<string> {
+    console.log(`Read text message from Alert box`);
+    let dialogMessage: string;
+    dialogMessage = await this.waitForDialogMessage(
+      this.webPage
+    ).then.toString();
+    console.log(dialogMessage);
+    return dialogMessage;
+  }
+
+  /**
+   * The function `getFrame` takes a frame locator as input and calls a method on the `webPage` object
+   * to locate the frame.
+   * @param {string} frameLocator - The frameLocator parameter is a string that represents the locator
+   * or identifier of the frame you want to retrieve.
+   */
+  async getFrame(frameLocator: string) {
+    return this.webPage.frameLocator(frameLocator);
+  }
+
+  /**
+   * The function `getStringFromShadowDom` retrieves the text content from a specified element within
+   * the Shadow DOM.
+   * @param {string} locator - The `locator` parameter is a string that represents a CSS selector used
+   * to locate an element within the Shadow DOM.
+   * @returns a Promise that resolves to a string.
+   */
+  async getStringFromShadowDom(locator: string): Promise<string> {
+    return (await this.webPage.locator(locator).textContent()) as string;
+  }
+
+  /**
+   * The `downLoadFile` function downloads a file by clicking on a specified locator and waits for the
+   * download event to occur.
+   * @param {string} locator - The locator parameter is a string that represents the selector used to
+   * locate the element on the web page that triggers the file download. It could be an ID, class name,
+   * CSS selector, or any other valid selector that can be used with the `this.webPage.locator()`
+   * method to locate the element
+   * @param {string} expectedFileName - The expectedFileName parameter is a string that represents the
+   * name of the file that is expected to be downloaded.
+   * @param {string} savePath - The `savePath` parameter is a string that represents the path where the
+   * downloaded file will be saved on the local machine.
+   */
+  async downLoadFile(
+    locator: string,
+    expectedFileName: string,
+    savePath: string
+  ) {
+    //start download
+    const [download] = await Promise.all([
+      this.webPage.waitForEvent("download"),
+      this.webPage.locator(locator).click(),
+    ]);
+
+    await download.saveAs(savePath);
+    return download;
+  }
+
+  /**
+   * The function uploads a file to a web page using the specified file path, file upload locator, and
+   * upload button locator.
+   * @param {string} filePath - The file path is the path to the file that you want to upload. It
+   * should be a string that specifies the location of the file on your computer.
+   * @param {string} fileUploadLocator - The fileUploadLocator parameter is a string that represents
+   * the locator of the file upload input element on the web page. This locator is used to identify the
+   * element where the file will be uploaded to.
+   * @param {string} uploadBtnLocator - The `uploadBtnLocator` parameter is a string that represents
+   * the locator of the upload button on the web page. It is used to locate and interact with the
+   * upload button element on the page.
+   */
+  async uploadFile(
+    filePath: string,
+    fileUploadLocator: string,
+    uploadBtnLocator: string
+  ) {
+    if (!fs.existsSync(filePath)) {
+      console.log(`File ${filePath} does not exist`);
+      throw new Error(`File not found :${filePath}`);
+    }
+
+    await this.webPage.setInputFiles(`${fileUploadLocator}`, filePath);
+    await this.webPage.locator(`${uploadBtnLocator}`).click();
   }
 }
