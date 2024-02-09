@@ -352,4 +352,58 @@ export class WebHelper {
     await this.webPage.setInputFiles(`${fileUploadLocator}`, filePath);
     await this.webPage.locator(`${uploadBtnLocator}`).click();
   }
+
+  /**
+   * The function intercepts a specific route in a browser context, logs the request and response, and
+   * continues with the intercepted request.
+   * @param {string} interceptRoute - The interceptRoute parameter is a string that represents the route
+   * that you want to intercept. It is used to match against the URL of incoming requests and determine
+   * if the route should be intercepted.
+   */
+  async interceptRouteAndContinue(interceptRoute: string) {
+    await this.browserContext.route(interceptRoute, async (route) => {
+      //Arrange & Log the request
+      const response = await route.fetch();
+      const json = await response.json();
+      console.log(JSON.stringify(json, null, 10));
+
+      //continue with the intercepted request
+      await route.continue();
+    });
+  }
+
+  /**
+   * The function intercepts a specific route and aborts it.
+   * @param {string} interceptRoute - The `interceptRoute` parameter is a string that represents the
+   * URL pattern that you want to intercept and abort. It is used to match against the URLs of incoming
+   * network requests.
+   */
+  async interceptRouteAndAbort(interceptRoute: string) {
+    await this.browserContext.route(interceptRoute, async (route) => {
+      route.abort(); //abort the route
+    });
+  }
+  /**
+   * The function intercepts a specified route and modifies the response data with the provided JSON
+   * data.
+   * @param {string} interceptRoute - The `interceptRoute` parameter is a string that represents the
+   * route that you want to intercept. It is the URL or path that you want to intercept and modify the
+   * response for. For example, if you want to intercept the route "/api/data", you would pass
+   * "/api/data" as the
+   * @param {string} modifiedJsonData - The `modifiedJsonData` parameter is a string representing the
+   * modified JSON data that you want to use as the response body for the intercepted route.
+   */
+  async interceptRouteAndChangeData(
+    interceptRoute: string,
+    modifiedJsonData: string
+  ) {
+    await this.browserContext.route(interceptRoute, async (route) => {
+      const modifiedResponse = [`${modifiedJsonData}`];
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(modifiedResponse),
+      });
+    });
+  }
 }
