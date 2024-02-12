@@ -1,8 +1,9 @@
 import { request, expect, APIResponse } from "@playwright/test";
+import { log } from "console";
 import exp from "constants";
 import { StringLiteral } from "typescript";
 
-const BASE_URL = "https://jsonplaceholder.typicode.com";
+const BASE_URL = "https://restful-booker.herokuapp.com";
 export class ApiHelper {
   private apiContext: any;
 
@@ -13,12 +14,13 @@ export class ApiHelper {
    * credentials, request headers, and other configuration settings.
    */
   constructor(apiContext: any) {
-    this.apiContext = apiContext.newContext({
-      extraHTTPHeaders: {
-        Authorization: `Bearer 12345`,
-        "Content-Type": `application/json`,
-      },
-    });
+    this.apiContext = apiContext;
+    // this.apiContext = apiContext({
+    //   extraHTTPHeaders: {
+    //     Authorization: `Bearer 12345`,
+    //     "Content-Type": `application/json`,
+    //   },
+    // });
   }
 
   /**
@@ -56,7 +58,6 @@ export class ApiHelper {
       case "put":
         await this.invokePutApi(endPoint, payload, statusCode);
         break;
-
       default:
         break;
     }
@@ -67,9 +68,13 @@ export class ApiHelper {
     try {
       console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
       response = await this.apiContext.get(`${BASE_URL}${endPoint}`);
-      expect(response.status()).toBe(statusCode);
+      expect(
+        response.status(),
+        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
+      ).toBe(statusCode);
       return await response.json();
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
@@ -80,7 +85,10 @@ export class ApiHelper {
         `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
       );
       response = await this.apiContext.delete(`${BASE_URL}${endPoint}`);
-      expect(response.status()).toBe(statusCode);
+      expect(
+        response.status(),
+        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
+      ).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;
@@ -105,13 +113,17 @@ export class ApiHelper {
   ) {
     let response;
     try {
+      let tempPayload = JSON.stringify(payload);
       console.log(
-        `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
+        `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${tempPayload} `
       );
       response = await this.apiContext.post(`${BASE_URL}${endPoint}`, {
         data: payload,
       });
-      expect(response.status()).toBe(statusCode);
+      expect(
+        response.status(),
+        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
+      ).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;
@@ -130,7 +142,10 @@ export class ApiHelper {
       response = await this.apiContext.put(`${BASE_URL}${endPoint}`, {
         data: payload,
       });
-      expect(response.status()).toBe(statusCode);
+      expect(
+        response.status(),
+        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
+      ).toBe(statusCode);
       return await response.json();
     } catch (error) {
       return error;

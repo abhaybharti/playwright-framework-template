@@ -85,6 +85,9 @@ export default defineConfig({
         video: "on",
         headless: false,
         viewport: { width: 1920, height: 1080 },
+        // baseURL:'https://restful-booker.herokuapp.com',
+        ignoreHTTPSErrors: true,
+        acceptDownloads: true,
       },
     },
     // {
