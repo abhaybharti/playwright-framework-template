@@ -1,10 +1,11 @@
 import { request, expect, APIResponse } from "@playwright/test";
 import { log } from "console";
 import exp from "constants";
+import { Helper } from "helper/Helper";
 import { StringLiteral } from "typescript";
 
 const BASE_URL = "https://restful-booker.herokuapp.com";
-export class ApiHelper {
+export class ApiHelper extends Helper {
   private apiContext: any;
 
   /**
@@ -14,6 +15,7 @@ export class ApiHelper {
    * credentials, request headers, and other configuration settings.
    */
   constructor(apiContext: any) {
+    super();
     this.apiContext = apiContext;
     // this.apiContext = apiContext({
     //   extraHTTPHeaders: {

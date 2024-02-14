@@ -1,7 +1,6 @@
 import { expect, test, APIRequestContext } from "@playwright/test";
 
 import { ApiHelper } from "../../../helper/api/apiHelper";
-import { GeneralPurpose } from "../../../utils/generalPurpose";
 
 let token: string;
 let bookingId: string;
@@ -61,7 +60,7 @@ test("Get Booking Details using BookingID --> 1914", async ({ request }) => {
     description:
       "This will make GET call to https://restful-booker.herokuapp.com/booking/:id and verify keys/values in response",
   });
-  const gs = await new GeneralPurpose();
+
   const apiHelper = await new ApiHelper(request); //
   const bookingDetails = await apiHelper.invokeGetApi("/booking/1914");
   console.log(JSON.stringify(bookingDetails));
@@ -70,8 +69,10 @@ test("Get Booking Details using BookingID --> 1914", async ({ request }) => {
   expect(bookingDetails.lastname).toBe("Allen");
   expect(bookingDetails.totalprice).toBe(111);
   expect(bookingDetails.depositpaid).toBeTruthy();
-  expect(gs.isValidDate(bookingDetails.bookingdates.checkin)).toBe(true);
-  expect(gs.isValidDate(bookingDetails.bookingdates.checkout)).toBe(true);
+  expect(apiHelper.isValidDate(bookingDetails.bookingdates.checkin)).toBe(true);
+  expect(apiHelper.isValidDate(bookingDetails.bookingdates.checkout)).toBe(
+    true
+  );
   expect(bookingDetails.additionalneeds).toBe("super bowls");
 });
 

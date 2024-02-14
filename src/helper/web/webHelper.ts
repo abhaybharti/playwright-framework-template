@@ -1,11 +1,13 @@
 import { BrowserContext, Page, expect } from "@playwright/test";
 import fs from "fs";
+import { Helper } from "helper/Helper";
 
-export class WebHelper {
+export class WebHelper extends Helper {
   readonly webPage: Page;
   readonly browserContext: BrowserContext;
 
   constructor(webPage: Page, browserContext: BrowserContext) {
+    super();
     this.webPage = webPage;
     this.browserContext = browserContext;
   }
@@ -406,6 +408,4 @@ export class WebHelper {
       });
     });
   }
-
-  
 }
