@@ -68,6 +68,7 @@ export class ApiHelper {
     try {
       console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
       response = await this.apiContext.get(`${BASE_URL}${endPoint}`);
+
       expect(
         response.status(),
         `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
