@@ -111,6 +111,8 @@ To pick a locator, run the `codegen` command followed by URL, `npx playwright co
 
 ## Sample Test
 
+### Unit/Integration Testing
+
 ### Sample Web Test
 
 > Note: Refer to [sample-web-test](https://github.com/abhaybharti/playwright-framework-template/tree/master/src/tests/web/example)
@@ -184,6 +186,8 @@ This will start running script in debug mode & open PlayWright inspector
 `artillery report report.json --output report.html`
 
 #### Run & Generate Report
+
+## GitHub Actions - created workflow to run test
 
 ## Contributing
 

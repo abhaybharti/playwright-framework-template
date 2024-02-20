@@ -408,4 +408,49 @@ export class WebHelper extends Helper {
       });
     });
   }
+
+  async changeElementValue(): Promise<void> {}
+
+  async verifyValueFromUi(): Promise<void> {}
+
+  async getAttribute(locator: string, attributeName: string): Promise<string> {
+    const value = await this.webPage
+      .locator(locator)
+      .getAttribute(attributeName);
+    return value ?? "";
+  }
+
+  async getText(locator: string): Promise<string> {
+    const value = await this.webPage.locator(locator).textContent();
+    return value ?? "";
+  }
+
+  async press(key: string): Promise<void> {
+    await this.webPage.keyboard.press(key);
+  }
+
+  async addStep(stepDescription: string, stepFunction: any): Promise<any> {
+    return await test.step(stepDescription, stepFunction);
+  }
+
+  async attachScreenshot(
+    locator: string,
+    fileName: string,
+    testInfo: TestInfo
+  ): Promise<void> {
+    const file = testInfo.outputPath(fileName);
+    const pathFile = path.dirname(file);
+    const pathAttachments = path.join(pathFile, "attachments");
+    const attachmentFile = path.join(pathAttachments, fileName);
+    const screenshot = await webPage
+      .locator(locator)
+      .isVisible()
+      .screenshot({ path: file });
+    await fs.promise.writeFile(file, screenshot);
+    if (!fs.existsSync(pathAttachments)) {
+      fs.mkdirSync(pathAttachments, { recursive: true });
+    }
+    await fs.promises.writeFile(attachmentFile, screenshot);
+    await testInfo.attach(fileName, { contentType: "image/png", path: file });
+  }
 }

@@ -1,0 +1,166 @@
+{
+  "App": {
+    "Login": {
+      "objType": "page",
+      "OrangeHRMLogo": {
+        "objType": "img",
+        "locatorType": "xpath",
+        "locatorValue": "//img[@alt='company-branding']"
+      },
+      "LoginInfo": {},
+      "UsernameText": {
+        "objType": "text",
+        "locatorType": "xpath",
+        "locatorValue": "//label[normalize-space()='Username']",
+        "label": "Username"
+      },
+      "Username": {
+        "objType": "input",
+        "locatorType": "xpath",
+        "locatorValue": "//input[@placeholder='Username']",
+        "label": "",
+        "validTestData": "a,abcde",
+        "invalidTestData": ",abcdef,%%%%,$$$$",
+        "saveTestData": "admin,test",
+        "fieldErrorMessage": "Required,invalid error"
+      },
+      "PasswordText": {
+        "objType": "text",
+        "locatorType": "xpath",
+        "locatorValue": "//label[normalize-space()='Password']",
+        "label": "Password"
+      },
+      "Password": {
+        "objType": "input",
+        "locatorType": "xpath",
+        "locatorValue": "//input[@placeholder='Password']",
+        "label": "",
+        "validTestData": "",
+        "invalidTestData": "",
+        "saveTestData": "",
+        "fieldErrorMessage": ""
+      },
+      "Login": {
+        "elementType": "button",
+        "locatorType": "xpath",
+        "locatorValue": "//button[normalize-space()='Login']",
+        "labelName": "Login"
+      },
+      "Forgotyourpassword": {
+        "elementType": "link",
+        "locatorType": "xpath",
+        "locatorValue": "//p[normalize-space()='Forgot your password?']",
+        "labelName": "Forgot your password?"
+      }
+    },
+    "Admin": {
+      "objType": "sidebar",
+      "locatorType": "xpath",
+      "locatorValue": "//a[@class='oxd-main-menu-item active']//span[1]",
+      "label": "Admin",
+      "UserManagement": {
+        "objType": "tab",
+        "locatorType": "xpath",
+        "locatorValue": "//span[normalize-space()='User Management']",
+        "label": "User Management",
+        "Users": {
+          "objType": "subtab",
+          "locatorType": "xpath",
+          "locatorValue": "//a[text()='Users']",
+          "SystemUsers": {
+            "objType": "section",
+            "locatorType": "xpath",
+            "locatorValue": "//*[text()='System Users']",
+            "UsernameText": {
+              "objType": "text",
+              "locatorType": "xpath",
+              "locatorValue": "//label[text()='Username']",
+              "label": "Username",
+              "Username": {
+                "objType": "input",
+                "locatorType": "xpath",
+                "locatorValue": "//input[@class='oxd-input oxd-input--active']",
+                "label": "",
+                "validTestData": "",
+                "invalidTestData": "",
+                "saveTestData": "",
+                "fieldErrorMessage": "",
+                "UserRoleText": {
+                  "objType": "text",
+                  "locatorType": "xpath",
+                  "locatorValue": "//label[text()='User Role']",
+                  "label": "User Role",
+                  "UserRole": {
+                    "objType": "input",
+                    "locatorType": "xpath",
+                    "locatorValue": "//div[@class='oxd-select-text-input']",
+                    "label": "",
+                    "validTestData": "",
+                    "invalidTestData": "",
+                    "saveTestData": "",
+                    "fieldErrorMessage": "",
+                    "EmployeeNameText": {
+                      "objType": "text",
+                      "locatorType": "xpath",
+                      "locatorValue": "//label[text()='Employee Name']",
+                      "label": "Employee Name",
+                      "EmployeeName": {
+                        "objType": "input",
+                        "locatorType": "xpath",
+                        "locatorValue": "//input[@placeholder='Type for hints...']",
+                        "label": "",
+                        "validTestData": "",
+                        "invalidTestData": "",
+                        "saveTestData": "",
+                        "fieldErrorMessage": "",
+                        "StatusText": {
+                          "objType": "text",
+                          "locatorType": "xpath",
+                          "locatorValue": "//label[text()='Status']",
+                          "label": "User Role",
+                          "Status": {
+                            "objType": "input",
+                            "locatorType": "xpath",
+                            "locatorValue": "//div[@class='oxd-select-text-input']",
+                            "label": "",
+                            "validTestData": "",
+                            "invalidTestData": "",
+                            "saveTestData": "",
+                            "fieldErrorMessage": "",
+                            "Reset": {
+                              "elementType": "button",
+                              "locatorType": "xpath",
+                              "locatorValue": "//button[text()=' Reset ']",
+                              "labelName": "Reset",
+                              "Search": {
+                                "elementType": "button",
+                                "locatorType": "xpath",
+                                "locatorValue": "//button[text()=' Search ']",
+                                "labelName": "Search",
+                                "Add": {
+                                  "elementType": "button",
+                                  "locatorType": "xpath",
+                                  "locatorValue": "//button[text()=' Add ']",
+                                  "labelName": "Add",
+                                  "RecordsTable": {
+                                    "objType": "table/grid",
+                                    "locatorType": "xpath",
+                                    "locatorValue": "//div[@role='table']"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
