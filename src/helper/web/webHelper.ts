@@ -124,8 +124,15 @@ export class WebHelper extends Helper {
    * @param {string} imageName - The imageName parameter is a string that specifies the name of the
    * screenshot image file. If no value is provided, it defaults to "screenshot.png".
    */
-  async takeScreenshot(imageName: string = `screenshot.png`): Promise<void> {
+  async takeFullPageScreenshot(
+    imageName: string = `screenshot.png`
+  ): Promise<void> {
     await this.webPage.screenshot({ path: `${imageName}`, fullPage: true });
+  }
+  async takePageScreenshot(
+    imageName: string = `screenshot.png`
+  ): Promise<void> {
+    await this.webPage.screenshot({ path: `${imageName}` });
   }
 
   /**
@@ -143,6 +150,13 @@ export class WebHelper extends Helper {
   ): Promise<void> {
     const el = await this.webPage.locator(locator);
     await el.screenshot({ path: `${imageName}` });
+  }
+
+  async clipScreenshot(imageName: string = `screenshot.png`): Promise<void> {
+    await this.webPage.screenshot({
+      path: `${imageName}`,
+      clip: { x: 0, y: 0, width: 800, height: 800 },
+    });
   }
 
   /**

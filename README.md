@@ -187,6 +187,13 @@ This will start running script in debug mode & open PlayWright inspector
 
 #### Run & Generate Report
 
+### Best Practices in Test Authoring:
+
+- `Create isolated test cases`: Each test case should be independent.
+- `Write Meaningful Test Case Titles`: Make your test case titles descriptive and meaningful.
+- `Follow the AAA (Arrange-Act-Assert) Pattern`: Align your Test-Driven Development (TDD) approach with the clarity of Arrange, Act, and Assert.
+- `Maintain Cleanliness`: Separate additional logic from tests for a tidy and focused codebase.
+
 ## GitHub Actions - created workflow to run test
 
 ## Contributing

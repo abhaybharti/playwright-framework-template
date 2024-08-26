@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
 import { on } from "events";
+import OrtoniReport from "ortoni-report";
 
 switch (process.env.NODE_ENV) {
   case "local":
@@ -37,6 +38,7 @@ export default defineConfig({
   reporter: [
     [`./src/utils/report/CustomReporterConfig.ts`],
     ["html", { open: "always", host: "127.0.0.1", port: 5723 }],
+    ["OrtoniReport", { outputFolder: "reports" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
