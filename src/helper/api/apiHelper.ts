@@ -1,13 +1,20 @@
-import { request, expect, APIResponse } from "@playwright/test";
-import { log } from "console";
-import exp from "constants";
+import { expect, APIResponse } from "@playwright/test";
 import { Helper } from "helper/Helper";
-import { StringLiteral } from "typescript";
+import ErrorManager, { AppError } from "utils/error/ErrorManager";
+
+enum OperationType {
+  GET = "get",
+  POST = "post",
+  DELETE = "delete",
+  PUT = "put",
+}
 
 // const BASE_URL = "https://restful-booker.herokuapp.com";
 const BASE_URL = "https://www.rabstract.com";
 export class ApiHelper extends Helper {
   private apiContext: any;
+
+
 
   /**
    * The constructor function initializes a new context for the API.
@@ -43,26 +50,26 @@ export class ApiHelper extends Helper {
    * API endpoint should return.
    */
   async hitApiEndPoint(
-    operationType: string,
+    operationType: OperationType,
     endPoint: string,
     payload: object,
     statusCode: number
-  ) {
-    switch (operationType.toLowerCase()) {
-      case "get":
-        await this.invokeGetApi(endPoint, statusCode);
-        break;
-      case "post":
-        await this.invokePostApi(endPoint, payload, statusCode);
-        break;
-      case "delete":
-        await this.invokeDeleteApi(endPoint, statusCode);
-        break;
-      case "put":
-        await this.invokePutApi(endPoint, payload, statusCode);
-        break;
-      default:
-        break;
+  ):Promise<any> {
+    try {
+      switch (operationType.toLowerCase()) {
+        case OperationType.GET:
+          return await this.invokeGetApi(endPoint, statusCode);          
+        case OperationType.POST:
+          return await this.invokePostApi(endPoint, payload, statusCode);          
+        case OperationType.DELETE:
+          return await this.invokeDeleteApi(endPoint, statusCode);          
+        case OperationType.PUT:
+          return await this.invokePutApi(endPoint, payload, statusCode);          
+        default:
+          throw new Error(`Unsupported operation type: ${operationType}`);          
+      }
+    } catch (error) {
+      this.handleApiError(error);
     }
   }
 
@@ -168,5 +175,13 @@ export class ApiHelper extends Helper {
 
   async getToken() {
     return "tokenvalue";
+  }
+
+  private handleApiError(error: unknown) {
+    if (error instanceof Error || error instanceof AppError) {
+      ErrorManager.handleError(error);
+    } else {
+      ErrorManager.handleError(new Error("An unknown error occurred"));
+    }
   }
 }
