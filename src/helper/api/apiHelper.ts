@@ -20,6 +20,7 @@ export interface ApiResponse<T> {
 ;
 export class ApiHelper extends Helper {
   private apiContext: APIRequestContext;
+  private response:ApiResponse<any>;
 
   constructor(apiContext: any) {
     super();
@@ -29,23 +30,32 @@ export class ApiHelper extends Helper {
     operationType: OperationType,
     endPoint: string,
     payload: object,    
-  ):Promise<any> {
+  ): Promise<ApiResponse<any>> {
+    
     try {
       switch (operationType.toLowerCase()) {
         case OperationType.GET:
-          return await this.get(endPoint);          
+          this.response = await this.get(endPoint);          
+           break;
         case OperationType.POST:
-          return await this.post(endPoint, payload);          
+           await this.post(endPoint, payload);          
+           break;
         case OperationType.DELETE:
-          return await this.delete(endPoint);          
+           await this.delete(endPoint);          
+           break;
         case OperationType.PUT:
-          return await this.put(endPoint, payload);          
+          await this.put(endPoint, payload);          
+          break;
         default:
           throw new Error(`Unsupported operation type: ${operationType}`);          
       }
+      logInfo(`Successfully completed ${OperationType} request to ${endPoint}`, {
+        status: this.response.status,
+      });      
     } catch (error) {
       this.handleApiError(error);
     }
+    return this.response;
   }
 
   async get<T>(endpoint: string):Promise<ApiResponse<T>> {

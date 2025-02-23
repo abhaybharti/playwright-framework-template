@@ -206,3 +206,19 @@ We love our contributors! Here's how you can contribute:
 <a href="https://github.com/abhaybharti/playwright-framework-template/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=abhaybharti/playwright-framework-template" />
 </a>
+
+
+
+Alternative: Use ts-node (Run Without Compilation)
+To execute TypeScript files directly without manual compilation, install ts-node:
+
+sh
+Copy
+Edit
+npm install -g ts-node
+Then, run your TypeScript file directly:
+
+sh
+Copy
+Edit
+ts-node app.ts
