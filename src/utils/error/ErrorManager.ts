@@ -1,5 +1,11 @@
-import winston from 'winston';
+import { logError,logDebug } from "utils/report/Logger";
 
+// Define an interface for the expected error object
+interface ApiErrorResponse {
+    status?: number;
+    data?: any; // Replace 'any' with a more specific type if known
+  }
+  
 // Custom Error Class for Handling Application Errors
 export class AppError extends Error {
     statusCode: number;
@@ -11,25 +17,51 @@ export class AppError extends Error {
     }
 }
 
+export class ApiError extends Error {
+    constructor(
+      message: string,
+      public statusCode?: number,
+      public response?: any
+    ) {
+      super(message);
+      this.name = 'ApiError';
+    }
+  }
+
+  export const handleError = (error: any): never => {
+    if (error instanceof ApiError) {
+      logError(`API Error: ${error.message}`, {
+        statusCode: error.statusCode,
+        response: error.response
+      });
+    } else {
+      logError('Unexpected error occurred', error);
+    }
+    throw error;
+  };
+  
+  export const wrapAsync = async <T>(
+    fn: () => Promise<T>,
+    errorMessage: string
+  ): Promise<T> => {
+    try {
+      return await fn();
+    } catch (error) {
+        const apiError = error as { response?: ApiErrorResponse }; // Cast error to the expected type
+      throw new ApiError(
+        errorMessage,
+        error?.response?.status,
+        error?.response?.data
+      );
+    }
+  };
+
 // Centralized Error Manager Class
 class ErrorManager {
-    private logger: winston.Logger;
+    
 
     constructor() {
-        this.logger = winston.createLogger({
-            level: 'error',
-            format: winston.format.combine(
-                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-                winston.format.printf(({ timestamp, level, message }) => {
-                    return `${timestamp} [${level.toUpperCase()}]: ${message}`;
-                })
-            ),
-            transports: [
-                new winston.transports.Console(),
-                new winston.transports.File({ filename: 'logs/errors.log' }),
-            ],
-        });
-
+      
         // Handle Uncaught Exceptions & Rejections
         process.on('uncaughtException', (err) => {
             this.handleError(new AppError(err.message, 500));
@@ -43,9 +75,9 @@ class ErrorManager {
     // Log and Handle Error
     handleError(error: Error | AppError): void {
         if (error instanceof AppError) {
-            this.logger.error(`App Error: ${error.message} | Status Code: ${error.statusCode}`);
+            logError(`App Error: ${error.message} | Status Code: ${error.statusCode}`);
         } else {
-            this.logger.error(`System Error: ${error.message}`);
+            logError(`System Error: ${error.message}`);
         }
     }
 
