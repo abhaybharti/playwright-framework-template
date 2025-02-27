@@ -31,12 +31,14 @@
     "@types/webdriverio": "^5.0.0",
     "ajv": "^8.12.0",
     "appium": "^2.4.1",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.7",
+    "joi": "^17.13.3",
     "mocha": "^10.2.0",
     "moment": "^2.30.1",
     "nodejs-nodemailer-outlook": "^1.2.4",
     "ts-node": "^10.9.2",
     "webdriverio": "^8.28.0",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "zod": "^3.24.2"
   }
 }

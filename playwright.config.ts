@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
+import {Config} from "./config";
 import { on } from "events";
 import OrtoniReport from "ortoni-report";
 
@@ -31,9 +32,9 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 1,
+  retries: process.env.CI ? 2 : Config.RETRY_FAILED,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : 1,
+  workers: process.env.CI ? 1 : Config.WORKERS,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     [`./src/utils/report/CustomReporterConfig.ts`],
@@ -47,6 +48,10 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "retain-on-failure",
+    headless:Config.HEADLESS_BROWSER,
+    baseURL:Config.BASE_URL,
+    screenshot: "on",
+    video: "on",
   },
 
   /* Configure projects for major browsers */
@@ -81,11 +86,7 @@ export default defineConfig({
       name: "Microsoft Edge",
       use: {
         ...devices["Desktop Edge"],
-        channel: "msedge",
-        screenshot: "on",
-        trace: "on",
-        video: "on",
-        headless: false,
+        channel: "msedge",        
         viewport: { width: 1920, height: 1080 },
         // baseURL:'https://restful-booker.herokuapp.com',
         ignoreHTTPSErrors: true,

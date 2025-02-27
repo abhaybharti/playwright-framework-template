@@ -222,3 +222,6 @@ sh
 Copy
 Edit
 ts-node app.ts
+
+App to run UI test- 
+https://moatazeldebsy.github.io/test-automation-practices/#/
