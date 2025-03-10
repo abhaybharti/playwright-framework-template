@@ -1,4 +1,4 @@
-import { BrowserContext, Page, expect } from "@playwright/test";
+import { BrowserContext, Page, expect, Locator } from "@playwright/test";
 import fs from "fs";
 import { Helper } from "helper/Helper";
 
@@ -423,9 +423,9 @@ export class WebHelper extends Helper {
     });
   }
 
-  async changeElementValue(): Promise<void> {}
+  async changeElementValue(): Promise<void> { }
 
-  async verifyValueFromUi(): Promise<void> {}
+  async verifyValueFromUi(): Promise<void> { }
 
   async getAttribute(locator: string, attributeName: string): Promise<string> {
     const value = await this.webPage
@@ -467,4 +467,21 @@ export class WebHelper extends Helper {
     await fs.promises.writeFile(attachmentFile, screenshot);
     await testInfo.attach(fileName, { contentType: "image/png", path: file });
   }
+
+  async enterText(el: Locator, value: string) {
+    await el.fill(value);
+  }
+
+  async setCheckBox(el: Locator, state: boolean | string) {
+    const targetState = typeof state === "string" ? state.toLowerCase() === "on" || state.toLowerCase() === "true" : state;
+
+    if (targetState) {
+      await el.check();
+    } else {
+      await el.uncheck();
+    }
+
+    await el.isChecked();
+  }
+
 }

@@ -44,11 +44,11 @@ export class SSHHelper {
 
                 let output = '';
                 stream
-                    .on('close', (code, signal) => {
+                    .on('close', (code:string, signal:string) => {
                         console.log(`Command execution completed. Exit code: ${code}, Signal: ${signal}`);
                         resolve(output);
                     })
-                    .on('data', (data) => {
+                    .on('data', (data:string) => {
                         output += data.toString();
                     })
                     .stderr.on('data', (data) => {

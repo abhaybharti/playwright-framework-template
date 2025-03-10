@@ -15,6 +15,7 @@
   "devDependencies": {
     "@playwright/test": "^1.44.1",
     "@types/node": "^20.11.5",
+    "@types/ssh2": "^1.15.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
@@ -36,6 +37,7 @@
     "mocha": "^10.2.0",
     "moment": "^2.30.1",
     "nodejs-nodemailer-outlook": "^1.2.4",
+    "ssh2": "^1.16.0",
     "ts-node": "^10.9.2",
     "webdriverio": "^8.28.0",
     "winston": "^3.11.0",
