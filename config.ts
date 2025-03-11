@@ -21,18 +21,18 @@ dotenv.config()
 // }).unknown(true) //Allow other unknow enviornment variables
 
 // Define the schema for validation using Zod
-const envSchema = z.object({
-    // Environment
-    BASE_URL: z.string().url().nonempty(),
-    USER_NAME: z.string().nonempty(),
-    PASSWORD: z.string().nonempty(),
+// const envSchema = z.object({
+//     // Environment
+//     BASE_URL: z.string().url().nonempty(),
+//     USER_NAME: z.string().nonempty(),
+//     PASSWORD: z.string().nonempty(),
 
-    // Playwright settings
-    WORKERS: z.number().int().min(1),
-    RETRY_FAILED: z.number().int().min(0),
-    MAX_TEST_RUNTIME: z.number().int().min(1000),
-    HEADLESS_BROWSER: z.boolean()
-}).passthrough(); //Allow unknonn environment variables
+//     // Playwright settings
+//     WORKERS: z.number().int().min(1),
+//     RETRY_FAILED: z.number().int().min(0),
+//     MAX_TEST_RUNTIME: z.number().int().min(1000),
+//     HEADLESS_BROWSER: z.boolean()
+// }).passthrough(); //Allow unknonn environment variables
 
 //.strict() //Allow only known environment variables
 
@@ -41,21 +41,21 @@ const envSchema = z.object({
 
 //Validate environment variables
 // const envVars = envSchema.validate(process.env,{allowUnknown:true,abortEarly:false})
-const envVars = envSchema.safeParse(process.env)
+// const envVars = envSchema.safeParse(process.env)
 
-if (envVars.error){
-    throw new Error(`Enviornment validation error : ${envVars.error.message}`)
-}
+// if (envVars.error){
+//     throw new Error(`Enviornment validation error : ${envVars.error.message}`)
+// }
 
 //Config class with validate enviornment variables
 export  class Config{
 
-    static readonly BASE_URL :string = envVars?.data?.BASE_URL || '';
-    static readonly USER_NAME :string = envVars?.data?.USER_NAME || '';
-    static readonly PASSWORD :string = envVars?.data?.PASSWORD || '';
+    static readonly BASE_URL :string = process.env.BASE_URL || '';
+    static readonly USER_NAME :string = process.env.USER_NAME || '';
+    static readonly PASSWORD :string = process.env.PASSWORD || '';
 
-    static readonly WORKERS :number = envVars?.data?.WORKERS || 1;
-    static readonly RETRY_FAILED :number = envVars?.data?.RETRY_FAILED || 0;
-    static readonly MAX_TEST_RUNTIME :number = envVars?.data?.MAX_TEST_RUNTIME || 1000;
-    static readonly HEADLESS_BROWSER :boolean = envVars?.data?.HEADLESS_BROWSER ?? false;
+    static readonly WORKERS :number = parseInt(process.env.WORKERS || '1');
+    static readonly RETRY_FAILED :number = parseInt(process.env.RETRY_FAILED || '0');
+    static readonly MAX_TEST_RUNTIME :number = parseInt(process.env.MAX_TEST_RUNTIME || '1000');
+    static readonly HEADLESS_BROWSER :boolean = process.env.HEADLESS_BROWSER === 'true';
 }

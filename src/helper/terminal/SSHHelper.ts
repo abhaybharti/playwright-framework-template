@@ -1,6 +1,6 @@
 import { Client, ConnectConfig } from 'ssh2';
 
-export class SSHHelper {
+export class SshHelper {
     private client: Client;
     private isConnected: boolean = false;
 
