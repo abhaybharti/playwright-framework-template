@@ -1,17 +1,22 @@
-import { test as base, Page, BrowserContext, expect, APIResponse, APIRequestContext, Locator } from '@playwright/test'
+import { test as base, Page, BrowserContext } from '@playwright/test'
 import { ApiHelper, SshHelper, WebHelper } from "../../src/helper";
 import { } from "@playwright/test";
 
-export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper; page: Page; browserContext: BrowserContext; apiRequest: APIRequestContext }>({
+type MyMixtures = {
+    context: BrowserContext
+}
 
-    api: async ({ apiRequest }, use) => {
-        await use(new ApiHelper(apiRequest))
+export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper; MyMixtures: any; }>({
+
+    api: async ({ request }, use) => {
+        await use(new ApiHelper(request))
     },
 
-    web: async ({ page,browserContext }, use) => {
-        await use(new WebHelper(page,browserContext));
+    web: async ({ page, browser }, use) => {
+        const context = await browser.newContext();
+        await use(new WebHelper(page, context));
     },
-    ssh:async({},use)=>{
+    ssh: async ({ }, use) => {
         await use(new SshHelper())
     }
 })

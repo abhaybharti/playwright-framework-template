@@ -1,0 +1,13 @@
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-03-12T14:44:11.928Z"}
+{"level":"error","message":"TestError :  Fixture \"api\" has unknown parameter \"apiRequest\".","timestamp":"2025-03-12T14:44:11.936Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"browserContext\".","timestamp":"2025-03-12T14:44:11.937Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-03-12T14:51:04.602Z"}
+{"level":"info","message":"Test Case Started : Verify homepage","timestamp":"2025-03-12T14:51:07.354Z"}
+{"level":"info","message":"Test Case Completed : Verify homepage Status : failed","timestamp":"2025-03-12T14:51:17.087Z"}
+{"level":"info","message":"Test Case Started : Verify homepage","timestamp":"2025-03-12T14:51:21.134Z"}
+{"level":"info","message":"Test Case Completed : Verify homepage Status : failed","timestamp":"2025-03-12T14:51:29.828Z"}
+{"level":"info","message":"Test Case Started : Verify homepage","timestamp":"2025-03-12T14:51:32.532Z"}
+{"level":"info","message":"Test Case Completed : Verify homepage Status : failed","timestamp":"2025-03-12T14:51:40.528Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-03-12T14:56:35.496Z"}
+{"level":"info","message":"Test Case Started : Verify homepage","timestamp":"2025-03-12T14:56:38.069Z"}
+{"level":"info","message":"Test Case Completed : Verify homepage Status : passed","timestamp":"2025-03-12T14:56:45.668Z"}

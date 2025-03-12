@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
 import {Config} from "./config";
 import { on } from "events";
-import OrtoniReport from "ortoni-report";
+//import OrtoniReport from "ortoni-report";
 
 switch (process.env.NODE_ENV) {
   case "local":
@@ -23,7 +23,7 @@ switch (process.env.NODE_ENV) {
     break;
 }
 export default defineConfig({
-  testDir: "./src/tests",
+  testDir: "./tests",
   testMatch: ["**/*.ts", "**/*.js"],
   timeout: 180 * 1000,
   expect: { timeout: 180 * 1000 },
@@ -39,7 +39,7 @@ export default defineConfig({
   reporter: [
     [`./src/utils/report/CustomReporterConfig.ts`],
     ["html", { open: "always", host: "127.0.0.1", port: 5723 }],
-    ["OrtoniReport", { outputFolder: "reports" }],
+    //["OrtoniReport", { outputFolder: "reports" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -109,9 +109,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run start',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   command: 'npm run start',
+  //   url: 'http://127.0.0.1:3000',
+  //   reuseExistingServer: !process.env.CI,
+  // },
 });
