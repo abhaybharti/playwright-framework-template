@@ -36,6 +36,7 @@
     "mocha": "^10.2.0",
     "moment": "^2.30.1",
     "nodejs-nodemailer-outlook": "^1.2.4",
+    "pw-api-plugin": "^1.2.0",
     "ssh2": "^1.16.0",
     "ts-node": "^10.9.2",
     "webdriverio": "^8.28.0",
