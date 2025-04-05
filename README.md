@@ -225,3 +225,5 @@ ts-node app.ts
 
 App to run UI test- 
 https://moatazeldebsy.github.io/test-automation-practices/#/
+
+https://github.com/AtulKrSharma/PlaywrightInjectTagsWithCaching/blob/main/playwright.config.ts
