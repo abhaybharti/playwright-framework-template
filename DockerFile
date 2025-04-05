@@ -1,0 +1,20 @@
+# Use the official Playwright Docker image
+FROM mcr.microsoft.com/playwright:focal
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the entire project to the working directory
+COPY . .
+
+# Install Playwright browsers (Chromium, Firefox, WebKit)
+RUN npx playwright install --with-deps
+
+# Command to run the Playwright tests
+CMD ["npx", "playwright", "test"]
