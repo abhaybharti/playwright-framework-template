@@ -7,7 +7,9 @@
     "test": "echo %NODE_ENV% && npx playwright test --headed --config=playwright.config.ts",
     "test:local": "cross-env NODE_ENV='local' npm run test",
     "test:dev": "cross-env NODE_ENV='dev' npm run test",
-    "test:sit": "cross-env NODE_ENV='sit' npm run test"
+    "test:sit": "cross-env NODE_ENV='sit' npm run test",
+    "mcp": "ts-node mcp-server.ts",
+    "test:mcp": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +26,7 @@
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4"     
   },
   "dependencies": {
     "@types/mocha": "^10.0.6",

@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import * as dotenv from "dotenv";
-import {Config} from "./config";
+import { Config } from "./config";
 import { on } from "events";
 //import OrtoniReport from "ortoni-report";
 
@@ -48,8 +48,8 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "retain-on-failure",
-    headless:Config.HEADLESS_BROWSER,
-    baseURL:Config.BASE_URL,
+    headless: Config.HEADLESS_BROWSER,
+    baseURL: Config.BASE_URL,
     screenshot: "on",
     video: "on",
   },
@@ -86,7 +86,7 @@ export default defineConfig({
       name: "Microsoft Edge",
       use: {
         ...devices["Desktop Edge"],
-        channel: "msedge",        
+        channel: "msedge",
         //viewport: { width: 1920, height: 1080 },
         viewport: devices["Desktop Edge"].viewport, //set viewport dynamically
         // baseURL:'https://restful-booker.herokuapp.com',
@@ -107,6 +107,23 @@ export default defineConfig({
     //   },
     // },
   ],
+  /* MCP Server Configuration */
+  mcp: {
+    server: {
+      port: 3000, // Port for MCP server
+      host: "localhost", // Host for MCP server
+      path: "/mcp", // Path for MCP server
+    },
+    client: {
+      url: "http://localhost:3000/mcp", // URL to connect to MCP server
+      token: process.env.MCP_TOKEN || "your-secret-token", // Token for authentication
+    },
+    features: {
+      parallelExecution: true, // Enable parallel test execution
+      browserAllocation: true, // Enable browser allocation
+      testIsolation: true, // Enable test isolation
+    },
+  } as MCPConfig,
 
   /* Run your local dev server before starting the tests */
   // webServer: {
