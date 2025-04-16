@@ -4,112 +4,174 @@
  * @returns {Object} Helper object with locator methods
  */
 function createLocatorHelper(page) {
-  // Internal storage for locators
-  const locatorStorage = new Map();
-
-  return {
-    /**
-     * Finds a single element using the specified locator strategy
-     * @param {string} type - Locator type ('css', 'xpath', 'text', 'testid', 'role', 'label')
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<import('@playwright/test').Locator>} Playwright locator
-     */
-    async findElement(type, value, options = {}) {
-      try {
-        switch (type.toLowerCase()) {
-          case 'css':
-            return page.locator(value, options);
-          case 'xpath':
-            return page.locator(`xpath=${value}`, options);
-          case 'text':
-            return page.getByText(value, options);
-          case 'testid':
-            return page.getByTestId(value, options);
-          case 'role':
-            return page.getByRole(value, options);
-          case 'label':
-            return page.getByLabel(value, options);
-          default:
-            throw new Error(`Unsupported locator type: ${type}`);
+    // Internal storage for locators
+    const locatorStorage = new Map();
+  
+    return {
+      /**
+       * Finds a single element using the specified locator strategy
+       * Checks if element is displayed and enabled
+       * Returns null if element is not found
+       * @param {string} type - Locator type ('css', 'xpath', 'text', 'testid', 'role', 'label')
+       * @param {string} value - Locator value
+       * @param {Object} [options] - Optional locator options
+       * @returns {Promise<{locator: import('@playwright/test').Locator, isDisplayed: boolean, isEnabled: boolean} | null>} Playwright locator with status or null
+       */
+      async findElement(type, value, options = {}) {
+        try {
+          let locator;
+          switch (type.toLowerCase()) {
+            case 'css':
+              locator = page.locator(value, options);
+              break;
+            case 'xpath':
+              locator = page.locator(`xpath=${value}`, options);
+              break;
+            case 'text':
+              locator = page.getByText(value, options);
+              break;
+            case 'testid':
+              locator = page.getByTestId(value, options);
+              break;
+            case 'role':
+              locator = page.getByRole(value, options);
+              break;
+            case 'label':
+              locator = page.getByLabel(value, options);
+              break;
+            default:
+              console.warn(`Unsupported locator type: ${type}`);
+              return null;
+          }
+  
+          // Check if element exists
+          const count = await locator.count();
+          if (count === 0) {
+            console.warn(`Element not found with ${type} locator: ${value}`);
+            return null;
+          }
+  
+          // Check visibility and enabled status
+          const isDisplayed = await locator.isVisible();
+          const isEnabled = await locator.isEnabled();
+  
+          return {
+            locator,
+            isDisplayed,
+            isEnabled
+          };
+        } catch (error) {
+          console.warn(`Error while finding element with ${type} locator: ${value}. Error: ${error.message}`);
+          return null;
         }
-      } catch (error) {
-        throw new Error(`Failed to find element with ${type} locator: ${value}. Error: ${error.message}`);
+      },
+  
+      /**
+       * Finds all elements using the specified locator strategy
+       * @param {string} type - Locator type
+       * @param {string} value - Locator value
+       * @param {Object} [options] - Optional locator options
+       * @returns {Promise<import('@playwright/test').Locator>} Playwright locator for all matching elements
+       */
+      async findAllElements(type, value, options = {}) {
+        try {
+          const result = await this.findElement(type, value, options);
+          if (!result) return [];
+          return result.locator.all();
+        } catch (error) {
+          console.warn(`Failed to find all elements with ${type} locator: ${value}. Error: ${error.message}`);
+          return [];
+        }
+      },
+  
+      /**
+       * Waits for an element to be visible using the specified locator strategy
+       * @param {string} type - Locator type
+       * @param {string} value - Locator value
+       * @param {Object} [options] - Optional locator options with timeout
+       * @returns {Promise<import('@playwright/test').Locator>} Playwright locator
+       */
+      async waitForElement(type, value, options = { timeout: 5000 }) {
+        try {
+          const result = await this.findElement(type, value);
+          if (!result) {
+            throw new Error(`Element not found with ${type} locator: ${value}`);
+          }
+          await result.locator.waitFor({ state: 'visible', ...options });
+          return result.locator;
+        } catch (error) {
+          throw new Error(`Failed to wait for element with ${type} locator: ${value}. Error: ${error.message}`);
+        }
+      },
+  
+      /**
+       * Stores a locator with a key for later use
+       * @param {string} key - Unique key to identify the locator
+       * @param {string} type - Locator type
+       * @param {string} value - Locator value
+       * @param {Object} [options] - Optional locator options
+       * @returns {Promise<void>}
+       */
+      async storeLocator(key, type, value, options = {}) {
+        try {
+          const result = await this.findElement(type, value, options);
+          if (!result) {
+            throw new Error(`Cannot store null locator with key ${key}`);
+          }
+          locatorStorage.set(key, { type, value, options, locator: result.locator });
+        } catch (error) {
+          throw new Error(`Failed to store locator with key ${key}. Error: ${error.message}`);
+        }
+      },
+  
+      /**
+       * Retrieves a stored locator by key
+       * @param {string} key - Key used to store the locator
+       * @returns {Promise<import('@playwright/test').Locator>} Stored Playwright locator
+       */
+      async getStoredLocator(key) {
+        const stored = locatorStorage.get(key);
+        if (!stored) {
+          throw new Error(`No locator found with key: ${key}`);
+        }
+        // Recreate locator to ensure it's fresh
+        const result = await this.findElement(stored.type, stored.value, stored.options);
+        return result ? result.locator : null;
+      },
+  
+      /**
+       * Clears all stored locators
+       */
+      clearStoredLocators() {
+        locatorStorage.clear();
       }
-    },
-
-    /**
-     * Finds all elements using the specified locator strategy
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<import('@playwright/test').Locator>} Playwright locator for all matching elements
-     */
-    async findAllElements(type, value, options = {}) {
-      try {
-        const locator = await this.findElement(type, value, options);
-        return locator.all();
-      } catch (error) {
-        throw new Error(`Failed to find all elements with ${type} locator: ${value}. Error: ${error.message}`);
+    };
+  }
+  
+  // Example usage:
+  /*
+  const { test, expect } = require('@playwright/test');
+  const { createLocatorHelper } = require('./playwright_locator_helper');
+  
+  test('example test with enhanced findElement', async ({ page }) => {
+    const locatorHelper = createLocatorHelper(page);
+    await page.goto('https://example.com');
+  
+    // Example with CSS locator
+    const buttonResult = await locatorHelper.findElement('css', 'button.submit');
+    if (buttonResult) {
+      console.log(`Button is displayed: ${buttonResult.isDisplayed}`);
+      console.log(`Button is enabled: ${buttonResult.isEnabled}`);
+      if (buttonResult.isDisplayed && buttonResult.isEnabled) {
+        await buttonResult.locator.click();
       }
-    },
-
-    /**
-     * Waits for an element to be visible using the specified locator strategy
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options with timeout
-     * @returns {Promise<import('@playwright/test').Locator>} Playwright locator
-     */
-    async waitForElement(type, value, options = { timeout: 5000 }) {
-      try {
-        const locator = await this.findElement(type, value);
-        await locator.waitFor({ state: 'visible', ...options });
-        return locator;
-      } catch (error) {
-        throw new Error(`Failed to wait for element with ${type} locator: ${value}. Error: ${error.message}`);
-      }
-    },
-
-    /**
-     * Stores a locator with a key for later use
-     * @param {string} key - Unique key to identify the locator
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<void>}
-     */
-    async storeLocator(key, type, value, options = {}) {
-      try {
-        const locator = await this.findElement(type, value, options);
-        locatorStorage.set(key, { type, value, options, locator });
-      } catch (error) {
-        throw new Error(`Failed to store locator with key ${key}. Error: ${error.message}`);
-      }
-    },
-
-    /**
-     * Retrieves a stored locator by key
-     * @param {string} key - Key used to store the locator
-     * @returns {Promise<import('@playwright/test').Locator>} Stored Playwright locator
-     */
-    async getStoredLocator(key) {
-      const stored = locatorStorage.get(key);
-      if (!stored) {
-        throw new Error(`No locator found with key: ${key}`);
-      }
-      // Recreate locator to ensure it's fresh
-      return this.findElement(stored.type, stored.value, stored.options);
-    },
-
-    /**
-     * Clears all stored locators
-     */
-    clearStoredLocators() {
-      locatorStorage.clear();
+    } else {
+      console.log('Button not found');
     }
-  };
-}
+  });
+  */
+  
+  module.exports = { createLocatorHelper };
 
 // Example usage:
 /*
