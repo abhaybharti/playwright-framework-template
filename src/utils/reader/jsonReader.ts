@@ -74,13 +74,13 @@ export class JsonReader {
 // Example usage
 
 
-function readData() {
-    const jsonReader = new JsonReader('./orangeHRM.json'); // Update with your actual JSON file path
-    // const jsonData = jsonReader.readJsonFile();
-    if (jsonReader.jsonData) {
-        const value = jsonReader.getJsonValue("App.Login.OrangeHRMLogo", 'locatorValue'); // Example: Reading "city" from "user.address.city"
-        console.log("Extracted Value:", value);
-    }
-}
+// function readData() {
+//     const jsonReader = new JsonReader('./orangeHRM.json'); // Update with your actual JSON file path
+//     // const jsonData = jsonReader.readJsonFile();
+//     if (jsonReader.jsonData) {
+//         const value = jsonReader.getJsonValue("App.Login.OrangeHRMLogo", 'locatorValue'); // Example: Reading "city" from "user.address.city"
+//         console.log("Extracted Value:", value);
+//     }
+// }
 
-readData();
+// readData();

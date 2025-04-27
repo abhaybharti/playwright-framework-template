@@ -1,2 +1,12 @@
 {"level":"error","message":"TestError :  Fixture \"api\" has unknown parameter \"apiRequest\".","timestamp":"2025-03-12T14:44:11.936Z"}
 {"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"browserContext\".","timestamp":"2025-03-12T14:44:11.937Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:51:58.696Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:51:58.705Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:52:03.796Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:52:03.958Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:08.475Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:08.498Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:12.604Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:12.630Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:54:52.227Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:54:52.233Z"}

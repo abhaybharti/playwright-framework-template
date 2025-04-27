@@ -1,0 +1,55 @@
+{
+  "Basic": {
+    "Forms": {
+      "Username": {
+        "objType": "Label",
+        "locatorType": "xpath",
+        "locatorValue": "//label[@for='username']",
+        "label": "Username"
+      },
+      "UsernameText": {
+        "objType": "textbox",
+        "locatorType": "xpath",
+        "locatorValue": "//input[@data-test='username-input']",
+        "saveTestData": "A|B",
+        "invalidTestData": "",
+        "validTestData": ""
+      },
+      "Email": {
+        "objType": "Label",
+        "locatorType": "xpath",
+        "locatorValue": "//label[@for='email']",
+        "label": "Email"
+      },
+      "EmailText": {
+        "objType": "textbox",
+        "locatorType": "xpath",
+        "locatorValue": "//input[@data-test='email-input']",
+        "saveTestData": "",
+        "invalidTestData": "",
+        "validTestData": ""
+      },
+      "Password": {
+        "objType": "Label",
+        "locatorType": "xpath",
+        "locatorValue": "//label[@for='password']",
+        "label": "Password"
+      },
+      "PasswordText": {
+        "objType": "textbox",
+        "locatorType": "xpath",
+        "locatorValue": "//input[@data-test='password-input']",
+        "saveTestData": "",
+        "invalidTestData": "",
+        "validTestData": ""
+      },
+      "SignIn": {
+        "objType": "button",
+        "locatorType": "xpath",
+        "locatorValue": "//button[@data-test='submit-button']",
+        "label": "Sign In"
+      }
+    },
+    "Table": {}
+  }
+}

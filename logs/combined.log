@@ -11,3 +11,34 @@
 {"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-03-12T14:56:35.496Z"}
 {"level":"info","message":"Test Case Started : Verify homepage","timestamp":"2025-03-12T14:56:38.069Z"}
 {"level":"info","message":"Test Case Completed : Verify homepage Status : passed","timestamp":"2025-03-12T14:56:45.668Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T16:51:57.567Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:51:58.696Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:51:58.705Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T16:52:03.098Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:52:03.796Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:52:03.958Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T16:53:08.241Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:08.475Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:08.498Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T16:53:12.564Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:12.604Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:53:12.630Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T16:54:52.217Z"}
+{"level":"error","message":"TestError :  Fixture \"json\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:54:52.227Z"}
+{"level":"error","message":"TestError :  Fixture \"web\" has unknown parameter \"config\".","timestamp":"2025-04-27T16:54:52.233Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:02:52.652Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:02:59.727Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:06:41.824Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:06:48.265Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:07:44.451Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:07:52.065Z"}
+{"level":"info","message":"Test Suite Started :  , 0 tests","timestamp":"2025-04-27T17:15:24.846Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:16:10.475Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:16:20.281Z"}
+{"level":"info","message":"Test Case Completed : Launch twitter and take screenshot @form Status : interrupted","timestamp":"2025-04-27T17:19:37.923Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:20:00.365Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:20:07.844Z"}
+{"level":"info","message":"Test Case Completed : Launch twitter and take screenshot @form Status : interrupted","timestamp":"2025-04-27T17:28:41.027Z"}
+{"level":"info","message":"Test Suite Started :  , 1 tests","timestamp":"2025-04-27T17:29:06.243Z"}
+{"level":"info","message":"Test Case Started : Launch twitter and take screenshot @form","timestamp":"2025-04-27T17:29:12.396Z"}
+{"level":"info","message":"Test Case Completed : Launch twitter and take screenshot @form Status : passed","timestamp":"2025-04-27T17:30:39.967Z"}

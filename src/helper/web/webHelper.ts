@@ -1,8 +1,14 @@
-import { BrowserContext, Page, expect, Locator } from "@playwright/test";
-import { test } from "@tests/fixtures/customFixtures"
+import { test, BrowserContext, Page, expect, Locator } from "@playwright/test";
+
 import fs from "fs";
 import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
+import logger from '@src/utils/report/Logger'
+
+interface ChangedValueParams {
+  elementName: string;
+  valueToUse?: string;  // Optional parameter for values  
+}
 
 export class WebHelper extends Helper {
   readonly webPage: Page;
@@ -18,9 +24,13 @@ export class WebHelper extends Helper {
   }
 
 
+
   async changeValueOnUi(
-    elementName: string,
+    params: ChangedValueParams
   ): Promise<any> {
+
+    let { elementName, valueToUse } = params;
+
     const objType: string = await this.json.getJsonValue(elementName, "objType")
     const locatorType: string = await this.json.getJsonValue(elementName, "locatorType")
     const locatorValue: string = await this.json.getJsonValue(elementName, "locatorValue")
@@ -32,10 +42,15 @@ export class WebHelper extends Helper {
       return null;
     }
 
-    
+    let testData: string[] = [];
+    if (typeof valueToUse === 'undefined') {
+      testData = this.json.getJsonValue(elementName, "saveTestData").split("|");
+    }
+
+
     try {
-      let result:string;
-      let newValue:string;
+      let result: string;
+
 
       switch (objType.toLowerCase()) {
         case 'toggle':
@@ -45,12 +60,15 @@ export class WebHelper extends Helper {
         case 'textbox':
         case 'textarea':
           let currentValue = await this.getText(elementInfo)
-          // newValue = getValueFromArray()
-          // if (currentValue!==newValue){
-          //   result = this.enterText(elementInfo,newValue)
-          // }
-          break;
+          if (testData.length !== 0) {
+            valueToUse = this.getValueFromArray(testData, currentValue);
+          }
 
+          if (currentValue !== valueToUse) {
+            await this.enterText(elementInfo, valueToUse || '');
+          }
+          let afterChangeValue = await this.getText(elementInfo);
+          break;
         case 'dropdown':
           break;
         case 'radiobutton':
@@ -554,8 +572,22 @@ export class WebHelper extends Helper {
   }
 
   async getText(el: Locator): Promise<string> {
-    const value = await el.textContent();
-    return value ?? "";
+    // Check if it's an input element
+    const isInput = await el.evaluate(el =>
+      el.tagName === 'INPUT' ||
+      el.tagName === 'TEXTAREA' ||
+      el.tagName === 'SELECT'
+    );
+
+    if (isInput) {
+      // For input elements, get the value
+      const value = await el.inputValue();
+      return value ?? "";
+    } else {
+      // For other elements, get the text content
+      const value = await el.textContent();
+      return value ?? "";
+    }
   }
 
   async press(key: string): Promise<void> {
@@ -603,4 +635,9 @@ export class WebHelper extends Helper {
     await el.isChecked();
   }
 
+  getValueFromArray(testData: string[], preVal: string) {
+    const currentIndex = testData.indexOf(preVal);
+    const nextIndex = (currentIndex + 1) % testData.length;
+    return testData[nextIndex];
+  }
 }
