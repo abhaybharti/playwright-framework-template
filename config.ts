@@ -59,3 +59,11 @@ export  class Config{
     static readonly MAX_TEST_RUNTIME :number = parseInt(process.env.MAX_TEST_RUNTIME || '1000');
     static readonly HEADLESS_BROWSER :boolean = process.env.HEADLESS_BROWSER === 'true';
 }
+
+export const MCP_CONFIG = {
+    mcpServers: {
+      playwright: {
+        url: "http://localhost:8931/sse"
+      }
+    }
+  };

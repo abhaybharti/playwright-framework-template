@@ -1,7 +1,7 @@
 import { Page, expect } from "@playwright/test";
-import { Helper } from "helper/Helper";
-import { apiDelete, apiGet, apiPost, apiPut } from "pw-api-plugin";
-import { ApiError } from "utils/error/ErrorManager";
+import { Helper } from "@src/helper/Helper";
+import { pwApi, test } from 'pw-api-plugin';
+import { ApiError } from "@src/utils/error/ErrorManager";
 
 enum OperationType {
   GET = "get",
@@ -15,8 +15,8 @@ enum OperationType {
 const BASE_URL = "https://restful-booker.herokuapp.com";
 
 export class ApiHelper extends Helper {
-  private apiRequest: any;
-  private webPage: any;
+  private readonly apiRequest: pwApi;
+  private readonly webPage: Page;
 
 
 
@@ -26,11 +26,10 @@ export class ApiHelper extends Helper {
    * API. It is used to store and manage information related to the API, such as authentication
    * credentials, request headers, and other configuration settings.
    */
-  constructor(apiRequest: Request,webPage: Page,) {
+  constructor(webPage: Page,apiRequest: pwApi) {
     super();
     this.apiRequest = apiRequest;
-    this.webPage = webPage;
-    
+    this.webPage = webPage;    
   }
 
 
@@ -70,14 +69,16 @@ export class ApiHelper extends Helper {
           throw new Error(`Unsupported operation type: ${operationType}`);          
       }
     } catch (error) {
-      this.handleApiError(error);
+      throw new ApiError(
+        `Unsupported operation type: ${operationType}`,       
+      );
     }
   }
 
   async invokeGetApi(endPoint: string, statusCode: number = 200) {
     try {
       console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
-      const responseGet = await apiGet({request:this.apiRequest, page:this.webPage},`${endPoint}`);
+      const responseGet = await pwApi.get ({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`);
 
       expect(responseGet.status(),`${endPoint}, Expected Status : ${statusCode}, Actual Status : ${responseGet.status()}`).toBe(statusCode);
       return await responseGet.json();      
@@ -93,7 +94,7 @@ export class ApiHelper extends Helper {
       console.log(
         `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
       );
-      response = await apiDelete({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`);
+      response = await pwApi.delete({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`);
       expect(
         response.status(),
         `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
@@ -126,7 +127,7 @@ export class ApiHelper extends Helper {
       console.log(
         `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${tempPayload} `
       );
-      response = await apiPost({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
+      response = await pwApi.post({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
         data: payload,
       });
       expect(
@@ -148,7 +149,7 @@ export class ApiHelper extends Helper {
       console.log(
         `Making PUT request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
       );
-      response = await apiPut({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
+      response = await pwApi.put({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
         data: payload,
       });
       expect(
@@ -160,18 +161,6 @@ export class ApiHelper extends Helper {
       return error;
     }
   }
-
+}
   
 
-  async getToken() {
-    return "tokenvalue";
-  }
-
-  private handleApiError(error: unknown) {
-    if (error instanceof Error || error instanceof AppError) {
-      ErrorManager.handleError(error);
-    } else {
-      ErrorManager.handleError(new Error("An unknown error occurred"));
-    }
-  }
-}

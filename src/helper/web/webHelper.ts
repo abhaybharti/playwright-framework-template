@@ -1,15 +1,134 @@
 import { BrowserContext, Page, expect, Locator } from "@playwright/test";
+import { test } from "@tests/fixtures/customFixtures"
 import fs from "fs";
-import { Helper } from "helper/Helper";
+import { Helper } from "@src/helper/Helper";
+import { JsonReader } from "@src/utils/reader/jsonReader";
 
 export class WebHelper extends Helper {
   readonly webPage: Page;
   readonly browserContext: BrowserContext;
+  readonly json: JsonReader;
 
-  constructor(webPage: Page, browserContext: BrowserContext) {
+
+  constructor(webPage: Page, browserContext: BrowserContext, jsonPath: string) {
     super();
     this.webPage = webPage;
     this.browserContext = browserContext;
+    this.json = new JsonReader(jsonPath);
+  }
+
+
+  async changeValueOnUi(
+    elementName: string,
+  ): Promise<any> {
+    const objType: string = await this.json.getJsonValue(elementName, "objType")
+    const locatorType: string = await this.json.getJsonValue(elementName, "locatorType")
+    const locatorValue: string = await this.json.getJsonValue(elementName, "locatorValue")
+
+    const elementInfo = await this.findElement(locatorType, locatorValue);
+
+    if (null === elementInfo) {
+      console.log(`Element ${locatorType} ${locatorValue} is not found`)
+      return null;
+    }
+
+    
+    try {
+      let result:string;
+      let newValue:string;
+
+      switch (objType.toLowerCase()) {
+        case 'toggle':
+          break;
+        case 'checkbox':
+          break;
+        case 'textbox':
+        case 'textarea':
+          let currentValue = await this.getText(elementInfo)
+          // newValue = getValueFromArray()
+          // if (currentValue!==newValue){
+          //   result = this.enterText(elementInfo,newValue)
+          // }
+          break;
+
+        case 'dropdown':
+          break;
+        case 'radiobutton':
+          break;
+
+        default:
+          throw new Error(`Unsupported Object type: ${objType}`);
+      }
+    } catch (error) {
+      throw new Error(`Unsupported operation type: ${objType}`);
+    }
+  }
+
+
+
+
+  /**
+  * Finds a single element using the specified locator strategy
+  * Checks if element is displayed and enabled
+  * Returns null if element is not found
+  * @param { string } type - Locator type('css', 'xpath', 'text', 'testid', 'role', 'label')
+  * @param { string } value - Locator value
+  * @returns { Promise<{ locator: import('@playwright/test').Locator, isDisplayed: boolean, isEnabled: boolean } | null> } Playwright locator with status or null
+  */
+  async findElement(type: string, value: string): Promise<Locator | null> {
+    try {
+      let locator: Locator;
+      switch (type.toLowerCase()) {
+        case 'css':
+          locator = this.webPage.locator(value);
+          break;
+        case 'xpath':
+          locator = this.webPage.locator(`xpath=${value}`);
+          break;
+        case 'text':
+          locator = this.webPage.getByText(value);
+          break;
+        case 'testid':
+          locator = this.webPage.getByTestId(value);
+          break;
+        case 'role':
+        // locator = this.webPage.getByRole(value as Role,{name:value,exact:false});
+        // break;
+        case 'label':
+          locator = this.webPage.getByLabel(value,);
+          break;
+        default:
+          console.warn(`Unsupported locator type: ${type}`);
+          return null;
+      }
+
+      // Check if element exists
+      const count = await locator.count();
+      if (count === 0) {
+        console.warn(`Element not found with ${type} locator: ${value}`);
+        return null;
+      }
+
+      // Check visibility and enabled status
+      const isDisplayed = await locator.isVisible();
+      const isEnabled = await locator.isEnabled();
+
+      if (!locator) {
+        console.log(`Element ${type} ${value} is not found`);
+        return null;
+      }
+
+      if (!isDisplayed || !isEnabled) {
+        console.log(`Element ${type} ${value} is not visible or enabled`);
+        return null;
+      }
+      return locator;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.warn(`Error while finding element with ${type} locator: ${value}. Error: ${errorMessage}`);
+      return null;
+    }
   }
 
   /**
@@ -434,8 +553,8 @@ export class WebHelper extends Helper {
     return value ?? "";
   }
 
-  async getText(locator: string): Promise<string> {
-    const value = await this.webPage.locator(locator).textContent();
+  async getText(el: Locator): Promise<string> {
+    const value = await el.textContent();
     return value ?? "";
   }
 
@@ -443,30 +562,30 @@ export class WebHelper extends Helper {
     await this.webPage.keyboard.press(key);
   }
 
-  async addStep(stepDescription: string, stepFunction: any): Promise<any> {
-    return await test.step(stepDescription, stepFunction);
-  }
+  // async addStep(stepDescription: string, stepFunction: any): Promise<any> {
+  //   return await test.step(stepDescription, stepFunction);
+  // }
 
-  async attachScreenshot(
-    locator: string,
-    fileName: string,
-    testInfo: TestInfo
-  ): Promise<void> {
-    const file = testInfo.outputPath(fileName);
-    const pathFile = path.dirname(file);
-    const pathAttachments = path.join(pathFile, "attachments");
-    const attachmentFile = path.join(pathAttachments, fileName);
-    const screenshot = await webPage
-      .locator(locator)
-      .isVisible()
-      .screenshot({ path: file });
-    await fs.promise.writeFile(file, screenshot);
-    if (!fs.existsSync(pathAttachments)) {
-      fs.mkdirSync(pathAttachments, { recursive: true });
-    }
-    await fs.promises.writeFile(attachmentFile, screenshot);
-    await testInfo.attach(fileName, { contentType: "image/png", path: file });
-  }
+  // async attachScreenshot(
+  //   locator: string,
+  //   fileName: string,
+  //   testInfo: TestInfo
+  // ): Promise<void> {
+  //   const file = testInfo.outputPath(fileName);
+  //   const pathFile = path.dirname(file);
+  //   const pathAttachments = path.join(pathFile, "attachments");
+  //   const attachmentFile = path.join(pathAttachments, fileName);
+  //   const screenshot = await webPage
+  //     .locator(locator)
+  //     .isVisible()
+  //     .screenshot({ path: file });
+  //   await fs.promise.writeFile(file, screenshot);
+  //   if (!fs.existsSync(pathAttachments)) {
+  //     fs.mkdirSync(pathAttachments, { recursive: true });
+  //   }
+  //   await fs.promises.writeFile(attachmentFile, screenshot);
+  //   await testInfo.attach(fileName, { contentType: "image/png", path: file });
+  // }
 
   async enterText(el: Locator, value: string) {
     await el.fill(value);

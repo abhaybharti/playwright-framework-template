@@ -1,4 +1,4 @@
-import { test } from "../../fixtures/basePage";
+import { test } from "../../fixtures/customFixtures";
 
 test.describe('Demo website',()=>{
 

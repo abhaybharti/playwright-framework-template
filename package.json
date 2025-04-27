@@ -25,8 +25,11 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^5.2.1",
+    "playwright-ajv-schema-validator": "^1.0.2",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.4"     
+    "pw-api-plugin": "^2.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@types/mocha": "^10.0.6",
@@ -38,9 +41,7 @@
     "mocha": "^10.2.0",
     "moment": "^2.30.1",
     "nodejs-nodemailer-outlook": "^1.2.4",
-    "pw-api-plugin": "^1.2.0",
     "ssh2": "^1.16.0",
-    "ts-node": "^10.9.2",
     "webdriverio": "^8.28.0",
     "winston": "^3.11.0",
     "zod": "^3.24.2"
