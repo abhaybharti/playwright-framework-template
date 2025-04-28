@@ -2,6 +2,7 @@ import { Page, expect } from "@playwright/test";
 import { Helper } from "@src/helper/Helper";
 import { pwApi, test } from 'pw-api-plugin';
 import { ApiError } from "@src/utils/error/ErrorManager";
+import { validateSchema } from 'playwright-ajv-schema-validator';
 
 enum OperationType {
   GET = "get",
