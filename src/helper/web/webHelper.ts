@@ -56,6 +56,11 @@ export class WebHelper extends Helper {
         case 'toggle':
           break;
         case 'checkbox':
+          let currentStatus = await this.getCheckBoxStatus(elementInfo) ? "true" : "false";
+          if (currentStatus !== valueToUse) {
+            await this.setCheckBoxStatus(elementInfo, valueToUse);
+          }
+
           break;
         case 'textbox':
         case 'textarea':
@@ -620,19 +625,34 @@ export class WebHelper extends Helper {
   // }
 
   async enterText(el: Locator, value: string) {
+    await el.clear();
     await el.fill(value);
   }
 
-  async setCheckBox(el: Locator, state: boolean | string) {
-    const targetState = typeof state === "string" ? state.toLowerCase() === "on" || state.toLowerCase() === "true" : state;
+  async setCheckBoxStatus(el: Locator, state: string = 'true') {
+    let isChecked = await el.isChecked();
+    let tryCount = 0;
+    while (`${isChecked}` !== state) {
+      if (`${isChecked}` !== `${state}` && `${state}` === `true`) {
+        await el.check(); // Check the checkbox
+        console.log('checkbox was not checked, now checked.');
+      }
 
-    if (targetState) {
-      await el.check();
-    } else {
-      await el.uncheck();
+      if (`${isChecked}` !== `${state}` && `${state}` === `false`) {
+        await el.check(); // unCheck the checkbox
+        console.log('checkbox was checked, now unchecked.');
+      }
+      isChecked = await el.isChecked();
+      tryCount++;
+
+      if (tryCount == 3){
+        return false; //exit the loop        
+      }
     }
+  }
 
-    await el.isChecked();
+  async getCheckBoxStatus(el: Locator): Promise<boolean> {
+    return await el.isChecked();
   }
 
   getValueFromArray(testData: string[], preVal: string) {
