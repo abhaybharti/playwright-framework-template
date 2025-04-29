@@ -1,3 +1,5 @@
+import { linkSync } from 'fs';
+
 /**
  * Extends Playwright locator with a helper function to find, store, and manage elements using different locator strategies
  * @param {import('@playwright/test').Page} page - Playwright page instance
@@ -281,3 +283,29 @@ test.describe('Locator Examples', () => {
     await expect(passwordInput).toHaveValue('secure123');
   });
 });
+
+## phaatak package
+https://www.npmjs.com/package/phaatak Try this npm package for 
+- managing multiple tabs
+- handling new windows
+- Saving and loading profiles
+- Stop the browser
+- close All tabs
+
+
+Example code - https://github.com/ghostinlinux/phaatak-playwright-demo/
+
+## Visual testing
+https://medium.com/@adam_pajda/playwright-visual-tests-with-git-lfs-and-docker-d537ddd6e86a
+
+Verify all broken links
+https://medium.com/@thananjayan1988/automatic-broken-link-detection-with-playwright-a241a6f41973
+
+How to link existing chrome browser in playwright run
+https://dev.to/mxschmitt/running-playwright-codegen-with-existing-chromium-profiles-5g7k
+
+Mobile App testing
+https://medium.com/@testerstalk/mobile-app-testing-with-playwright-a-step-by-step-guide-in-detail-cabf5def30a9
+
+Excel data comparision using Playwright
+https://medium.com/@testerstalk/how-to-download-validate-excel-file-in-playwright-b8acbb19a4e8
