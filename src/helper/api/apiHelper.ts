@@ -4,7 +4,7 @@ import { pwApi, test } from 'pw-api-plugin';
 import { ApiError } from "@src/utils/error/ErrorManager";
 import { validateSchema } from 'playwright-ajv-schema-validator';
 
-enum OperationType {
+enum methodType {
   GET = "get",
   POST = "post",
   DELETE = "delete",
@@ -38,40 +38,40 @@ export class ApiHelper extends Helper {
    * The function `hitApiEndPoint` is an asynchronous function that takes in an operation type, an
    * endpoint, a payload, and a status code, and then invokes the corresponding API method based on the
    * operation type.
-   * @param {string} operationType - The `operationType` parameter is a string that specifies the type of
+   * @param {string} method - The `operationType` parameter is a string that specifies the type of
    * operation to be performed on the API endpoint. It can have one of the following values: "get",
    * "post", "delete", or "put".
    * @param {string} endPoint - The `endPoint` parameter is a string that represents the URL or endpoint
    * of the API that you want to hit. It specifies the location where the API is hosted and the specific
    * resource or action you want to perform.
-   * @param {object} payload - The `payload` parameter is an object that contains the data to be sent in
+   * @param {object} body - The `payload` parameter is an object that contains the data to be sent in
    * the request body for POST and PUT operations. It can include any relevant information that needs to
    * be sent to the API endpoint.
    * @param {number} statusCode - The `statusCode` parameter is the expected HTTP status code that the
    * API endpoint should return.
    */
   async hitApiEndPoint(
-    operationType: OperationType,
+    method: methodType,
     endPoint: string,
-    payload: object,
+    body: object,
     statusCode: number
   ):Promise<any> {
     try {
-      switch (operationType.toLowerCase()) {
-        case OperationType.GET:
+      switch (method.toLowerCase()) {
+        case methodType.GET:
           return await this.invokeGetApi(endPoint, statusCode);          
-        case OperationType.POST:
-          return await this.invokePostApi(endPoint, payload, statusCode);          
-        case OperationType.DELETE:
+        case methodType.POST:
+          return await this.invokePostApi(endPoint, body, statusCode);          
+        case methodType.DELETE:
           return await this.invokeDeleteApi(endPoint, statusCode);          
-        case OperationType.PUT:
-          return await this.invokePutApi(endPoint, payload, statusCode);          
+        case methodType.PUT:
+          return await this.invokePutApi(endPoint, body, statusCode);          
         default:
-          throw new Error(`Unsupported operation type: ${operationType}`);          
+          throw new Error(`Unsupported operation type: ${method}`);          
       }
     } catch (error) {
       throw new ApiError(
-        `Unsupported operation type: ${operationType}`,       
+        `Unsupported operation type: ${method}`,       
       );
     }
   }

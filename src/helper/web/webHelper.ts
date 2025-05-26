@@ -480,9 +480,11 @@ export class WebHelper extends Helper {
       this.webPage.waitForEvent("download"),
       this.webPage.locator(locator).click(),
     ]);
-
-    await download.saveAs(savePath);
-    return download;
+    const suggestedFileName = download.suggestedFilename()
+    const filePath = 'download/'+suggestedFileName
+    await download.saveAs(filePath);
+    expect(fs.existsSync(filePath)).toBeTruthy();
+    return filePath;
   }
 
   /**
