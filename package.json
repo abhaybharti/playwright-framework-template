@@ -9,7 +9,14 @@
     "test:dev": "cross-env NODE_ENV='dev' npm run test",
     "test:sit": "cross-env NODE_ENV='sit' npm run test",
     "mcp": "ts-node mcp-server.ts",
-    "test:mcp": "playwright test"
+    "test:mcp": "playwright test",
+    "ci":"npx playwright test --project=chromium --workers=1",
+    "flaky":"npx playwright test --project=chromium --repeat-each=20",
+    "sanity":"npx playwright test --grep @Sanity --workers=1",
+    "smoke":"npx playwright test --grep @Smoke --workers=1",
+    "api":"npx playwright test --grep @Api --workers=1",
+    "regresion":"npx playwright test --grep @Regressoin --workers=1"
+
   },
   "keywords": [],
   "author": "",
@@ -36,7 +43,7 @@
     "@types/webdriverio": "^5.0.0",
     "ajv": "^8.12.0",
     "appium": "^2.4.1",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "joi": "^17.13.3",
     "mocha": "^10.2.0",
     "moment": "^2.30.1",

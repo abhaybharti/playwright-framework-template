@@ -107,23 +107,7 @@ export default defineConfig({
     //   },
     // },
   ],
-  /* MCP Server Configuration */
-  mcp: {
-    server: {
-      port: 3000, // Port for MCP server
-      host: "localhost", // Host for MCP server
-      path: "/mcp", // Path for MCP server
-    },
-    client: {
-      url: "http://localhost:3000/mcp", // URL to connect to MCP server
-      token: process.env.MCP_TOKEN || "your-secret-token", // Token for authentication
-    },
-    features: {
-      parallelExecution: true, // Enable parallel test execution
-      browserAllocation: true, // Enable browser allocation
-      testIsolation: true, // Enable test isolation
-    },
-  } as MCPConfig,
+ 
 
   /* Run your local dev server before starting the tests */
   // webServer: {
