@@ -1,20 +1,27 @@
+/**
+ * This module mimics SSHLibrary keywords using Node.js + SSH2 library
+ * Install dependency: npm install ssh2
+ */
+
 import { Client, ConnectConfig } from 'ssh2';
 
 export class SshHelper {
-    private client: Client;
+    private conn: Client;
     private isConnected: boolean = false;
+    private stdout: string = '';
+    private stderr: string = '';
 
     constructor() {
-        this.client = new Client();
+        this.conn = new Client();
     }
 
     /**
      * Establish SSH Connection
      * @param config - SSH connection details
      */
-    public async setUpSshSession(config: ConnectConfig): Promise<void> {
+    public async openConnection(config: ConnectConfig): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.client
+            this.conn
                 .on('ready', () => {
                     console.log('SSH Connection Established');
                     this.isConnected = true;
@@ -39,16 +46,16 @@ export class SshHelper {
                 return reject(new Error('SSH session is not connected'));
             }
 
-            this.client.exec(command, (err, stream) => {
+            this.conn.exec(command, (err, stream) => {
                 if (err) return reject(err);
 
                 let output = '';
                 stream
-                    .on('close', (code:string, signal:string) => {
+                    .on('close', (code: string, signal: string) => {
                         console.log(`Command execution completed. Exit code: ${code}, Signal: ${signal}`);
                         resolve(output);
                     })
-                    .on('data', (data:string) => {
+                    .on('data', (data: string) => {
                         output += data.toString();
                     })
                     .stderr.on('data', (data) => {
@@ -62,12 +69,27 @@ export class SshHelper {
      * Close the SSH Connection
      */
     public closeConnection(): void {
-        if (this.isConnected) {
-            this.client.end();
+        if (this.conn && this.isConnected) {
+            this.conn.end();
             this.isConnected = false;
             console.log('SSH Connection Closed');
         }
     }
+
+     /**
+   * Get last command output
+   */
+  getStdout(): string {
+    return this.stdout;
+  }
+
+   /**
+   * Verify output contains string
+   */
+   verifyOutputContains(text: string): boolean {
+    return this.stdout.includes(text);
+  }
+
 }
 
 //Example code
