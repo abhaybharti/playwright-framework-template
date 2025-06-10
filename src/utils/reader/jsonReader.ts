@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { logInfo } from '../report/Logger';
 
 export class JsonReader {
     private filePath: string;
@@ -9,7 +10,7 @@ export class JsonReader {
         // Resolve the path relative to the project root
         // Adjust the path resolution based on where the file is located
         this.filePath = path.resolve(__dirname, '..', '..', '..', 'tests', 'resources', 'uiMap', filePath);
-        console.log('Reading JSON from:', this.filePath);
+        logInfo('Reading JSON from:', this.filePath);
         this.readJsonFile();
     }
 
@@ -26,7 +27,7 @@ export class JsonReader {
 
             const fileContent = fs.readFileSync(this.filePath, 'utf-8');
             this.jsonData = JSON.parse(fileContent);
-            console.log(this.jsonData);
+            logInfo(this.jsonData);
         } catch (error) {
             console.error("Error reading or parsing JSON file:", error);
              this.jsonData = null;
@@ -48,7 +49,7 @@ export class JsonReader {
     */
     getJsonValue(path: string, key: string): any {
         if (!this.jsonData) {
-            console.log("No Json Data loaded")
+            logInfo("No Json Data loaded")
             return undefined;
         }
 
@@ -64,7 +65,7 @@ export class JsonReader {
         if (parentObject && parentObject[key] !== undefined) {
             return parentObject[key];
         }
-        console.log(`Path or key not found: ${path}.${key}`);
+        logInfo(`Path or key not found: ${path}.${key}`);
 
         return undefined;
     }
@@ -79,7 +80,7 @@ export class JsonReader {
 //     // const jsonData = jsonReader.readJsonFile();
 //     if (jsonReader.jsonData) {
 //         const value = jsonReader.getJsonValue("App.Login.OrangeHRMLogo", 'locatorValue'); // Example: Reading "city" from "user.address.city"
-//         console.log("Extracted Value:", value);
+//         logInfo("Extracted Value:", value);
 //     }
 // }
 

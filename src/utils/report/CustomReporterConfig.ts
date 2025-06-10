@@ -8,38 +8,34 @@ import {
   TestResult,
   TestStep,
 } from "@playwright/test/reporter";
-import logger from './Logger'
-
-
-// Writes logs to console
-// logger.add(console);
+import {logInfo} from './Logger'
 
 export default class CustomReporterConfig implements Reporter {
   constructor(options: { customOption?: string } = {}) {
-    console.log(`playwright-framework-template ${options.customOption}`);
+    logInfo(`playwright-framework-template ${options.customOption}`);
   }
 
   onBegin(config: FullConfig, suite: Suite): void {
-    logger.log(`info`,
+    logInfo(`info`,
       `Test Suite Started : ${suite.title} , ${suite.allTests().length} tests`
     );
   }
   onTestBegin(test: TestCase): void {
-    logger.log(`info`,`Test Case Started : ${test.title}`);
+    logInfo(`info`,`Test Case Started : ${test.title}`);
   }
 
   onTestEnd(test: TestCase, result: TestResult): void {
-    logger.log(`info`,`Test Case Completed : ${test.title} Status : ${result.status}`);
+    logInfo(`info`,`Test Case Completed : ${test.title} Status : ${result.status}`);
   }
 
   onStepBegin(test: TestCase, result: TestResult, step: TestStep): void {
     if (step.category === `test.step`) {
-      logger.log(`info`,`Executing Step : ${step.title}`);
+      logInfo(`info`,`Executing Step : ${step.title}`);
     }
   }
 
   onError(error: TestError): void {
-    logger.log(`error`,`TestError :  ${error.message}`);
+    logInfo(`error`,`TestError :  ${error.message}`);
   }
 
   onEnd(
