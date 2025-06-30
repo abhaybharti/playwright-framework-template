@@ -10,18 +10,24 @@
     "test:sit": "cross-env NODE_ENV='sit' npm run test",
     "mcp": "ts-node mcp-server.ts",
     "test:mcp": "playwright test",
-    "ci":"npx playwright test --project=chromium --workers=1",
-    "flaky":"npx playwright test --project=chromium --repeat-each=20",
-    "sanity":"npx playwright test --grep @Sanity --workers=1",
-    "smoke":"npx playwright test --grep @Smoke --workers=1",
-    "api":"npx playwright test --grep @Api --workers=1",
-    "regresion":"npx playwright test --grep @Regressoin --workers=1"
-
+    "ci": "npx playwright test --project=chromium --workers=1",
+    "flaky": "npx playwright test --project=chromium --repeat-each=20",
+    "sanity": "npx playwright test --grep @Sanity --workers=1",
+    "smoke": "npx playwright test --grep @Smoke --workers=1",
+    "api": "npx playwright test --grep @Api --workers=1",
+    "regresion": "npx playwright test --grep @Regressoin --workers=1",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "npx eslint . --ext .js --fix",
+    "format": "prettier --write \"**/*.{js,ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,tsx}\"",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@playwright/test": "^1.51.0",
     "@types/node": "^20.17.24",
     "@types/ssh2": "^1.15.4",
@@ -32,11 +38,14 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "playwright-ajv-schema-validator": "^1.0.2",
     "prettier": "^3.3.3",
     "pw-api-plugin": "^2.0.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.33.1"
   },
   "dependencies": {
     "@types/mocha": "^10.0.6",

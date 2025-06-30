@@ -1,4 +1,5 @@
 import { test } from '@playwright/test';
+import {logInfo as loggerInfo, logError as loggerError, logWarn} from "../../src/utils/report/Logger"
 
 export function step(description?: string) {
   return function (target: Function, context: ClassMethodDecoratorContext) {
@@ -97,10 +98,10 @@ export function boxedStep(description?: string) {
              const duration = Date.now() - startTime
              
              // Log performance metrics
-             console.log(`Performance: ${className}.${methodName} took ${duration}ms`)
+             logInfo(`Performance: ${className}.${methodName} took ${duration}ms`)
              
              if (configOptions.warnThreshold && duration > configOptions.warnThreshold) {
-               console.warn(`Warning: ${className}.${methodName} exceeded warn threshold (${duration}ms > ${configOptions.warnThreshold}ms)`)
+               logWarn(`Warning: ${className}.${methodName} exceeded warn threshold (${duration}ms > ${configOptions.warnThreshold}ms)`)
              }
              
              if (configOptions.errorThreshold && duration > configOptions.errorThreshold) {
@@ -110,13 +111,13 @@ export function boxedStep(description?: string) {
              if (startMemory && configOptions.trackMemory) {
                const endMemory = process.memoryUsage()
                const memoryDiff = endMemory.heapUsed - startMemory.heapUsed
-               console.log(`Memory: ${className}.${methodName} used ${memoryDiff} bytes`)
+               logInfo(`Memory: ${className}.${methodName} used ${memoryDiff} bytes`)
              }
              
              return result
            } catch (error) {
              const duration = Date.now() - startTime
-             console.error(`Performance: ${className}.${methodName} failed after ${duration}ms`)
+             logError(`Performance: ${className}.${methodName} failed after ${duration}ms`)
              throw error
            }
          })
@@ -264,7 +265,7 @@ export function waitFor(configOptions:{element?: string; state?: 'visible' | 'hi
             return result
           } catch (error) {
             const duration = Date.now() - startTime
-            console.error(`[ERROR] Failed ${className}.${methodName} after ${duration}ms:`, error)
+            logError(`[ERROR] Failed ${className}.${methodName} after ${duration}ms:`, error)
             throw error
           }
         })
@@ -289,7 +290,7 @@ export function waitFor(configOptions:{element?: string; state?: 'visible' | 'hi
           (env === 'development' && config.development)
         )) {
           return test.step.skip(`Test Step Skipped as the env is: ${env}`, async () => {
-            console.log(`Skipping method in ${env} environment`)
+            logInfo(`Skipping method in ${env} environment`)
           })
         }
         
@@ -361,7 +362,7 @@ export function waitFor(configOptions:{element?: string; state?: 'visible' | 'hi
 //   @asyncBoundary({ 
 //     timeout: 15000,
 //     onError: async (error) => {
-//       console.error('Add to cart failed:', error.message);
+//       logError('Add to cart failed:', error.message);
 //       await this.page.screenshot({ path: 'add-to-cart-error.png' });
 //     }
 //   })
@@ -473,7 +474,7 @@ export function dataProvider<T>(data: T[] | (() => T[])) {
     
 //     // Verify login success or failure based on credentials
 //     const isSuccessful = await this.page.locator('[data-testid="dashboard"]').isVisible();
-//     console.log(`Login with ${credentials.email}: ${isSuccessful ? 'Success' : 'Failed'}`);
+//     logInfo(`Login with ${credentials.email}: ${isSuccessful ? 'Success' : 'Failed'}`);
     
 //     return isSuccessful;
 //   }
@@ -489,16 +490,104 @@ export function dataProvider<T>(data: T[] | (() => T[])) {
 export function debug() {
     return function (target: Function, context: ClassMethodDecoratorContext): any {
       return async function replacementMethod(...args: any): Promise<any> {
-        console.log(`🐛 Entering ${context.name as string} with args:`, args)
+        loggerInfo(`🐛 Entering ${context.name as string} with args:`, args)
         
         try {
           const result = await target.call(this, ...args)
-          console.log(`✅ ${context.name as string} completed with result:`, result)
+          loggerInfo(`✅ ${context.name as string} completed with result:`, result)
           return result
         } catch (error) {
-          console.error(`❌ ${context.name as string} failed:`, error)
+          loggerError(`❌ ${context.name as string} failed:`, error)
           throw error
         }
       }
     }
   }
+  export function LogMethod(): MethodDecorator {
+    return function (target, propertyKey, descriptor: PropertyDescriptor) {
+      const originalMethod = descriptor.value;
+  
+      descriptor.value = function (...args: any[]) {
+        const className = target.constructor.name;
+        const methodName = String(propertyKey);
+        const startTime = Date.now();
+  
+        const stack = new Error().stack?.split('\n').slice(2).join('\n') || 'N/A';
+  
+        logInfo({
+          event: 'method_call',
+          class: className,
+          method: methodName,
+          args,
+          caller: stack,
+        });
+  
+        try {
+          const result = originalMethod.apply(this, args);
+  
+          if (result instanceof Promise) {
+            return result.then((res: any) => {
+              logFinish(className, methodName, startTime, res);
+              return res;
+            }).catch((err: any) => {
+              logError(className, methodName, err);
+              throw err;
+            });
+          } else {
+            logFinish(className, methodName, startTime, result);
+            return result;
+          }
+        } catch (err) {
+          logError(className, methodName, err);
+          throw err;
+        }
+      };
+  
+      return descriptor;
+    };
+  }
+  
+  function logFinish(className: string, methodName: string, startTime: number, returnValue: any) {
+    const duration = Date.now() - startTime;
+    logInfo({
+      event: 'method_return',
+      class: className,
+      method: methodName,
+      returnValue,
+      durationMs: duration,
+    });
+  }
+  
+  function logInfo(data: object) {
+    loggerInfo('', data);
+  }
+  
+  function logError(className: string, methodName: string, err: Error) {
+    loggerError('', {
+      event: 'method_error',
+      class: className,
+      method: methodName,
+      error: err.message,
+      stack: err.stack,
+    });
+  }
+
+  // Usage code
+// import { LogMethod } from './logMethod';
+
+// export class MyService {
+//   @LogMethod()
+//   getData(userId: number): string {
+//     return `Data for user ${userId}`;
+//   }
+
+//   @LogMethod()
+//   async fetchDataFromApi() {
+//     return new Promise(resolve => setTimeout(() => resolve("API Response"), 500));
+//   }
+
+//   @LogMethod()
+//   causeError() {
+//     throw new Error("Something went wrong!");
+//   }
+// }
