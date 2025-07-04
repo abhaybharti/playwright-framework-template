@@ -585,7 +585,6 @@ export function debug() {
 //   async fetchDataFromApi() {
 //     return new Promise(resolve => setTimeout(() => resolve("API Response"), 500));
 //   }
-
 //   @LogMethod()
 //   causeError() {
 //     throw new Error("Something went wrong!");
