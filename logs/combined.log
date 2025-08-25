@@ -257,3 +257,37 @@
 {"level":"info","message":"info","meta":"Test Case Completed : Launch Firefox Status : failed","service":"job-posting-service","timestamp":"2025-08-24T06:30:26.797Z"}
 {"level":"info","message":"info","meta":"Test Case Started : Launch Firefox","service":"job-posting-service","timestamp":"2025-08-24T06:30:30.000Z"}
 {"level":"info","message":"info","meta":"Test Case Completed : Launch Firefox Status : failed","service":"job-posting-service","timestamp":"2025-08-24T06:30:31.360Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-08-25T12:56:37.933Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 0 tests","service":"job-posting-service","timestamp":"2025-08-25T12:56:38.167Z"}
+{"level":"info","message":"error","meta":"TestError :  ReferenceError: test is not defined","service":"job-posting-service","timestamp":"2025-08-25T12:56:38.169Z"}
+{"level":"info","message":"error","meta":"TestError :  Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.","service":"job-posting-service","timestamp":"2025-08-25T12:56:38.172Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-08-25T12:57:04.338Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 0 tests","service":"job-posting-service","timestamp":"2025-08-25T12:57:04.529Z"}
+{"level":"info","message":"error","meta":"TestError :  TypeError: (0 , _test.test)(...) is not a function","service":"job-posting-service","timestamp":"2025-08-25T12:57:04.531Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-08-25T12:57:29.703Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-08-25T12:57:29.870Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:57:32.343Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:57:35.127Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:57:40.625Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:57:42.249Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:57:48.079Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:57:50.052Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-08-25T12:58:19.808Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-08-25T12:58:20.004Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:58:23.435Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:58:25.340Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:58:31.183Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:58:33.071Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:58:38.539Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:58:40.241Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-08-25T12:59:08.603Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-08-25T12:59:08.795Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:59:11.424Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:59:14.245Z"}
+{"level":"info","message":"error","meta":"TestError :  Error: browser.newPage: Target page, context or browser has been closed\n\n\u001b[31mFailed worker ran 1 test:\u001b[39m\n[Microsoft Edge] › tests\\web\\example\\launchMultipleBrowserInSingle.spec.js:3:5 › Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:59:17.269Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:59:20.510Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:59:25.391Z"}
+{"level":"info","message":"error","meta":"TestError :  Error: browser.newPage: Target page, context or browser has been closed\n\n\u001b[31mFailed worker ran 1 test:\u001b[39m\n[Microsoft Edge] › tests\\web\\example\\launchMultipleBrowserInSingle.spec.js:3:5 › Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:59:32.215Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T12:59:35.359Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Launch Multiple Browser In Single Spec Status : failed","service":"job-posting-service","timestamp":"2025-08-25T12:59:38.824Z"}
+{"level":"info","message":"error","meta":"TestError :  Error: browser.newPage: Target page, context or browser has been closed\n\n\u001b[31mFailed worker ran 1 test:\u001b[39m\n[Microsoft Edge] › tests\\web\\example\\launchMultipleBrowserInSingle.spec.js:3:5 › Launch Multiple Browser In Single Spec","service":"job-posting-service","timestamp":"2025-08-25T13:00:46.959Z"}
