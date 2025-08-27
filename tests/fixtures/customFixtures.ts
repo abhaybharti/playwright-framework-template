@@ -34,6 +34,40 @@ export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper
         // npx playwright test --config:jsonPath=./alternative-config.json -- command to pass json filename
 
         //npx playwright test --config:jsonPath=./moataeldebsy.json --debug ./tests/e2e/moatazeldebsy/form.spec.ts 
-    }
+    },
+    page: async ({ page }, use) => {
+        // Array to store failed API details for this test run
+        const failedApis:any = [];
+    
+        // Add the response listener to the page
+        // This logic will run before each test starts
+        page.on('response', (response) => {
+          const request = response.request();
+          // Filter for API calls (XHR or fetch requests) and non-200 status codes
+          if (['xhr', 'fetch'].includes(request.resourceType()) && response.status() !== 200) {
+            failedApis.push({
+              url: request.url(),
+              method: request.method(),
+              status: response.status(),
+            });
+          }
+        });
+    
+        // Proceed with the actual test execution.
+        // The 'page' object with the listener attached is passed to your test.
+        await use(page);
+    
+        // This logic runs after the test has finished.
+        // We check for any failed APIs that were captured.
+        if (failedApis.length > 0) {
+          console.log('\n--- Failed APIs Detected ---');
+          console.log(failedApis);
+          console.log('----------------------------\n');
+          // You could also add reporting or assertion logic here
+          // For example: expect(failedApis).toEqual([]);
+        } else {
+          console.log('All API calls for this test succeeded.');
+        }
+      },
 })
 
