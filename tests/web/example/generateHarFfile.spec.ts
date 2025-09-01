@@ -1,11 +1,14 @@
-import { test } from '../../fixtures/customFixtures'
-import { testHar } from '../../fixtures/networkLogFixture'
+// import { test } from '../../fixtures/test-options'
+import {test} from "@tests/fixtures/test-options"
 
-test.describe('Sample UI test', async({web}) => {
-    test('Capture network logs', { tag: '@network1' }, async ({ page }) => {
-        await web.goto('https://practicesoftwaretesting.com/')
+test.describe('Sample UI test', () => {
+    test('Capture network logs', { tag: '@network1' }, async ({ page,web }) => {
+        await web.navigateToUrl('https://practicesoftwaretesting.com/')
         // await page.goto('https://practicesoftwaretesting.com/');
-        await page.locator("//*[@src='assets/img/products/pliers01.avif']").click();
+        const locator = await web.findElement("xpath","//*[@src='assets/img/products/pliers01.avif']");
+        if (locator) {
+            await locator.click();
+        }
 
         //To Do : Add more steps to
     })

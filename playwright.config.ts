@@ -16,9 +16,7 @@ switch (process.env.NODE_ENV) {
     break;
   case "prod":
     dotenv.config({ path: "./environments/prod.env" });
-
     break;
-
   default:
     break;
 }
@@ -59,6 +57,9 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      metadata:{
+        video:"on"
+      }
     },
 
     // {
@@ -107,7 +108,7 @@ export default defineConfig({
     //   },
     // },
   ],
- 
+
 
   /* Run your local dev server before starting the tests */
   // webServer: {

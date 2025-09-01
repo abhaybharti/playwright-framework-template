@@ -9,7 +9,7 @@ type MyMixtures = {
 }
 
 // Initialize browser context with HAR recording
-const initHarRecording = async (browser: Browser, testInfo: TestInfo, video: any) => {
+const initHarRecording = async (browser: Browser, testInfo: TestInfo) => {
   const fileName = testInfo.title.replace(/[^a-zA-Z0-9]/g, '-')
   const harFilePath = `./test-results/${fileName}.har`
   const newContext = await browser.newContext({
@@ -18,7 +18,7 @@ const initHarRecording = async (browser: Browser, testInfo: TestInfo, video: any
       mode: 'full',
       urlFilter: /api.practicesoftwaretesting.com/,
     },
-    ...(video === 'on' ? {
+    ...(testInfo.project.metadata?.video ? {
       recordVideo: {
         dir: testInfo.outputPath('videos'),
       },
@@ -28,9 +28,9 @@ const initHarRecording = async (browser: Browser, testInfo: TestInfo, video: any
 }
 
 // Teardown and save HAR file
-const teardownHarRecording = async (page: Page, testInfo: TestInfo, video: any) => {
+const teardownHarRecording = async (page: Page, testInfo: TestInfo, videoMode: 'on' | 'off') => {
   const fileName = testInfo.title.replace(/[^a-zA-Z0-9]/g, '-')
-  if (video === 'on') {
+  if (videoMode === 'on') {
     const videoPath = testInfo.outputPath('my-video.webm')
     await Promise.all([page.video()?.saveAs(videoPath), page.close()])
     testInfo.attachments.push({
@@ -51,7 +51,6 @@ export const test = base.extend<{
   MyMixtures: any;
   json: JsonReader; 
   config: { jsonPath: string };
-  video: VideoMode;
 }>({
     config: async ({}, use) => {
         // Get JSON path from environment variable or use default
@@ -78,9 +77,9 @@ export const test = base.extend<{
 
         //npx playwright test --config:jsonPath=./moataeldebsy.json --debug ./tests/e2e/moatazeldebsy/form.spec.ts 
     },
-    page: async ({ browser, video }, use, testInfo) => {
+    page: async ({ browser }, use, testInfo) => {
         // Initialize HAR recording
-        const context = await initHarRecording(browser, testInfo, video);
+        const context = await initHarRecording(browser, testInfo);
         const page = await context.newPage();
         
         // Array to store failed API details for this test run
@@ -112,9 +111,8 @@ export const test = base.extend<{
         }
         
         // Teardown HAR recording
-        await teardownHarRecording(page, testInfo, video);
+        await teardownHarRecording(page, testInfo, 'on');
     },
     
-    video: ['on' as const, { mode: 'on' as const }],
 })
 
