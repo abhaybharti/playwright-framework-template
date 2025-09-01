@@ -1,15 +1,58 @@
-import { test as base, BrowserContext } from '@playwright/test'
+import { test as base, BrowserContext, Browser, Page, TestInfo, VideoMode } from '@playwright/test'
 import { ApiHelper, SshHelper, WebHelper } from "../../src/helper";
 import { pwApi } from 'pw-api-plugin';
-
-import { } from "@playwright/test";
+import { analyzeHAR } from '@src/utils/harAnalyser';
 import { JsonReader } from '@src/utils/reader/jsonReader';
 
 type MyMixtures = {
     context: BrowserContext
 }
 
-export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper; MyMixtures: any;json:JsonReader; config: { jsonPath: string }  }>({
+// Initialize browser context with HAR recording
+const initHarRecording = async (browser: Browser, testInfo: TestInfo, video: any) => {
+  const fileName = testInfo.title.replace(/[^a-zA-Z0-9]/g, '-')
+  const harFilePath = `./test-results/${fileName}.har`
+  const newContext = await browser.newContext({
+    recordHar: {
+      path: harFilePath,
+      mode: 'full',
+      urlFilter: /api.practicesoftwaretesting.com/,
+    },
+    ...(video === 'on' ? {
+      recordVideo: {
+        dir: testInfo.outputPath('videos'),
+      },
+    } : {}),
+  })
+  return newContext
+}
+
+// Teardown and save HAR file
+const teardownHarRecording = async (page: Page, testInfo: TestInfo, video: any) => {
+  const fileName = testInfo.title.replace(/[^a-zA-Z0-9]/g, '-')
+  if (video === 'on') {
+    const videoPath = testInfo.outputPath('my-video.webm')
+    await Promise.all([page.video()?.saveAs(videoPath), page.close()])
+    testInfo.attachments.push({
+      name: 'video',
+      path: videoPath,
+      contentType: 'video/webm',
+    })
+  }
+  await page.context().close({ reason: 'Saving HAR file' })
+  await analyzeHAR(`./test-results/${fileName}.har`, `./test-results/${fileName}.html`)
+  await testInfo.attach('Network Console', { path: `./test-results/${fileName}.html`, contentType: 'text/html' })
+}
+
+export const test = base.extend<{ 
+  api: ApiHelper; 
+  web: WebHelper; 
+  ssh: SshHelper; 
+  MyMixtures: any;
+  json: JsonReader; 
+  config: { jsonPath: string };
+  video: VideoMode;
+}>({
     config: async ({}, use) => {
         // Get JSON path from environment variable or use default
         const jsonPath = process.env.JSON_PATH || 'moataeldebsy.json';
@@ -35,12 +78,15 @@ export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper
 
         //npx playwright test --config:jsonPath=./moataeldebsy.json --debug ./tests/e2e/moatazeldebsy/form.spec.ts 
     },
-    page: async ({ page }, use) => {
+    page: async ({ browser, video }, use, testInfo) => {
+        // Initialize HAR recording
+        const context = await initHarRecording(browser, testInfo, video);
+        const page = await context.newPage();
+        
         // Array to store failed API details for this test run
-        const failedApis:any = [];
+        const failedApis: any = [];
     
         // Add the response listener to the page
-        // This logic will run before each test starts
         page.on('response', (response) => {
           const request = response.request();
           // Filter for API calls (XHR or fetch requests) and non-200 status codes
@@ -53,21 +99,22 @@ export const test = base.extend<{ api: ApiHelper; web: WebHelper; ssh: SshHelper
           }
         });
     
-        // Proceed with the actual test execution.
-        // The 'page' object with the listener attached is passed to your test.
+        // Proceed with the actual test execution
         await use(page);
-    
-        // This logic runs after the test has finished.
-        // We check for any failed APIs that were captured.
+        
+        // Log any failed APIs
         if (failedApis.length > 0) {
           console.log('\n--- Failed APIs Detected ---');
           console.log(failedApis);
           console.log('----------------------------\n');
-          // You could also add reporting or assertion logic here
-          // For example: expect(failedApis).toEqual([]);
         } else {
           console.log('All API calls for this test succeeded.');
         }
-      },
+        
+        // Teardown HAR recording
+        await teardownHarRecording(page, testInfo, video);
+    },
+    
+    video: ['on' as const, { mode: 'on' as const }],
 })
 
