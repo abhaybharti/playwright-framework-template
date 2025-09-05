@@ -2,7 +2,7 @@
 import {test} from "@tests/fixtures/test-options"
 
 test.describe('Sample UI test', () => {
-    test('Capture network logs', { tag: '@network1' }, async ({ page,web }) => {
+    test('Capture network logs', { tag: '@network1' }, async ({ web }) => {
         await web.navigateToUrl('https://practicesoftwaretesting.com/')
         // await page.goto('https://practicesoftwaretesting.com/');
         const locator = await web.findElement("xpath","//*[@src='assets/img/products/pliers01.avif']");

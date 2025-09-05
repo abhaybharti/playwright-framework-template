@@ -1,9 +1,8 @@
-import { test, BrowserContext, Page, expect, Locator } from "@playwright/test";
+import { BrowserContext, Page, expect, Locator } from "@playwright/test";
 
 import fs from "fs";
 import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
-import logger from '@src/utils/report/Logger'
 import { step } from "@src/utils/report/ReportAction";
 
 
@@ -26,7 +25,7 @@ export class WebHelper extends Helper {
   }
 
 
-  @step('changeValueOnUi')
+  @step()
   async changeValueOnUi(
     params: ChangedValueParams
   ): Promise<any> {
