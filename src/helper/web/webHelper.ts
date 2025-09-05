@@ -4,6 +4,8 @@ import fs from "fs";
 import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
 import logger from '@src/utils/report/Logger'
+import { step } from "@src/utils/report/ReportAction";
+
 
 interface ChangedValueParams {
   elementName: string;
@@ -24,7 +26,7 @@ export class WebHelper extends Helper {
   }
 
 
-
+  @step('changeValueOnUi')
   async changeValueOnUi(
     params: ChangedValueParams
   ): Promise<any> {
@@ -98,6 +100,7 @@ export class WebHelper extends Helper {
   * @param { string } value - Locator value
   * @returns { Promise<{ locator: import('@playwright/test').Locator, isDisplayed: boolean, isEnabled: boolean } | null> } Playwright locator with status or null
   */
+  @step('findElement')
   async findElement(type: string, value: string): Promise<Locator | null> {
     try {
       let locator: Locator;
@@ -161,6 +164,7 @@ export class WebHelper extends Helper {
    * in seconds.
    * @returns a Promise that resolves to void.
    */
+  @step('delay')
   async delay(time: number): Promise<void> {
     return new Promise(function (resolve) {
       setTimeout(resolve, time * 1000);
@@ -175,22 +179,27 @@ export class WebHelper extends Helper {
    * text should be matched exactly or not. If `exact` is set to `true`, the `clickByText` function will
    * only click on elements that have an exact match with the provided text. If `exact` is set to `
    */
+  @step('click By Text')
   async clickByText(text: string, exact: boolean = true): Promise<void> {
     await this.webPage.getByText(text, { exact: exact }).click();
   }
 
+  @step('rightClickButton')
   async rightClickButton(locator: string): Promise<void> {
     await this.webPage.locator(locator).click({ button: "right" });
   }
 
+  @step('leftClickButton')
   async leftClickButton(locator: string): Promise<void> {
     await this.webPage.locator(locator).click({ button: "left" });
   }
 
+  @step('navigateToUrl : {url}')
   async navigateToUrl(url: string): Promise<void> {
     await this.webPage.goto(url);
   }
 
+  @step('verifyDragAndDrop')
   async verifyDragAndDrop(
     source: string,
     target: string,
@@ -205,26 +214,33 @@ export class WebHelper extends Helper {
     await expect(droppable).toContainText(verifyText);
   }
 
+  @step('verifyToolTip')
   async verifyToolTip(locator: string, hoverText: string): Promise<void> {
     let el = await this.webPage.locator(locator);
     el.hover();
     await expect(el).toContainText(hoverText);
   }
 
+  @step('verifyFileDownload')
   async verifyFileDownload(): Promise<void> {
     //TBD
   }
 
+  @step('verifyNewTab')
   async verifyNewTab(newTabUrlExpected: string): Promise<void> {
     //TBD
   }
 
+  @step('verifyNewWindow')
   async verifyNewWindow(newWindowUrlExpected: string): Promise<void> {
     //TBD
   }
+
+  @step('verifyFrameText')
   async verifyFrameText(): Promise<void> {
     //TBD
   }
+  @step('verifyNestedFrame')
   async verifyNestedFrame(): Promise<void> {
     //TBD
   }
@@ -234,6 +250,7 @@ export class WebHelper extends Helper {
    * @param {string} url - The `url` parameter is a string that represents the expected URL of a web
    * page.
    */
+  @step('assertPageURL')
   async assertPageURL(url: string): Promise<void> {
     console.log(`Asserts that page url is ${url}.`);
     await expect(this.webPage).toHaveURL(url);
@@ -244,6 +261,7 @@ export class WebHelper extends Helper {
    * @param {string} title - The title parameter is a string that represents the expected title of the
    * web page.
    */
+  @step('assertPageTitle')
   async assertPageTitle(title: string): Promise<void> {
     console.log(`Asserts that page title is ${title}.`);
     await expect(this.webPage).toHaveTitle(title);
@@ -255,6 +273,7 @@ export class WebHelper extends Helper {
    * tab.
    * @returns a Promise that resolves to a Page object.
    */
+  @step('openNewTab')
   async openNewTab(url: string): Promise<Page> {
     const pageOne = await this.browserContext.newPage();
     await pageOne.goto(url);
@@ -266,11 +285,14 @@ export class WebHelper extends Helper {
    * @param {string} imageName - The imageName parameter is a string that specifies the name of the
    * screenshot image file. If no value is provided, it defaults to "screenshot.png".
    */
+  @step('takeFullPageScreenshot')
   async takeFullPageScreenshot(
     imageName: string = `screenshot.png`
   ): Promise<void> {
     await this.webPage.screenshot({ path: `${imageName}`, fullPage: true });
   }
+
+  @step('takePageScreenshot')
   async takePageScreenshot(
     imageName: string = `screenshot.png`
   ): Promise<void> {
@@ -286,6 +308,7 @@ export class WebHelper extends Helper {
    * @param {string} imageName - The `imageName` parameter is a string that specifies the name of the
    * screenshot image file. If no value is provided, it defaults to "screenshot.png".
    */
+  @step('takeScreenshotOfElement')
   async takeScreenshotOfElement(
     locator: string,
     imageName: string = `screenshot.png`
@@ -294,6 +317,7 @@ export class WebHelper extends Helper {
     await el.screenshot({ path: `${imageName}` });
   }
 
+  @step('clipScreenshot')
   async clipScreenshot(imageName: string = `screenshot.png`): Promise<void> {
     await this.webPage.screenshot({
       path: `${imageName}`,
@@ -306,6 +330,7 @@ export class WebHelper extends Helper {
    * @param {string} target - A string representing the target element to locate on the web page.
    * @param {string} expectedText - The expected text that you want the element to contain.
    */
+  @step('elementContainText')
   async elementContainText(
     target: string,
     expectedText: string
@@ -324,6 +349,7 @@ export class WebHelper extends Helper {
    * valid locator strategy supported by the testing framework you are using.
    * @param {string} expectedText - The expected text that the element should have.
    */
+  @step('elementHasText')
   async elementHasText(target: string, expectedText: string): Promise<void> {
     console.log(
       `Asserts that element ${target} has expected text ${expectedText}.`
@@ -338,6 +364,7 @@ export class WebHelper extends Helper {
    * element you want to check for visibility. It could be a CSS selector, an XPath expression, or any
    * other valid locator that can be used to identify the element on the web page.
    */
+  @step('elementIsVisible')
   async elementIsVisible(target: string): Promise<void> {
     console.log(`Asserts that element ${target} is visible.`);
     expect(await this.webPage.locator(target)).toBeVisible();
@@ -349,11 +376,13 @@ export class WebHelper extends Helper {
    * for the element that you want to check for visibility. It can be a CSS selector, an XPath
    * expression, or any other valid locator that can be used to identify the element on the web page.
    */
+  @step('elementIsNotVisible')
   async elementIsNotVisible(target: string): Promise<void> {
     console.log(`Asserts that element ${target} is not visible.`);
     expect(await this.webPage.locator(target)).toBeHidden();
   }
 
+  @step('elementHasAttributeAndValue')
   async elementHasAttributeAndValue(
     target: string,
     attribute: string,
@@ -375,6 +404,7 @@ export class WebHelper extends Helper {
    * the request you want to block.
    * Call this method in your tests
    */
+  @step('blockRequest')
   async blockRequest(context: BrowserContext, requestName: string) {
     await context.route("**/*", (request) => {
       request.request().url().startsWith(`${requestName}`)
@@ -388,6 +418,7 @@ export class WebHelper extends Helper {
    * The function will setup a listener for alert box, if dialog appears during the test then automatically accepting them.
    * Alert box contains only Ok button
    */
+  @step('acceptAlertBox')
   async acceptAlertBox(): Promise<void> {
     console.log(`Handle Alert Box by clicking on Ok button`);
     this.webPage.on("dialog", async (dialog) => dialog.dismiss());
@@ -397,11 +428,13 @@ export class WebHelper extends Helper {
    * The function will setup a listener for Confirm box, if dialog appears during the test then automatically call accept/dismiss method.
    * Confirm box contains Ok/Cancel button
    */
+  @step('acceptConfirmBox')
   async acceptConfirmBox(): Promise<void> {
     console.log(`Accept Confirm Box by clicking on Ok button`);
     this.webPage.on("dialog", async (dialog) => dialog.accept());
   }
 
+  @step('dismissConfirmBox')
   async dismissConfirmBox(): Promise<void> {
     console.log(`Dismiss Confirm Box by clicking on Cancel button`);
     this.webPage.on("dialog", async (dialog) => dialog.dismiss());
@@ -411,11 +444,13 @@ export class WebHelper extends Helper {
    * The function will setup a listener for Prompt box, if dialog appears during the test then automatically call accept/dismiss method.
    * Prompt box contains text box where user can enter text and submit (using Ok/Cancel button) it.
    */
+  @step('handlePromptBox')
   async handlePromptBox(txtVal: string): Promise<void> {
     console.log(`Enter text message in Prompt Box and click on Ok button`);
     this.webPage.on("dialog", async (dialog) => dialog.accept(txtVal));
   }
 
+  @step('waitForDialogMessage')
   waitForDialogMessage(page: Page) {
     return new Promise((resolve) => {
       page.on("dialog", (dialog) => {
@@ -427,6 +462,7 @@ export class WebHelper extends Helper {
   /**
    * The function will read text message from Alert and return.
    */
+  @step('getAlertText')
   async getAlertText(): Promise<string> {
     console.log(`Read text message from Alert box`);
     let dialogMessage: string;
@@ -443,6 +479,7 @@ export class WebHelper extends Helper {
    * @param {string} frameLocator - The frameLocator parameter is a string that represents the locator
    * or identifier of the frame you want to retrieve.
    */
+  @step('getFrame')
   async getFrame(frameLocator: string) {
     return this.webPage.frameLocator(frameLocator);
   }
@@ -454,6 +491,7 @@ export class WebHelper extends Helper {
    * to locate an element within the Shadow DOM.
    * @returns a Promise that resolves to a string.
    */
+  @step('getStringFromShadowDom')
   async getStringFromShadowDom(locator: string): Promise<string> {
     return (await this.webPage.locator(locator).textContent()) as string;
   }
@@ -470,6 +508,7 @@ export class WebHelper extends Helper {
    * @param {string} savePath - The `savePath` parameter is a string that represents the path where the
    * downloaded file will be saved on the local machine.
    */
+  @step('downLoadFile')
   async downLoadFile(
     locator: string,
     expectedFileName: string,
@@ -481,7 +520,7 @@ export class WebHelper extends Helper {
       this.webPage.locator(locator).click(),
     ]);
     const suggestedFileName = download.suggestedFilename()
-    const filePath = 'download/'+suggestedFileName
+    const filePath = 'download/' + suggestedFileName
     await download.saveAs(filePath);
     expect(fs.existsSync(filePath)).toBeTruthy();
     return filePath;
@@ -499,6 +538,7 @@ export class WebHelper extends Helper {
    * the locator of the upload button on the web page. It is used to locate and interact with the
    * upload button element on the page.
    */
+  @step('uploadFile')
   async uploadFile(
     filePath: string,
     fileUploadLocator: string,
@@ -520,6 +560,7 @@ export class WebHelper extends Helper {
    * that you want to intercept. It is used to match against the URL of incoming requests and determine
    * if the route should be intercepted.
    */
+  @step('interceptRouteAndContinue')
   async interceptRouteAndContinue(interceptRoute: string) {
     await this.browserContext.route(interceptRoute, async (route) => {
       //Arrange & Log the request
@@ -538,6 +579,8 @@ export class WebHelper extends Helper {
    * URL pattern that you want to intercept and abort. It is used to match against the URLs of incoming
    * network requests.
    */
+
+  @step('interceptRouteAndAbort')
   async interceptRouteAndAbort(interceptRoute: string) {
     await this.browserContext.route(interceptRoute, async (route) => {
       route.abort(); //abort the route
@@ -553,6 +596,7 @@ export class WebHelper extends Helper {
    * @param {string} modifiedJsonData - The `modifiedJsonData` parameter is a string representing the
    * modified JSON data that you want to use as the response body for the intercepted route.
    */
+  @step('interceptRouteAndChangeData')
   async interceptRouteAndChangeData(
     interceptRoute: string,
     modifiedJsonData: string
@@ -567,10 +611,13 @@ export class WebHelper extends Helper {
     });
   }
 
+  @step('changeElementValue')
   async changeElementValue(): Promise<void> { }
 
+  @step('verifyValueFromUi')
   async verifyValueFromUi(): Promise<void> { }
 
+  @step('getAttribute')
   async getAttribute(locator: string, attributeName: string): Promise<string> {
     const value = await this.webPage
       .locator(locator)
@@ -578,6 +625,7 @@ export class WebHelper extends Helper {
     return value ?? "";
   }
 
+  @step('getText')
   async getText(el: Locator): Promise<string> {
     // Check if it's an input element
     const isInput = await el.evaluate(el =>
@@ -597,6 +645,7 @@ export class WebHelper extends Helper {
     }
   }
 
+  @step('press')
   async press(key: string): Promise<void> {
     await this.webPage.keyboard.press(key);
   }
@@ -626,11 +675,13 @@ export class WebHelper extends Helper {
   //   await testInfo.attach(fileName, { contentType: "image/png", path: file });
   // }
 
+  @step('enterText')
   async enterText(el: Locator, value: string) {
     await el.clear();
     await el.fill(value);
   }
 
+  @step('setCheckBoxStatus')
   async setCheckBoxStatus(el: Locator, state: string = 'true') {
     let isChecked = await el.isChecked();
     let tryCount = 0;
@@ -647,16 +698,18 @@ export class WebHelper extends Helper {
       isChecked = await el.isChecked();
       tryCount++;
 
-      if (tryCount == 3){
+      if (tryCount == 3) {
         return false; //exit the loop        
       }
     }
   }
 
+  @step('getCheckBoxStatus')
   async getCheckBoxStatus(el: Locator): Promise<boolean> {
     return await el.isChecked();
   }
 
+  @step('getValueFromArray')
   getValueFromArray(testData: string[], preVal: string) {
     const currentIndex = testData.indexOf(preVal);
     const nextIndex = (currentIndex + 1) % testData.length;

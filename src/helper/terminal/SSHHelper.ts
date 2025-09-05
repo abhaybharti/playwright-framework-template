@@ -4,6 +4,7 @@
  */
 
 import { Client, ConnectConfig } from 'ssh2';
+import { step } from "@src/utils/report/ReportAction";
 
 export class SshHelper {
     private conn: Client;
@@ -19,6 +20,7 @@ export class SshHelper {
      * Establish SSH Connection
      * @param config - SSH connection details
      */
+    @step('openConnection')
     public async openConnection(config: ConnectConfig): Promise<void> {
         return new Promise((resolve, reject) => {
             this.conn
@@ -40,6 +42,7 @@ export class SshHelper {
      * @param command - Command to execute
      * @returns Command output as a string
      */
+    @step('runCommand')
     public async runCommand(command: string): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!this.isConnected) {
@@ -68,6 +71,7 @@ export class SshHelper {
     /**
      * Close the SSH Connection
      */
+    @step('closeConnection')
     public closeConnection(): void {
         if (this.conn && this.isConnected) {
             this.conn.end();
@@ -76,19 +80,21 @@ export class SshHelper {
         }
     }
 
-     /**
-   * Get last command output
-   */
-  getStdout(): string {
-    return this.stdout;
-  }
+    /**
+  * Get last command output
+  */
+    @step('getStdout')
+    getStdout(): string {
+        return this.stdout;
+    }
 
-   /**
-   * Verify output contains string
-   */
-   verifyOutputContains(text: string): boolean {
-    return this.stdout.includes(text);
-  }
+    /**
+    * Verify output contains string
+    */
+    @step('verifyOutputContains')
+    verifyOutputContains(text: string): boolean {
+        return this.stdout.includes(text);
+    }
 
 }
 

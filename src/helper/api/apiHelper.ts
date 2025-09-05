@@ -3,6 +3,7 @@ import { Helper } from "@src/helper/Helper";
 import { pwApi, test } from 'pw-api-plugin';
 import { ApiError } from "@src/utils/error/ErrorManager";
 import { validateSchema } from 'playwright-ajv-schema-validator';
+import { step } from "@src/utils/report/ReportAction";
 
 enum methodType {
   GET = "get",
@@ -50,6 +51,7 @@ export class ApiHelper extends Helper {
    * @param {number} statusCode - The `statusCode` parameter is the expected HTTP status code that the
    * API endpoint should return.
    */
+  @step('hitApiEndPoint')
   async hitApiEndPoint(
     method: methodType,
     endPoint: string,
@@ -76,6 +78,7 @@ export class ApiHelper extends Helper {
     }
   }
 
+  @step('invokeGetApi')
   async invokeGetApi(endPoint: string, statusCode: number = 200) {
     try {
       console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
@@ -89,6 +92,7 @@ export class ApiHelper extends Helper {
     }
   }
 
+  @step('invokeDeleteApi')
   async invokeDeleteApi(endPoint: string, statusCode: number = 200) {
     let response;
     try {
@@ -117,6 +121,7 @@ export class ApiHelper extends Helper {
    * @returns the response data as a JSON object if the response status is 200. If there is an error, it
    * will return the error object.
    */
+  @step('invokePostApi')
   async invokePostApi(
     endPoint: string,
     payload: object,
@@ -140,6 +145,8 @@ export class ApiHelper extends Helper {
       return error;
     }
   }
+
+  @step('invokePutApi')
   async invokePutApi(
     endPoint: string,
     payload: object,
