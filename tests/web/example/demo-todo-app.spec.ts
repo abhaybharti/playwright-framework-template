@@ -1,15 +1,9 @@
-import { test, expect } from "@playwright/test";
-import { WebHelper } from "../../../helper/web/webHelper";
+import { expect,test } from "@tests/fixtures/test-options";
 
-test.beforeEach(async ({ page }) => {
-  await page.goto("https://demo.playwright.dev/todomvc");
+test.beforeEach(async ({ web }) => {
+  await web.navigateToUrl("https://demo.playwright.dev/todomvc");
 });
 
-test("Sample Web Test", async ({ page, browser }) => {
-  const browserContext = await browser.newContext();
-
-  const webHelper = new WebHelper(page, browserContext);
-});
 
 const TODO_ITEMS = [
   "buy some cheese",
@@ -18,28 +12,28 @@ const TODO_ITEMS = [
 ];
 
 test.describe("New Todo", () => {
-  test("should allow me to add todo items", async ({ page }) => {
+  test("should allow me to add todo items", async ({ web }) => {
     // create a new todo locator
-    const newTodo = page.getByPlaceholder("What needs to be done?");
+    const newTodo = web.findElement("placeholder","What needs to be done?")
 
     // Create 1st todo.
-    await newTodo.fill(TODO_ITEMS[0]);
-    await newTodo.press("Enter");
+    await web.enterText(newTodo, TODO_ITEMS[0]);
+    await web.press(newTodo,"Enter");
 
     // Make sure the list only has one todo item.
-    await expect(page.getByTestId("todo-title")).toHaveText([TODO_ITEMS[0]]);
+    await expect(web.webPage.getByTestId("todo-title")).toHaveText([TODO_ITEMS[0]]);
 
     // Create 2nd todo.
-    await newTodo.fill(TODO_ITEMS[1]);
+    await web.enterText(newTodo, TODO_ITEMS[1]);
     await newTodo.press("Enter");
 
     // Make sure the list now has two todo items.
-    await expect(page.getByTestId("todo-title")).toHaveText([
+    await expect(web.webPage.getByTestId("todo-title")).toHaveText([
       TODO_ITEMS[0],
       TODO_ITEMS[1],
     ]);
 
-    await checkNumberOfTodosInLocalStorage(page, 2);
+    await checkNumberOfTodosInLocalStorage(web.webPage, 2);
   });
 
   test("should clear text input field when an item is added", async ({

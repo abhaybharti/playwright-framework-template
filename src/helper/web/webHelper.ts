@@ -25,7 +25,7 @@ export class WebHelper extends Helper {
   }
 
 
-  @step()
+  @step("changeValueOnUi")
   async changeValueOnUi(
     params: ChangedValueParams
   ): Promise<any> {
@@ -120,7 +120,10 @@ export class WebHelper extends Helper {
         // locator = this.webPage.getByRole(value as Role,{name:value,exact:false});
         // break;
         case 'label':
-          locator = this.webPage.getByLabel(value,);
+          locator = this.webPage.getByLabel(value);
+          break;
+        case 'placeholder':
+          locator = this.webPage.getByPlaceholder(value);
           break;
         default:
           console.warn(`Unsupported locator type: ${type}`);

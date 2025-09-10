@@ -1,18 +1,15 @@
-import { test, expect, request } from "@playwright/test";
-import { ApiHelper } from "helper/api/apiHelper";
+import { expect,test } from "@tests/fixtures/test-options";
+
 
 /*
 These assertions will retry until the assertion passes, or the assertion timeout is reached. 
 */
-test("Using playwright Auto-Retrying Assertion", async ({ page }) => {
-  await page.goto("https://www.google.com");
-  await expect(page).toHaveTitle("Google");
-  await expect(page.getByTestId("status")).toHaveText("PASS");
-  const locator = await page.locator("selector");
-
-  const apiContext = await request.newContext();
-  const apiHelper = new ApiHelper(apiContext);
-  const response = apiHelper.invokeGetApi("url");
+test("Using playwright Auto-Retrying Assertion", async ({ web,api }) => {
+  await web.navigateToUrl("https://www.google.com");
+  // await expect(web.toHaveTitle("Google"));
+  await expect(web.webPage.getByTestId("status")).toHaveText("PASS");
+     
+  const response = api.invokeGetApi("url");
 
   await expect(locator).toBeAttached(); //Element is attached
   await expect(locator).toBeChecked(); //Checkbox is checked

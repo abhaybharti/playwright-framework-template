@@ -1,6 +1,7 @@
 import { expect, test, APIRequestContext } from "@playwright/test";
+import { ApiHelper } from "@src/helper/api/apiHelper";
+import { pwApi } from "pw-api-plugin";
 
-import { ApiHelper } from "../../../helper/api/apiHelper";
 
 let token: string;
 let bookingId: string;
@@ -10,7 +11,7 @@ test.beforeAll(async ({ request }) => {
   //2. fetch token value from JSON response
   //3. save in token variable
 
-  const apiHelper = await new ApiHelper(request);
+  const apiHelper = await new ApiHelper(page,pwApi);
   const responseMsg = await apiHelper.invokePostApi("/auth", {
     username: "admin",
     password: "password123",

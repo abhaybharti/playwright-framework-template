@@ -227,3 +227,7 @@ App to run UI test-
 https://moatazeldebsy.github.io/test-automation-practices/#/
 
 https://github.com/AtulKrSharma/PlaywrightInjectTagsWithCaching/blob/main/playwright.config.ts
+
+https://www.saucedemo.com/
+https://the-internet.herokuapp.com/
+https://selectorshub.com/xpath-practice-page/
