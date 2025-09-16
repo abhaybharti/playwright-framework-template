@@ -36,7 +36,7 @@
     "@types/ssh2": "^1.15.4",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "eslint": "^9.34.0",
+    "eslint": "^9.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.25.2",

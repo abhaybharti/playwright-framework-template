@@ -28,10 +28,10 @@ export class ApiHelper extends Helper {
    * API. It is used to store and manage information related to the API, such as authentication
    * credentials, request headers, and other configuration settings.
    */
-  constructor(webPage: Page,apiRequest: pwApi) {
+  constructor(webPage: Page, apiRequest: pwApi) {
     super();
     this.apiRequest = apiRequest;
-    this.webPage = webPage;    
+    this.webPage = webPage;
   }
 
 
@@ -57,23 +57,23 @@ export class ApiHelper extends Helper {
     endPoint: string,
     body: object,
     statusCode: number
-  ):Promise<any> {
+  ): Promise<any> {
     try {
       switch (method.toLowerCase()) {
         case methodType.GET:
-          return await this.invokeGetApi(endPoint, statusCode);          
+          return await this.invokeGetApi(endPoint, statusCode);
         case methodType.POST:
-          return await this.invokePostApi(endPoint, body, statusCode);          
+          return await this.invokePostApi(endPoint, body, statusCode);
         case methodType.DELETE:
-          return await this.invokeDeleteApi(endPoint, statusCode);          
+          return await this.invokeDeleteApi(endPoint, statusCode);
         case methodType.PUT:
-          return await this.invokePutApi(endPoint, body, statusCode);          
+          return await this.invokePutApi(endPoint, body, statusCode);
         default:
-          throw new Error(`Unsupported operation type: ${method}`);          
+          throw new Error(`Unsupported operation type: ${method}`);
       }
     } catch (error) {
       throw new ApiError(
-        `Unsupported operation type: ${method}`,       
+        `Unsupported operation type: ${method}`
       );
     }
   }
@@ -82,10 +82,10 @@ export class ApiHelper extends Helper {
   async invokeGetApi(endPoint: string, statusCode: number = 200) {
     try {
       console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
-      const responseGet = await pwApi.get ({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`);
+      const responseGet = await pwApi.get({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`);
 
-      expect(responseGet.status(),`${endPoint}, Expected Status : ${statusCode}, Actual Status : ${responseGet.status()}`).toBe(statusCode);
-      return await responseGet.json();      
+      expect(responseGet.status(), `${endPoint}, Expected Status : ${statusCode}, Actual Status : ${responseGet.status()}`).toBe(statusCode);
+      return await responseGet.json();
     } catch (error) {
       console.log(error);
       throw new ApiError("Get request failed");
@@ -99,14 +99,14 @@ export class ApiHelper extends Helper {
       console.log(
         `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
       );
-      response = await pwApi.delete({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`);
+      response = await pwApi.delete({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`);
       expect(
         response.status(),
         `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
       ).toBe(statusCode);
       return await response.json();
     } catch (error) {
-      return error;
+      throw new ApiError("Delete request failed");
     }
   }
 
@@ -133,7 +133,7 @@ export class ApiHelper extends Helper {
       console.log(
         `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${tempPayload} `
       );
-      response = await pwApi.post({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
+      response = await pwApi.post({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`, {
         data: payload,
       });
       expect(
@@ -142,7 +142,7 @@ export class ApiHelper extends Helper {
       ).toBe(statusCode);
       return await response.json();
     } catch (error) {
-      return error;
+      throw new ApiError("Post request failed");
     }
   }
 
@@ -157,7 +157,7 @@ export class ApiHelper extends Helper {
       console.log(
         `Making PUT request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
       );
-      response = await pwApi.put({request:this.apiRequest, page:this.webPage},`${BASE_URL}${endPoint}`, {
+      response = await pwApi.put({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`, {
         data: payload,
       });
       expect(
@@ -170,5 +170,5 @@ export class ApiHelper extends Helper {
     }
   }
 }
-  
+
 
