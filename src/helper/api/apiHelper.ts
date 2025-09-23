@@ -166,7 +166,7 @@ export class ApiHelper extends Helper {
       ).toBe(statusCode);
       return await response.json();
     } catch (error) {
-      return error;
+      throw new ApiError("Post request failed");
     }
   }
 }
