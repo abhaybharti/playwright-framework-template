@@ -276,3 +276,76 @@
 {"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-09-23T01:37:48.367Z"}
 {"level":"info","message":"info","meta":"Test Case Started : Multiple Browser WIndow","service":"job-posting-service","timestamp":"2025-09-23T01:37:51.103Z"}
 {"level":"info","message":"info","meta":"Test Case Completed : Multiple Browser WIndow Status : passed","service":"job-posting-service","timestamp":"2025-09-23T01:38:23.241Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T15:44:26.082Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-09-24T15:44:26.185Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authentication and save state","service":"job-posting-service","timestamp":"2025-09-24T15:44:28.983Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authentication and save state Status : passed","service":"job-posting-service","timestamp":"2025-09-24T15:44:41.130Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:30:18.435Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 0 tests","service":"job-posting-service","timestamp":"2025-09-24T16:30:18.516Z"}
+{"level":"info","message":"error","meta":"TestError :  Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.","service":"job-posting-service","timestamp":"2025-09-24T16:30:18.517Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:30:46.564Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:30:46.822Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:30:51.530Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:30:51.540Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:30:52.634Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:30:52.702Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:30:58.247Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:30:58.329Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:30:59.485Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:30:59.492Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:31:04.928Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:31:04.991Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:31:06.892Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:31:06.927Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:32:06.351Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:32:06.419Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:32:10.535Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:32:10.539Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:11.722Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:11.762Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:32:16.660Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:32:16.747Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:17.749Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:17.787Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:32:22.959Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : skipped","service":"job-posting-service","timestamp":"2025-09-24T16:32:22.994Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:32:23.210Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : skipped","service":"job-posting-service","timestamp":"2025-09-24T16:32:23.240Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:32:53.374Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:32:53.462Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:32:57.527Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:32:57.564Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:59.128Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:32:59.210Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:33:04.716Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:33:04.798Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:33:06.029Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:33:06.033Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:33:11.413Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:33:11.429Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:33:13.765Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : failed","service":"job-posting-service","timestamp":"2025-09-24T16:33:13.833Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:33:40.551Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:33:40.765Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:33:44.422Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:33:44.492Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : interrupted","service":"job-posting-service","timestamp":"2025-09-24T16:33:55.355Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : interrupted","service":"job-posting-service","timestamp":"2025-09-24T16:33:55.603Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:34:43.381Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:34:43.597Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:34:47.836Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:34:47.853Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:34:57.818Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:34:58.901Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:37:51.493Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:37:51.712Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:37:54.958Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:38:12.556Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:38:12.559Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:38:24.507Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-09-24T16:39:54.840Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 2 tests","service":"job-posting-service","timestamp":"2025-09-24T16:39:54.968Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Authenticate and save state","service":"job-posting-service","timestamp":"2025-09-24T16:40:00.699Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Authenticate and save state Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:40:37.209Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Use saved State and login into saucedemo website","service":"job-posting-service","timestamp":"2025-09-24T16:40:37.214Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Use saved State and login into saucedemo website Status : passed","service":"job-posting-service","timestamp":"2025-09-24T16:40:41.086Z"}

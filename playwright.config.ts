@@ -49,7 +49,8 @@ export default defineConfig({
     headless: Config.HEADLESS_BROWSER,
     baseURL: Config.BASE_URL,
     screenshot: "on",
-    video: "on",
+    video: "retain-on-failure",    
+    storageState:"auth.json",
   },
 
   /* Configure projects for major browsers */
