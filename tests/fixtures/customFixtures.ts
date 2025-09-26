@@ -1,4 +1,4 @@
-import { test as base, BrowserContext, Browser, Page, TestInfo, VideoMode } from '@playwright/test'
+import { test as base, BrowserContext, Browser, Page, TestInfo, VideoMode,expect } from '@playwright/test'
 import { ApiHelper, SshHelper, WebHelper } from "../../src/helper";
 import { pwApi } from 'pw-api-plugin';
 import { analyzeHAR } from '@src/utils/harAnalyser';
@@ -115,4 +115,7 @@ export const test = base.extend<{
     },
     
 })
+
+export type {TestInfo} from "@playwright/test"
+export {expect} from "@playwright/test"
 

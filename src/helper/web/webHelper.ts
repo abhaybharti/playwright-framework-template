@@ -679,7 +679,7 @@ export class WebHelper extends Helper {
 
   @step('enterText')
   async enterText(el: Locator, value: string) {
-    await el.clear();
+    // await el.clear();
     await el.fill(value);
   }
 
