@@ -30,7 +30,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.34.0",
-    "@playwright/test": "^1.51.0",
+    "@playwright/test": "^1.55.1",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.17.24",
     "@types/ssh2": "^1.15.4",

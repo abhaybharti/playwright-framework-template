@@ -105,25 +105,25 @@ export class WebHelper extends Helper {
       let locator: Locator;
       switch (type.toLowerCase()) {
         case 'css':
-          locator = this.webPage.locator(value);
+          locator = this.webPage.locator(value).describe('css'+ value);
           break;
         case 'xpath':
-          locator = this.webPage.locator(`xpath=${value}`);
+          locator = this.webPage.locator(`xpath=${value}`).describe('xpath'+ value);
           break;
         case 'text':
-          locator = this.webPage.getByText(value);
+          locator = this.webPage.getByText(value).describe('text'+ value);
           break;
         case 'testid':
-          locator = this.webPage.getByTestId(value);
+          locator = this.webPage.getByTestId(value).describe('testid'+ value);
           break;
         case 'role':
         // locator = this.webPage.getByRole(value as Role,{name:value,exact:false});
         // break;
         case 'label':
-          locator = this.webPage.getByLabel(value);
+          locator = this.webPage.getByLabel(value).describe('label'+ value);
           break;
         case 'placeholder':
-          locator = this.webPage.getByPlaceholder(value);
+          locator = this.webPage.getByPlaceholder(value).describe('placeholder'+ value);
           break;
         default:
           console.warn(`Unsupported locator type: ${type}`);
@@ -633,7 +633,7 @@ export class WebHelper extends Helper {
     const isInput = await el.evaluate(el =>
       el.tagName === 'INPUT' ||
       el.tagName === 'TEXTAREA' ||
-      el.tagName === 'SELECT'
+      el.tagName === 'SELECT' || el.tagName === 'TEXTBOX'
     );
 
     if (isInput) {

@@ -1,11 +1,10 @@
-import { test, expect } from "@playwright/test";
-import { WebHelper } from "../../../helper/web/webHelper";
+import { test, expect } from "../../fixtures/customFixtures"
 import fs from "fs";
 import path from "path";
 
-test("File Download Test ", async ({ page, browser }) => {
+test("File Download Test ", async ({web,  browser }) => {
   const context = await browser.newContext();
-  const webHelper = new WebHelper(page, context);
+  
 
   //Arrange
   const expectedFileName = "fileToDownload.txt";
@@ -13,7 +12,7 @@ test("File Download Test ", async ({ page, browser }) => {
   const savePath = path.join(downloadFolderPath, expectedFileName);
 
   //Action
-  await webHelper.downLoadFile(
+  await web.downLoadFile(
     expectedFileName,
     downloadFolderPath,
     "locatorOfDownloadLink"

@@ -1,6 +1,5 @@
-import test from "@playwright/test";
-import { Console, log } from "console";
-import { WebHelper } from "../../../helper/web/webHelper";
+
+import { test, expect } from "../../fixtures/customFixtures"
 
 test("iframe", async ({ page }) => {
   await page.goto("http://rahulshettyacademy.com/AutomationPractice/");
@@ -10,8 +9,8 @@ test("iframe", async ({ page }) => {
   console.log(textCheck);
 });
 
-test("Test 2 : Operation on frame", async ({ page, browser }) => {
+test("Test 2 : Operation on frame", async ({ web, browser }) => {
   const context = await browser.newContext();
-  const webHelper = new WebHelper(page, context);
-  const frameOne = await webHelper.getFrame("iframe[name='courses-iframe']");
+ 
+  const frameOne = await web.getFrame("iframe[name='courses-iframe']");
 });
