@@ -55,13 +55,13 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-      metadata:{
-        video:"on"
-      }
-    },
+    // {
+    //   name: "chromium",
+    //   use: { ...devices["Desktop Chrome"] },
+    //   metadata:{
+    //     video:"on"
+    //   }
+    // },
 
     // {
     //   name: "firefox",
@@ -84,18 +84,18 @@ export default defineConfig({
     // },
 
     /* Test against branded browsers. */
-    // {
-    //   name: "Microsoft Edge",
-    //   use: {
-    //     ...devices["Desktop Edge"],
-    //     channel: "msedge",
-    //     //viewport: { width: 1920, height: 1080 },
-    //     viewport: devices["Desktop Edge"].viewport, //set viewport dynamically
-    //     // baseURL:'https://restful-booker.herokuapp.com',
-    //     ignoreHTTPSErrors: true,
-    //     acceptDownloads: true,
-    //   },
-    // },
+    {
+      name: "Microsoft Edge",
+      use: {
+        ...devices["Desktop Edge"],
+        channel: "msedge",
+        //viewport: { width: 1920, height: 1080 },
+        viewport: devices["Desktop Edge"].viewport, //set viewport dynamically
+        // baseURL:'https://restful-booker.herokuapp.com',
+        ignoreHTTPSErrors: true,
+        acceptDownloads: true,
+      },
+    },
     // {viewport: devices["Desktop Edge"].viewport,
     //   name: "Chrome",
     //   use: {

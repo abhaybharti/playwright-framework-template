@@ -1,5 +1,5 @@
 import { BrowserContext, Page, expect, Locator } from "@playwright/test";
-
+import { logError, logInfo } from '../../utils/report/Logger';
 import fs from "fs";
 import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
@@ -105,25 +105,25 @@ export class WebHelper extends Helper {
       let locator: Locator;
       switch (type.toLowerCase()) {
         case 'css':
-          locator = this.webPage.locator(value).describe('css'+ value);
+          locator = this.webPage.locator(value).describe('css' + value);
           break;
         case 'xpath':
-          locator = this.webPage.locator(`xpath=${value}`).describe('xpath'+ value);
+          locator = this.webPage.locator(`xpath=${value}`).describe('xpath' + value);
           break;
         case 'text':
-          locator = this.webPage.getByText(value).describe('text'+ value);
+          locator = this.webPage.getByText(value).describe('text' + value);
           break;
         case 'testid':
-          locator = this.webPage.getByTestId(value).describe('testid'+ value);
+          locator = this.webPage.getByTestId(value).describe('testid' + value);
           break;
         case 'role':
         // locator = this.webPage.getByRole(value as Role,{name:value,exact:false});
         // break;
         case 'label':
-          locator = this.webPage.getByLabel(value).describe('label'+ value);
+          locator = this.webPage.getByLabel(value).describe('label' + value);
           break;
         case 'placeholder':
-          locator = this.webPage.getByPlaceholder(value).describe('placeholder'+ value);
+          locator = this.webPage.getByPlaceholder(value).describe('placeholder' + value);
           break;
         default:
           console.warn(`Unsupported locator type: ${type}`);
@@ -138,15 +138,19 @@ export class WebHelper extends Helper {
       }
 
       // Check visibility and enabled status
-      const isDisplayed = await locator.isVisible();
-      const isEnabled = await locator.isEnabled();
+      const becameVisible = await locator
+        .waitFor({ state: 'visible' })
+        .then(() => true)
+        .catch(() => false);
+
+      const isEnabled = becameVisible ? await locator.isEnabled() : false;
 
       if (!locator) {
         console.log(`Element ${type} ${value} is not found`);
         return null;
       }
 
-      if (!isDisplayed || !isEnabled) {
+      if (!becameVisible || !isEnabled) {
         console.log(`Element ${type} ${value} is not visible or enabled`);
         return null;
       }
@@ -415,66 +419,36 @@ export class WebHelper extends Helper {
       return;
     });
   }
+  
 
   /**
-   * The function will setup a listener for alert box, if dialog appears during the test then automatically accepting them.
-   * Alert box contains only Ok button
-   */
-  @step('acceptAlertBox')
-  async acceptAlertBox(): Promise<void> {
-    console.log(`Handle Alert Box by clicking on Ok button`);
-    this.webPage.on("dialog", async (dialog) => dialog.dismiss());
-  }
-
-  /**
-   * The function will setup a listener for Confirm box, if dialog appears during the test then automatically call accept/dismiss method.
-   * Confirm box contains Ok/Cancel button
-   */
-  @step('acceptConfirmBox')
-  async acceptConfirmBox(): Promise<void> {
-    console.log(`Accept Confirm Box by clicking on Ok button`);
-    this.webPage.on("dialog", async (dialog) => dialog.accept());
-  }
-
-  @step('dismissConfirmBox')
-  async dismissConfirmBox(): Promise<void> {
-    console.log(`Dismiss Confirm Box by clicking on Cancel button`);
-    this.webPage.on("dialog", async (dialog) => dialog.dismiss());
-  }
-
-  /**
-   * The function will setup a listener for Prompt box, if dialog appears during the test then automatically call accept/dismiss method.
-   * Prompt box contains text box where user can enter text and submit (using Ok/Cancel button) it.
-   */
-  @step('handlePromptBox')
-  async handlePromptBox(txtVal: string): Promise<void> {
-    console.log(`Enter text message in Prompt Box and click on Ok button`);
-    this.webPage.on("dialog", async (dialog) => dialog.accept(txtVal));
-  }
-
-  @step('waitForDialogMessage')
-  waitForDialogMessage(page: Page) {
-    return new Promise((resolve) => {
-      page.on("dialog", (dialog) => {
-        resolve(dialog.message());
-      });
+ * Waits for the next JavaScript dialog, logs its message, and handles it.
+ * @param {'accept' | 'dismiss'} action - How to handle the dialog.
+ * @param {string} [promptText] - Text to pass when accepting a prompt dialog.
+ * @returns {Promise<string>} The dialog message.
+ */
+@step('waitAndHandleDialog')
+async waitAndHandleDialog(
+  action: 'accept' | 'dismiss' = 'accept',
+  promptText?: string
+): Promise<string> {
+  const message = await new Promise<string>((resolve) => {
+    this.webPage.once('dialog', async (dialog) => {
+      const msg = dialog.message();
+      logInfo(`Dialog [${dialog.type()}]: ${msg}`);
+      if (action === 'accept') {
+        await dialog.accept(promptText);
+      } else {
+        await dialog.dismiss();
+      }
+      resolve(msg);
     });
-  }
+  });
+  return message;
+}
+  
 
-  /**
-   * The function will read text message from Alert and return.
-   */
-  @step('getAlertText')
-  async getAlertText(): Promise<string> {
-    console.log(`Read text message from Alert box`);
-    let dialogMessage: string;
-    dialogMessage = await this.waitForDialogMessage(
-      this.webPage
-    ).then.toString();
-    console.log(dialogMessage);
-    return dialogMessage;
-  }
-
+  
   /**
    * The function `getFrame` takes a frame locator as input and calls a method on the `webPage` object
    * to locate the frame.
