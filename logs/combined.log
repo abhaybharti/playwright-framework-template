@@ -371,3 +371,35 @@
 {"level":"info","message":"info","meta":"Test Case Completed : Drag and Drop Status : passed","service":"job-posting-service","timestamp":"2025-10-04T16:46:03.026Z"}
 {"level":"info","message":"info","meta":"Executing Step : findElement - WebHelper.findElement ","service":"job-posting-service","timestamp":"2025-10-04T16:46:03.120Z"}
 {"level":"info","message":"info","meta":"Test Case Completed : Drag and Drop Using Mouse Hover Status : passed","service":"job-posting-service","timestamp":"2025-10-04T16:46:16.676Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:04:13.473Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:04:13.902Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:04:16.866Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:05:24.097Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:05:29.518Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:06:58.203Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:07:03.730Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:08:12.060Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:09:24.362Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:09:25.010Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:09:29.480Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:10:48.751Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:10:56.110Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:11:39.761Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:11:40.500Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:11:45.871Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:14:20.422Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:14:27.887Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : failed","service":"job-posting-service","timestamp":"2025-10-04T17:16:15.670Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:16:20.517Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : interrupted","service":"job-posting-service","timestamp":"2025-10-04T17:18:48.454Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:18:48.638Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:18:50.526Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:18:56.488Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:19:41.202Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:19:41.795Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:19:47.319Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : passed","service":"job-posting-service","timestamp":"2025-10-04T17:21:44.568Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-04T17:25:36.839Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:25:37.750Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:25:42.200Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : passed","service":"job-posting-service","timestamp":"2025-10-04T17:26:57.039Z"}

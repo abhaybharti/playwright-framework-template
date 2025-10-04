@@ -41,7 +41,7 @@ export const analyzeHAR = async (harFilePath: string, htmlOututPath: string) => 
     }
 
     // Identify error responses (status codes 4xx and 5xx)
-    if (status >= 400) {
+    if (status !== 200) {
       findings.errorResponses.push({
         url,
         method,
