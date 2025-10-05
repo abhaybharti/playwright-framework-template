@@ -1,0 +1,206 @@
+{
+    "brands": [
+        {
+            "id": "01J47796Q8XWWJ66Z4MX764YKS",
+            "name": "Hand Tools",
+            "slug": "hand-tools",
+            "parent_id": null,
+            "sub_categories": [
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD1",
+                    "name": "Hammer",
+                    "slug": "hammer",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD2",
+                    "name": "Hand Saw",
+                    "slug": "hand-saw",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD3",
+                    "name": "Wrench",
+                    "slug": "wrench",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD4",
+                    "name": "Screwdriver",
+                    "slug": "screwdriver",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD5",
+                    "name": "Pliers",
+                    "slug": "pliers",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD6",
+                    "name": "Chisels",
+                    "slug": "chisels",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                },
+                {
+                    "id": "01J47796QCFV3FS7SEKFF51VD7",
+                    "name": "Glass",
+                    "slug": "Glass",
+                    "parent_id": "01J47796Q8XWWJ66Z4MX764YKS",
+                    "sub_categories": []
+                }
+            ]
+        }
+    ],
+    "mobiles": [
+        {
+            "id": 1,
+            "name": "Google Pixel 6 Pro",
+            "data": {
+                "color": "Cloudy White",
+                "capacity": "128 GB"
+            },
+            "reviewId": 1
+        },
+        {
+            "id": 2,
+            "name": "Apple iPhone 12 Mini, 256GB, Blue",
+            "data": null,
+            "reviewId": 2
+        },
+        {
+            "id": 3,
+            "name": "Apple iPhone 12 Pro Max",
+            "data": {
+                "color": "Cloudy White",
+                "capacity GB": 512
+            },
+            "reviewId": 3
+        },
+        {
+            "id": 4,
+            "name": "Apple iPhone 11, 64GB",
+            "data": {
+                "price": 389.99,
+                "color": "Purple"
+            }
+        },
+        {
+            "id": 5,
+            "name": "Samsung Galaxy Z Fold2",
+            "data": {
+                "price": 689.99,
+                "color": "Brown"
+            }
+        },
+        {
+            "id": 6,
+            "name": "Apple AirPods",
+            "data": {
+                "generation": "3rd",
+                "price": 120
+            }
+        },
+        {
+            "id": 7,
+            "name": "Apple MacBook Pro 16",
+            "data": {
+                "year": 2019,
+                "price": 1849.99,
+                "CPU model": "Intel Core i9",
+                "Hard disk size": "1 TB"
+            }
+        },
+        {
+            "id": 8,
+            "name": "Apple Watch Series 8",
+            "data": {
+                "Strap Colour": "Elderberry",
+                "Case Size": "41mm"
+            }
+        },
+        {
+            "id": 9,
+            "name": "Beats Studio3 Wireless",
+            "data": {
+                "Color": "Red",
+                "Description": "High-performance wireless noise cancelling headphones"
+            }
+        },
+        {
+            "id": 10,
+            "name": "Apple iPad Mini 5th Gen",
+            "data": {
+                "Capacity": "64 GB",
+                "Screen size": 7.9
+            }
+        },
+        {
+            "id": 11,
+            "name": "Apple iPad Mini 5th Gen",
+            "data": {
+                "Capacity": "254 GB",
+                "Screen size": 7.9
+            }
+        },
+        {
+            "id": 12,
+            "name": "Apple iPad Air",
+            "data": {
+                "Generation": "4th",
+                "Price": "419.99",
+                "Capacity": "64 GB"
+            }
+        },
+        {
+            "id": 13,
+            "name": "Apple iPad Air",
+            "data": {
+                "Generation": "4th",
+                "Price": "519.99",
+                "Capacity": "256 GB"
+            }
+        },
+        {
+            "data": {
+                "color": "Cloudy White",
+                "capacity": "128 GB",
+                "price": "500"
+            },
+            "reviewId": 5,
+            "id": 20
+        }
+    ],
+    "reviews": [
+        {
+            "id": 1,
+            "rating": 3,
+            "comment": "Mobile camera have good resolution",
+            "mobileId": 1
+        },
+        {
+            "id": 2,
+            "rating": 4,
+            "comment": "Battery life is good",
+            "mobileId": 1
+        },
+        {
+            "id": 3,
+            "rating": 3,
+            "comment": "Price is too high",
+            "mobileId": 2
+        },
+        {
+            "id": 4,
+            "rating": 5,
+            "comment": "Lot of new apps....",
+            "mobileId": 3
+        }
+    ]
+}

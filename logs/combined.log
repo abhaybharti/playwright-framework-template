@@ -403,3 +403,23 @@
 {"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-04T17:25:37.750Z"}
 {"level":"info","message":"info","meta":"Test Case Started : Check the exception and logs in console log","service":"job-posting-service","timestamp":"2025-10-04T17:25:42.200Z"}
 {"level":"info","message":"info","meta":"Test Case Completed : Check the exception and logs in console log Status : passed","service":"job-posting-service","timestamp":"2025-10-04T17:26:57.039Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-05T11:01:13.088Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-05T11:01:21.972Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Validate category with subcategoty","service":"job-posting-service","timestamp":"2025-10-05T11:01:30.704Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Validate category with subcategoty Status : interrupted","service":"job-posting-service","timestamp":"2025-10-05T11:03:21.444Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-05T11:03:33.405Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-05T11:03:40.976Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Validate category with subcategoty","service":"job-posting-service","timestamp":"2025-10-05T11:03:59.801Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Validate category with subcategoty Status : timedOut","service":"job-posting-service","timestamp":"2025-10-05T11:07:11.911Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Validate category with subcategoty","service":"job-posting-service","timestamp":"2025-10-05T11:07:23.454Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Validate category with subcategoty Status : timedOut","service":"job-posting-service","timestamp":"2025-10-05T11:11:12.808Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Validate category with subcategoty","service":"job-posting-service","timestamp":"2025-10-05T14:16:12.202Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Validate category with subcategoty Status : interrupted","service":"job-posting-service","timestamp":"2025-10-05T14:16:16.468Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-05T14:19:34.709Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-05T14:19:35.153Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Basic Authetication","service":"job-posting-service","timestamp":"2025-10-05T14:19:39.006Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Basic Authetication Status : passed","service":"job-posting-service","timestamp":"2025-10-05T14:20:30.514Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-10-05T14:23:21.325Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-10-05T14:23:21.792Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Basic Authetication with Extra HTTP headers","service":"job-posting-service","timestamp":"2025-10-05T14:23:26.454Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Basic Authetication with Extra HTTP headers Status : passed","service":"job-posting-service","timestamp":"2025-10-05T14:23:38.241Z"}
