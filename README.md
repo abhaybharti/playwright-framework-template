@@ -2,11 +2,22 @@
 
 ## Introduction
 
-Playwright-Framework-Template - This project is based on Microsoft Playwright, Appium, Artillery which enables reliable end-to-end testing, Web testing, API testing, Mobile testing, load testing.
+Playwright-Framework-Template - This project is based on Microsoft Playwright, Appium, Artillery which enables reliable end-to-end testing, Web testing, API testing, Mobile testing, load testing. It is a single unified for your entire testing suite : UI, API, Mobile, Load testing.
 
 _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/abhaybharti/playwright-framework-template). It will motivate me to add more such project._
 
 \_☝ If you want new feature to be added or you believe you've encountered a bug [Open an issue] (https://github.com/abhaybharti/playwright-framework-template/issues) .
+
+## Core capabilites
+- **Cross-Browser Testing**: Chromium, Firefox,WebKit, Edge
+- **Multipel Test Types**: UI, API, Mobile, Load Testing, Visual Testing
+- **Page Object Model**: Scalable & maintainable test architecture
+- **JSON Config**: Build script 
+- **Dependency Injection**: Custom Fixtures, TypeScript Decorators for clean test & function code
+- **Comprehenisve Reporting**: HTML, Log file, Video, Trace, Screenshot, 
+- **Capture API**: HTML, Log file, Video, Trace, Screenshot, 
+
+
 
 ## Features
 
@@ -29,14 +40,21 @@ _☝ If you liked the project, please give a ⭐ on [GitHub](https://github.com/
 
 ## Tech Stack/Libraries Used
 
-- [PlayWright](https://playwright.dev/) - for web automation
-- [PlayWright](https://playwright.dev/) - for Api automation
+- [PlayWright](https://playwright.dev/) - for web/API automation/Mobile Device Emulation Testing
 - [Artillery](https://www.artillery.io/) - for load testing
 - [Appium](https://appium.io/docs/en/2.4/) - for mobile app automation
 - [ESLint](https://eslint.org/) - pinpoint issues and guide you in rectifying potential problems in both JavaScript and TypeScript.
 - [Prettier](https://prettier.io/) - for formatting code & maintain consistent style throughout codebase
 - [Dotenv](https://www.dotenv.org/) - to load environment variables from .env file
 - [Secrets](https://github.com/du5rte/secrets) - to load secrets from AWS Secrets Manager
+- [TypeScript](https://www.typescriptlang.org/) - for type safety
+- [Joi](https://github.com/sideway/joi) - for data validation
+- [Moment](https://momentjs.com/) - for date & time handling
+- [Winston](https://github.com/winstonjs/winston) - for logging
+- [Mocha](https://mochajs.org/) - for test runner
+- [Chai](https://www.chaijs.com/) - for assertion
+
+
 
 ## Getting Started
 
@@ -232,3 +250,4 @@ https://www.saucedemo.com/
 https://the-internet.herokuapp.com/
 https://selectorshub.com/xpath-practice-page/
 https://test-edzotech.web.app/doms.html
+https://github.com/gauravkhuraana/PlaywrightTypeScriptWithAgenticAI
