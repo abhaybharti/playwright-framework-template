@@ -226,21 +226,6 @@ We love our contributors! Here's how you can contribute:
 </a>
 
 
-
-Alternative: Use ts-node (Run Without Compilation)
-To execute TypeScript files directly without manual compilation, install ts-node:
-
-sh
-Copy
-Edit
-npm install -g ts-node
-Then, run your TypeScript file directly:
-
-sh
-Copy
-Edit
-ts-node app.ts
-
 App to run UI test- 
 https://moatazeldebsy.github.io/test-automation-practices/#/
 

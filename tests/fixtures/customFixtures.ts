@@ -1,4 +1,4 @@
-import { test as base, BrowserContext, Browser, Page, TestInfo, VideoMode, expect } from '@playwright/test'
+import { test as base, BrowserContext, Browser, Page, TestInfo, VideoMode, expect, request } from '@playwright/test'
 import { ApiHelper, SshHelper, WebHelper } from "../../src/helper";
 import { pwApi } from 'pw-api-plugin';
 import { analyzeHAR } from '@src/utils/harAnalyser';
@@ -58,8 +58,8 @@ export const test = base.extend<{
     const jsonPath = process.env.JSON_PATH || 'moataeldebsy.json';
     await use({ jsonPath });
   },
-  api: async ({ page }, use) => {
-    await use(new ApiHelper(page, pwApi))
+  api: async ({ request }, use) => {
+    await use(new ApiHelper(request))
   },
 
   web: async ({ page, browser, config }, use) => {

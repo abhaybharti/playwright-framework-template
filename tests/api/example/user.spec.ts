@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { ApiHelper } from '../../../helper/api/apiHelper';
+import { ApiHelper } from '@src/helper/api/apiHelper';
+
 
 test.describe('Users API', () => {
   let apiHelper: ApiHelper;
 
-  test.beforeEach(async ({ request }) => {
-    apiHelper = new ApiHelper(request);
+  test.beforeEach(async ({ request,page }) => {
+    apiHelper = new ApiHelper(page,request);
   });
 
   test('should get all users', async () => {

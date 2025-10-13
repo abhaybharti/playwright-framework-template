@@ -1,9 +1,9 @@
-import { Page, expect } from "@playwright/test";
 import { Helper } from "@src/helper/Helper";
-import { pwApi, test } from 'pw-api-plugin';
+import type { APIRequestContext, APIResponse } from "@playwright/test";
 import { ApiError } from "@src/utils/error/ErrorManager";
 import { validateSchema } from 'playwright-ajv-schema-validator';
 import { step } from "@src/utils/report/ReportAction";
+import { logError, logInfo } from "@src/utils/report/Logger";
 
 enum methodType {
   GET = "get",
@@ -17,9 +17,7 @@ enum methodType {
 const BASE_URL = "https://restful-booker.herokuapp.com";
 
 export class ApiHelper extends Helper {
-  private readonly apiRequest: pwApi;
-  private readonly webPage: Page;
-
+  private readonly apiRequest: APIRequestContext;
 
 
   /**
@@ -28,64 +26,108 @@ export class ApiHelper extends Helper {
    * API. It is used to store and manage information related to the API, such as authentication
    * credentials, request headers, and other configuration settings.
    */
-  constructor(webPage: Page, apiRequest: pwApi) {
+  constructor(apiRequest: APIRequestContext) {
     super();
     this.apiRequest = apiRequest;
-    this.webPage = webPage;
   }
 
 
   /**
-   * The function `hitApiEndPoint` is an asynchronous function that takes in an operation type, an
-   * endpoint, a payload, and a status code, and then invokes the corresponding API method based on the
-   * operation type.
-   * @param {string} method - The `operationType` parameter is a string that specifies the type of
-   * operation to be performed on the API endpoint. It can have one of the following values: "get",
-   * "post", "delete", or "put".
-   * @param {string} endPoint - The `endPoint` parameter is a string that represents the URL or endpoint
-   * of the API that you want to hit. It specifies the location where the API is hosted and the specific
-   * resource or action you want to perform.
-   * @param {object} body - The `payload` parameter is an object that contains the data to be sent in
-   * the request body for POST and PUT operations. It can include any relevant information that needs to
-   * be sent to the API endpoint.
-   * @param {number} statusCode - The `statusCode` parameter is the expected HTTP status code that the
-   * API endpoint should return.
-   */
+ * Simplified helper for making API requests and returning the status and JSON body.
+ * This helper automatically performs the request based on the provided method, URL, body, and headers.
+ *
+ * @param {Object} params - The parameters for the request.
+ * @param {APIRequestContext} params.request - The Playwright request object, used to make the HTTP request.
+ * @param {string} params.method - The HTTP method to use (POST, GET, PUT, DELETE).
+ * @param {string} params.url - The URL to send the request to.
+ * @param {string} [params.baseUrl] - The base URL to prepend to the request URL.
+ * @param {Record<string, unknown> | null} [params.body=null] - The body to send with the request (for POST and PUT requests).
+ * @param {Record<string, string> | undefined} [params.headers=undefined] - The headers to include with the request.
+ * @returns {Promise<{ status: number; body: unknown }>} - An object containing the status code and the parsed response body.
+ *    - `status`: The HTTP status code returned by the server.
+ *    - `body`: The parsed JSON response body from the server.
+ */
   @step('hitApiEndPoint')
-  async hitApiEndPoint(
-    method: methodType,
-    endPoint: string,
-    body: object,
-    statusCode: number
-  ): Promise<any> {
-    try {
-      switch (method.toLowerCase()) {
-        case methodType.GET:
-          return await this.invokeGetApi(endPoint, statusCode);
-        case methodType.POST:
-          return await this.invokePostApi(endPoint, body, statusCode);
-        case methodType.DELETE:
-          return await this.invokeDeleteApi(endPoint, statusCode);
-        case methodType.PUT:
-          return await this.invokePutApi(endPoint, body, statusCode);
-        default:
-          throw new Error(`Unsupported operation type: ${method}`);
-      }
-    } catch (error) {
-      throw new ApiError(
-        `Unsupported operation type: ${method}`
+  async hitApiEndPoint({
+    method,
+    endPoint,
+    body = null,
+    headers,
+    statusCode
+  }: { method: methodType, endPoint: string, body?: string | null, headers?: string, statusCode: number }): Promise<{ status: number, body: unknown }> {
+
+    let response: APIResponse | null = null;
+
+    const options: {
+      data?: Record<string, unknown> | null;
+      headers?: Record<string, string>;
+    } = {};
+
+    if (body) { options.data = body; }
+
+    if (headers) {
+      options.headers = {
+        Authorization: `Token ${headers}`,
+        "Content-Type": "application/json",
+      };
+    } else {
+      options.headers = {
+        "Content-Type": "application/json",
+      };
+    }
+
+    switch (method.toLowerCase()) {
+      case methodType.GET:
+        response = await this.invokeGetApi(endPoint, options);
+        break;
+      case methodType.POST:
+        response = await this.invokePostApi(endPoint, body, options);
+        break;
+      case methodType.DELETE:
+        response = await this.invokeDeleteApi(endPoint, options);
+        break;
+      case methodType.PUT:
+        response = await this.invokePutApi(endPoint, body, options);
+        break;
+      default:
+        logError(`Unsupported operation type: ${method}`);
+    }
+
+    if (!response) {
+      throw new ApiError(`No response received for method ${method} on ${endPoint}`);
+    }
+
+    if (!response.ok()) {
+      const text = await response.text();
+      new ApiError(
+        `POST ${endPoint} failed: ${response.status()} ${response.statusText()} | body: ${text}`
       );
+
+      const status = response.status();
+
+      let bodyData: unknown = null;
+      const contentType = response.headers()["content-type"] || "";
+
+      try {
+        if (contentType.includes("application/json")) {
+          bodyData = await response.json();
+        } else if (contentType.includes("text/")) {
+          bodyData = await response.text();
+        }
+      } catch (err) {
+        console.warn(`Failed to parse response body for status ${status}: ${err}`);
+      }
+
+      return { status, body: bodyData };
     }
   }
 
   @step('invokeGetApi')
-  async invokeGetApi(endPoint: string, statusCode: number = 200) {
+  async invokeGetApi(endPoint: string, options: unknown): Promise<APIResponse> {
     try {
-      console.log(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
-      const responseGet = await pwApi.get({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`);
-
-      expect(responseGet.status(), `${endPoint}, Expected Status : ${statusCode}, Actual Status : ${responseGet.status()}`).toBe(statusCode);
-      return await responseGet.json();
+      logInfo(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
+      const response = await this.apiRequest.get(endPoint, options);
+      return await response;
     } catch (error) {
       console.log(error);
       throw new ApiError("Get request failed");
@@ -93,18 +135,15 @@ export class ApiHelper extends Helper {
   }
 
   @step('invokeDeleteApi')
-  async invokeDeleteApi(endPoint: string, statusCode: number = 200) {
+  async invokeDeleteApi(endPoint: string, options: unknown):Promise<APIResponse> {
     let response;
     try {
-      console.log(
+      logInfo(
         `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
       );
-      response = await pwApi.delete({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`);
-      expect(
-        response.status(),
-        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
-      ).toBe(statusCode);
-      return await response.json();
+      response = await this.apiRequest.delete(endPoint, options);
+
+      return await response;
     } catch (error) {
       throw new ApiError("Delete request failed");
     }
@@ -124,23 +163,20 @@ export class ApiHelper extends Helper {
   @step('invokePostApi')
   async invokePostApi(
     endPoint: string,
-    payload: object,
-    statusCode: number = 200
-  ) {
+    body: unknown,
+    options: unknown,
+  ): Promise<APIResponse> {
     let response;
     try {
-      let tempPayload = JSON.stringify(payload);
-      console.log(
-        `Making POST request to  endPoint:  ${BASE_URL}${endPoint} payload :${tempPayload} `
+      logInfo(
+        `Making POST request to  endPoint:  ${BASE_URL}${endPoint}`
       );
-      response = await pwApi.post({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`, {
-        data: payload,
-      });
-      expect(
-        response.status(),
-        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
-      ).toBe(statusCode);
-      return await response.json();
+      const reqOptions: any = { ...(options as any) };
+      if (body !== undefined && body !== null) {
+        reqOptions.data = body;
+      }
+      response = await this.apiRequest.post(endPoint, reqOptions);
+      return await response;
     } catch (error) {
       throw new ApiError("Post request failed");
     }
@@ -149,22 +185,20 @@ export class ApiHelper extends Helper {
   @step('invokePutApi')
   async invokePutApi(
     endPoint: string,
-    payload: object,
-    statusCode: number = 200
-  ) {
+    payload: unknown,
+    options: unknown,
+  ): Promise<APIResponse> {
     let response;
     try {
-      console.log(
-        `Making PUT request to  endPoint:  ${BASE_URL}${endPoint} payload :${payload} `
+      logInfo(
+        `Making PUT request to  endPoint:  ${BASE_URL}${endPoint}`
       );
-      response = await pwApi.put({ request: this.apiRequest, page: this.webPage }, `${BASE_URL}${endPoint}`, {
-        data: payload,
-      });
-      expect(
-        response.status(),
-        `API : ${BASE_URL}${endPoint} , Expected status : ${statusCode}, Actual status : ${response.status()}`
-      ).toBe(statusCode);
-      return await response.json();
+      const reqOptions: any = { ...(options as any) };
+      if (payload !== undefined && payload !== null) {
+        reqOptions.data = payload;
+      }
+      response = await this.apiRequest.put(endPoint, reqOptions);
+      return await response;
     } catch (error) {
       throw new ApiError("Post request failed");
     }
