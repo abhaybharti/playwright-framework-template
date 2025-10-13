@@ -236,3 +236,4 @@ https://the-internet.herokuapp.com/
 https://selectorshub.com/xpath-practice-page/
 https://test-edzotech.web.app/doms.html
 https://github.com/gauravkhuraana/PlaywrightTypeScriptWithAgenticAI
+https://idavidov.eu/my-first-live-session-developing-playwright-framework-for-rest-api-testing
