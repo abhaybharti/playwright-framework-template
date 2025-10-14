@@ -18,6 +18,8 @@ const BASE_URL = "https://restful-booker.herokuapp.com";
 
 export class ApiHelper extends Helper {
   private readonly apiRequest: APIRequestContext;
+  private readonly retries: number;
+  private readonly timeout: number;
 
 
   /**
@@ -26,27 +28,27 @@ export class ApiHelper extends Helper {
    * API. It is used to store and manage information related to the API, such as authentication
    * credentials, request headers, and other configuration settings.
    */
-  constructor(apiRequest: APIRequestContext) {
+  constructor(apiRequest: APIRequestContext, config?: { timeout?: number; retries?: number }) {
     super();
     this.apiRequest = apiRequest;
+    this.timeout = config?.timeout || 30000;
+    this.retries = config?.retries || 3;
   }
 
 
   /**
- * Simplified helper for making API requests and returning the status and JSON body.
- * This helper automatically performs the request based on the provided method, URL, body, and headers.
- *
- * @param {Object} params - The parameters for the request.
- * @param {APIRequestContext} params.request - The Playwright request object, used to make the HTTP request.
- * @param {string} params.method - The HTTP method to use (POST, GET, PUT, DELETE).
- * @param {string} params.url - The URL to send the request to.
- * @param {string} [params.baseUrl] - The base URL to prepend to the request URL.
- * @param {Record<string, unknown> | null} [params.body=null] - The body to send with the request (for POST and PUT requests).
- * @param {Record<string, string> | undefined} [params.headers=undefined] - The headers to include with the request.
- * @returns {Promise<{ status: number; body: unknown }>} - An object containing the status code and the parsed response body.
- *    - `status`: The HTTP status code returned by the server.
- *    - `body`: The parsed JSON response body from the server.
- */
+  * Simplified helper for making API requests and returning the status and JSON body.
+  * This helper automatically performs the request based on the provided method, URL, body, and headers.
+  * 
+  * @param {string} params.method - The HTTP method to use (POST, GET, PUT, DELETE).
+  * @param {string} params.url - The URL to send the request to.
+  * @param {string} [params.baseUrl] - The base URL to prepend to the request URL.
+  * @param {Record<string, unknown> | null} [params.body=null] - The body to send with the request (for POST and PUT requests).
+  * @param {Record<string, string> | undefined} [params.headers=undefined] - The headers to include with the request.
+  * @returns {Promise<{ status: number; body: unknown }>} - An object containing the status code and the parsed response body.
+  *    - `status`: The HTTP status code returned by the server.
+  *    - `body`: The parsed JSON response body from the server.
+  */
   @step('hitApiEndPoint')
   async hitApiEndPoint({
     method,
@@ -102,30 +104,29 @@ export class ApiHelper extends Helper {
       new ApiError(
         `POST ${endPoint} failed: ${response.status()} ${response.statusText()} | body: ${text}`
       );
-
-      const status = response.status();
-
-      let bodyData: unknown = null;
-      const contentType = response.headers()["content-type"] || "";
-
-      try {
-        if (contentType.includes("application/json")) {
-          bodyData = await response.json();
-        } else if (contentType.includes("text/")) {
-          bodyData = await response.text();
-        }
-      } catch (err) {
-        console.warn(`Failed to parse response body for status ${status}: ${err}`);
-      }
-
-      return { status, body: bodyData };
     }
+    const status = response.status();
+
+    let bodyData: unknown = null;
+    const contentType = response.headers()["content-type"] || "";
+
+    try {
+      if (contentType.includes("application/json")) {
+        bodyData = await response.json();
+      } else if (contentType.includes("text/")) {
+        bodyData = await response.text();
+      }
+    } catch (err) {
+      console.warn(`Failed to parse response body for status ${status}: ${err}`);
+    }
+
+    return { status, body: bodyData };
   }
 
   @step('invokeGetApi')
   async invokeGetApi(endPoint: string, options: unknown): Promise<APIResponse> {
     try {
-      logInfo(`Making GET request to  endPoint:  ${BASE_URL}${endPoint}`);
+      logInfo(`Making GET request to  endPoint:  ${BASE_URL}${endPoint} `);
       const response = await this.apiRequest.get(endPoint, options);
       return await response;
     } catch (error) {
@@ -135,11 +136,11 @@ export class ApiHelper extends Helper {
   }
 
   @step('invokeDeleteApi')
-  async invokeDeleteApi(endPoint: string, options: unknown):Promise<APIResponse> {
+  async invokeDeleteApi(endPoint: string, options: unknown): Promise<APIResponse> {
     let response;
     try {
       logInfo(
-        `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint}`
+        `Making DELETE request to  endPoint:  ${BASE_URL}${endPoint} `
       );
       response = await this.apiRequest.delete(endPoint, options);
 
@@ -169,7 +170,7 @@ export class ApiHelper extends Helper {
     let response;
     try {
       logInfo(
-        `Making POST request to  endPoint:  ${BASE_URL}${endPoint}`
+        `Making POST request to  endPoint:  ${BASE_URL}${endPoint} `
       );
       const reqOptions: any = { ...(options as any) };
       if (body !== undefined && body !== null) {
@@ -191,7 +192,7 @@ export class ApiHelper extends Helper {
     let response;
     try {
       logInfo(
-        `Making PUT request to  endPoint:  ${BASE_URL}${endPoint}`
+        `Making PUT request to  endPoint:  ${BASE_URL}${endPoint} `
       );
       const reqOptions: any = { ...(options as any) };
       if (payload !== undefined && payload !== null) {
@@ -202,6 +203,14 @@ export class ApiHelper extends Helper {
     } catch (error) {
       throw new ApiError("Post request failed");
     }
+  }
+
+  getResponseHeader(response:APIResponse){
+    return response.headers()
+  }
+
+  validateSchema(response:APIResponse,schema:object){
+    
   }
 }
 

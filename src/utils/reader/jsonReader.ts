@@ -4,7 +4,7 @@ import { logInfo } from '../report/Logger';
 
 export class JsonReader {
     private filePath: string;
-    public jsonData: any;
+    public jsonData: unknown;
 
     constructor(filePath: string) {
         // Resolve the path relative to the project root
@@ -18,7 +18,7 @@ export class JsonReader {
      * Reads a JSON file from the given path and returns its content as an object.
      * @returns Parsed JSON object or null if an error occurs.
      */
-    readJsonFile(): any {
+    readJsonFile(): unknown {
         try {
             if (!fs.existsSync(this.filePath)) {
                 console.error(`File not found: ${this.filePath}`);
@@ -30,8 +30,8 @@ export class JsonReader {
             logInfo(this.jsonData);
         } catch (error) {
             console.error("Error reading or parsing JSON file:", error);
-             this.jsonData = null;
-             return false;
+            this.jsonData = null;
+            return false;
         }
     }
 
@@ -39,15 +39,10 @@ export class JsonReader {
      * Retrieves a value from a nested JSON object using a JSON path hierarchy.
      * @param jsonObj - The JSON object.
      * @param path - The dot-separated JSON path (e.g., "user.address.city").
-     * @returns The value at the specified path or undefined if not found.
+     * @param key - The specific key to retrieve from the parent object (e.g., "city").
+     * @returns The value at the specified key in the parent object or undefined if not found.
      */
-    /**
-    * Retrieves a value from a nested JSON object using a JSON path hierarchy.
-    * @param path - The dot-separated JSON path to the parent object (e.g., "user.profile.address").
-    * @param key - The specific key to retrieve from the parent object (e.g., "city").
-    * @returns The value at the specified key in the parent object or undefined if not found.
-    */
-    getJsonValue(path: string, key: string): any {
+    getJsonValue(path: string, key: string): string | undefined {
         if (!this.jsonData) {
             logInfo("No Json Data loaded")
             return undefined;

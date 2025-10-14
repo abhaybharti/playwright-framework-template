@@ -44,8 +44,9 @@ export class WebHelper extends Helper {
     }
 
     let testData: string[] = [];
-    if (typeof valueToUse === 'undefined') {
-      testData = this.json.getJsonValue(elementName, "saveTestData").split("|");
+    if (typeof valueToUse === 'undefined') {      
+      const raw = this.json.getJsonValue(elementName, "saveTestData");
+      testData = raw !== undefined ? raw.split("|") : [];
     }
 
 
@@ -163,19 +164,7 @@ export class WebHelper extends Helper {
     }
   }
 
-  /**
-   * The `delay` function is an asynchronous function that waits for a specified amount of time before
-   * resolving.
-   * @param {number} time - The `time` parameter is a number that represents the duration of the delay
-   * in seconds.
-   * @returns a Promise that resolves to void.
-   */
-  @step('delay')
-  async delay(time: number): Promise<void> {
-    return new Promise(function (resolve) {
-      setTimeout(resolve, time * 1000);
-    });
-  }
+
 
   /**
    * The function clicks on an element on a web page based on its text content.
