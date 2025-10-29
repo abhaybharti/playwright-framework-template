@@ -33,7 +33,14 @@
     "check": "npm run lint && npm run build",
     "format": "prettier --write \"**/*.{js,ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx}\"",
-    "pretest": "tsc --noEmit && npx eslint tests/**/*.ts && npx prettier tests/**/*.ts --write"
+    "pretest": "tsc --noEmit && npx eslint tests/**/*.ts && npx prettier tests/**/*.ts --write",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "npx eslint --fix",
+      "npx prettier --write"
+    ]
   },
   "keywords": [
     "playwright",
