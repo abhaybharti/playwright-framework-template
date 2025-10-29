@@ -1,6 +1,6 @@
 {
   "printWidth": 80,
-  "tabWidth": 2,
+  "tabWidth": 4,
   "userTabs": false,
   "semi": true,
   "singleQuote": false,
@@ -8,7 +8,7 @@
   "bracketSpacing": true,
   "jsxSingleQuote": false,
   "arrowParens": "always",
-  "proseWrap": "never",
+  "proseWrap": "preserve",
   "htmlWhitespaceSensitivity": "strict",
   "endOfLine": "lf",
   "overrides": [
