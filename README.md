@@ -226,14 +226,4 @@ We love our contributors! Here's how you can contribute:
 </a>
 
 
-App to run UI test- 
-https://moatazeldebsy.github.io/test-automation-practices/#/
-
-https://github.com/AtulKrSharma/PlaywrightInjectTagsWithCaching/blob/main/playwright.config.ts
-
-https://www.saucedemo.com/
-https://the-internet.herokuapp.com/
-https://selectorshub.com/xpath-practice-page/
-https://test-edzotech.web.app/doms.html
-https://github.com/gauravkhuraana/PlaywrightTypeScriptWithAgenticAI
-https://idavidov.eu/my-first-live-session-developing-playwright-framework-for-rest-api-testing
+g
