@@ -39,12 +39,12 @@ export class WebHelper extends Helper {
     const elementInfo = await this.findElement(locatorType, locatorValue);
 
     if (null === elementInfo) {
-      console.log(`Element ${locatorType} ${locatorValue} is not found`)
+      logInfo(`Element ${locatorType} ${locatorValue} is not found`)
       return null;
     }
 
     let testData: string[] = [];
-    if (typeof valueToUse === 'undefined') {      
+    if (typeof valueToUse === 'undefined') {
       const raw = this.json.getJsonValue(elementName, "saveTestData");
       testData = raw !== undefined ? raw.split("|") : [];
     }
@@ -127,14 +127,14 @@ export class WebHelper extends Helper {
           locator = this.webPage.getByPlaceholder(value).describe('placeholder' + value);
           break;
         default:
-          console.warn(`Unsupported locator type: ${type}`);
+          logError(`Unsupported locator type: ${type}`);
           return null;
       }
 
       // Check if element exists
       const count = await locator.count();
       if (count === 0) {
-        console.warn(`Element not found with ${type} locator: ${value}`);
+        logError(`Element not found with ${type} locator: ${value}`);
         return null;
       }
 
@@ -147,20 +147,58 @@ export class WebHelper extends Helper {
       const isEnabled = becameVisible ? await locator.isEnabled() : false;
 
       if (!locator) {
-        console.log(`Element ${type} ${value} is not found`);
+        logInfo(`Element ${type} ${value} is not found`);
         return null;
       }
 
       if (!becameVisible || !isEnabled) {
-        console.log(`Element ${type} ${value} is not visible or enabled`);
+        logInfo(`Element ${type} ${value} is not visible or enabled`);
         return null;
       }
       return locator;
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.warn(`Error while finding element with ${type} locator: ${value}. Error: ${errorMessage}`);
+      logError(`Error while finding element with ${type} locator: ${value}. Error: ${errorMessage}`);
       return null;
+    }
+  }
+
+  /**
+       * Finds all elements using the specified locator strategy
+       * @param {string} type - Locator type
+       * @param {string} value - Locator value
+       * @param {Object} [options] - Optional locator options
+       * @returns {Promise<import('@playwright/test').Locator>} Playwright locator for all matching elements
+       */
+  async findAllElements(type: string, value: string, options = {}) {
+    try {
+      const result = await this.findElement(type, value, options);
+      if (!result) return [];
+      return result.locator.all();
+    } catch (error) {
+      logError(`Failed to find all elements with ${type} locator: ${value}. Error: ${error.message}`);
+      return [];
+    }
+  }
+
+  /**
+     * Stores a locator with a key for later use
+     * @param {string} key - Unique key to identify the locator
+     * @param {string} type - Locator type
+     * @param {string} value - Locator value
+     * @param {Object} [options] - Optional locator options
+     * @returns {Promise<void>}
+     */
+  async storeLocator(key, type, value, options = {}) {
+    try {
+      const result = await this.findElement(type, value, options);
+      if (!result) {
+        throw new Error(`Cannot store null locator with key ${key}`);
+      }
+      this.locatorStorage.set(key, { type, value, options, locator: result.locator });
+    } catch (error) {
+      throw new Error(`Failed to store locator with key ${key}. Error: ${error.message}`);
     }
   }
 
@@ -247,7 +285,6 @@ export class WebHelper extends Helper {
    */
   @step('assertPageURL')
   async assertPageURL(url: string): Promise<void> {
-    console.log(`Asserts that page url is ${url}.`);
     await expect(this.webPage).toHaveURL(url);
   }
 
@@ -258,7 +295,6 @@ export class WebHelper extends Helper {
    */
   @step('assertPageTitle')
   async assertPageTitle(title: string): Promise<void> {
-    console.log(`Asserts that page title is ${title}.`);
     await expect(this.webPage).toHaveTitle(title);
   }
   /**
@@ -330,7 +366,7 @@ export class WebHelper extends Helper {
     target: string,
     expectedText: string
   ): Promise<void> {
-    console.log(
+    logInfo(
       `Asserts that element ${target} contains text ${expectedText}.`
     );
     const el = await this.webPage.locator(target);
@@ -346,7 +382,7 @@ export class WebHelper extends Helper {
    */
   @step('elementHasText')
   async elementHasText(target: string, expectedText: string): Promise<void> {
-    console.log(
+    logInfo(
       `Asserts that element ${target} has expected text ${expectedText}.`
     );
     const el = await this.webPage.locator(target);
@@ -361,7 +397,7 @@ export class WebHelper extends Helper {
    */
   @step('elementIsVisible')
   async elementIsVisible(target: string): Promise<void> {
-    console.log(`Asserts that element ${target} is visible.`);
+    logInfo(`Asserts that element ${target} is visible.`);
     expect(await this.webPage.locator(target)).toBeVisible();
   }
 
@@ -373,7 +409,7 @@ export class WebHelper extends Helper {
    */
   @step('elementIsNotVisible')
   async elementIsNotVisible(target: string): Promise<void> {
-    console.log(`Asserts that element ${target} is not visible.`);
+    logInfo(`Asserts that element ${target} is not visible.`);
     expect(await this.webPage.locator(target)).toBeHidden();
   }
 
@@ -383,7 +419,7 @@ export class WebHelper extends Helper {
     attribute: string,
     attributeVal: string
   ): Promise<void> {
-    console.log(
+    logInfo(
       `Asserts that '${target}' has a specific attribute '${attribute}' with the expected value '${attributeVal}'.`
     );
     //expect(await (target).toHaveAttribute(attribute, attributeVal));
@@ -408,7 +444,7 @@ export class WebHelper extends Helper {
       return;
     });
   }
-  
+
 
   /**
  * Waits for the next JavaScript dialog, logs its message, and handles it.
@@ -416,28 +452,28 @@ export class WebHelper extends Helper {
  * @param {string} [promptText] - Text to pass when accepting a prompt dialog.
  * @returns {Promise<string>} The dialog message.
  */
-@step('waitAndHandleDialog')
-async waitAndHandleDialog(
-  action: 'accept' | 'dismiss' = 'accept',
-  promptText?: string
-): Promise<string> {
-  const message = await new Promise<string>((resolve) => {
-    this.webPage.once('dialog', async (dialog) => {
-      const msg = dialog.message();
-      logInfo(`Dialog [${dialog.type()}]: ${msg}`);
-      if (action === 'accept') {
-        await dialog.accept(promptText);
-      } else {
-        await dialog.dismiss();
-      }
-      resolve(msg);
+  @step('waitAndHandleDialog')
+  async waitAndHandleDialog(
+    action: 'accept' | 'dismiss' = 'accept',
+    promptText?: string
+  ): Promise<string> {
+    const message = await new Promise<string>((resolve) => {
+      this.webPage.once('dialog', async (dialog) => {
+        const msg = dialog.message();
+        logInfo(`Dialog [${dialog.type()}]: ${msg}`);
+        if (action === 'accept') {
+          await dialog.accept(promptText);
+        } else {
+          await dialog.dismiss();
+        }
+        resolve(msg);
+      });
     });
-  });
-  return message;
-}
-  
+    return message;
+  }
 
-  
+
+
   /**
    * The function `getFrame` takes a frame locator as input and calls a method on the `webPage` object
    * to locate the frame.
@@ -510,7 +546,7 @@ async waitAndHandleDialog(
     uploadBtnLocator: string
   ) {
     if (!fs.existsSync(filePath)) {
-      console.log(`File ${filePath} does not exist`);
+      logInfo(`File ${filePath} does not exist`);
       throw new Error(`File not found :${filePath}`);
     }
 
@@ -531,7 +567,7 @@ async waitAndHandleDialog(
       //Arrange & Log the request
       const response = await route.fetch();
       const json = await response.json();
-      console.log(JSON.stringify(json, null, 10));
+      logInfo(JSON.stringify(json, null, 10));
 
       //continue with the intercepted request
       await route.continue();
@@ -577,10 +613,14 @@ async waitAndHandleDialog(
   }
 
   @step('changeElementValue')
-  async changeElementValue(): Promise<void> { }
+  async changeElementValue(): Promise<void> {
+    //TBD
+  }
 
   @step('verifyValueFromUi')
-  async verifyValueFromUi(): Promise<void> { }
+  async verifyValueFromUi(): Promise<void> {
+    //TBD
+  }
 
   @step('getAttribute')
   async getAttribute(locator: string, attributeName: string): Promise<string> {
@@ -615,30 +655,6 @@ async waitAndHandleDialog(
     await this.webPage.keyboard.press(key);
   }
 
-  // async addStep(stepDescription: string, stepFunction: any): Promise<any> {
-  //   return await test.step(stepDescription, stepFunction);
-  // }
-
-  // async attachScreenshot(
-  //   locator: string,
-  //   fileName: string,
-  //   testInfo: TestInfo
-  // ): Promise<void> {
-  //   const file = testInfo.outputPath(fileName);
-  //   const pathFile = path.dirname(file);
-  //   const pathAttachments = path.join(pathFile, "attachments");
-  //   const attachmentFile = path.join(pathAttachments, fileName);
-  //   const screenshot = await webPage
-  //     .locator(locator)
-  //     .isVisible()
-  //     .screenshot({ path: file });
-  //   await fs.promise.writeFile(file, screenshot);
-  //   if (!fs.existsSync(pathAttachments)) {
-  //     fs.mkdirSync(pathAttachments, { recursive: true });
-  //   }
-  //   await fs.promises.writeFile(attachmentFile, screenshot);
-  //   await testInfo.attach(fileName, { contentType: "image/png", path: file });
-  // }
 
   @step('enterText')
   async enterText(el: Locator, value: string) {
@@ -653,12 +669,12 @@ async waitAndHandleDialog(
     while (`${isChecked}` !== state) {
       if (`${isChecked}` !== `${state}` && `${state}` === `true`) {
         await el.check(); // Check the checkbox
-        console.log('checkbox was not checked, now checked.');
+        logInfo('checkbox was not checked, now checked.');
       }
 
       if (`${isChecked}` !== `${state}` && `${state}` === `false`) {
         await el.check(); // unCheck the checkbox
-        console.log('checkbox was checked, now unchecked.');
+        logInfo('checkbox was checked, now unchecked.');
       }
       isChecked = await el.isChecked();
       tryCount++;
@@ -680,4 +696,45 @@ async waitAndHandleDialog(
     const nextIndex = (currentIndex + 1) % testData.length;
     return testData[nextIndex];
   }
+
+  /**
+    * Retrieves a stored locator by key
+    * @param {string} key - Key used to store the locator
+    * @returns {Promise<import('@playwright/test').Locator>} Stored Playwright locator
+    */
+  async getStoredLocator(key: string) {
+    const stored = this.locatorStorage.get(key);
+    if (!stored) {
+      throw new Error(`No locator found with key: ${key}`);
+    }
+    // Recreate locator to ensure it's fresh
+    const result = await this.findElement(stored.type, stored.value);
+    return result ? result.locator : null;
+  }
+
+  async getTableHeader(tableLocator: string): Promise<string> {
+    const tableHeader = this.webPage.locator(tableLocator).locator('thead').locator('tr').locator('th');
+    const tableHeaderCount = await tableHeader.count();
+    const headerText = [];
+    for (let i = 0; i < tableHeaderCount; i++) {
+      headerText.push(await tableHeader.nth(i).textContent());
+    }
+    const finalHeader = headerText.join('|');
+    logInfo(`Header Text: ${finalHeader}`);
+    return finalHeader;
+  }
+
+  async getTableData(tableLocator: string): Promise<string> {
+    const tableRow = this.webPage.locator(tableLocator).locator('tbody').locator('tr');
+    const tableRowCount = await tableRow.count();
+    const rowData = [];
+    for (let i = 0; i < tableRowCount; i++) {
+      rowData.push(await tableRow.locator('td').nth(i).textContent());
+    }
+    const finalData = rowData.join('|');
+    logInfo(`Header Text: ${finalData}`);
+    return finalData;
+  }
+
+
 }

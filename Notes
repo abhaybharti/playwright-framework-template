@@ -66,25 +66,9 @@ function createLocatorHelper(page) {
         console.warn(`Error while finding element with ${type} locator: ${value}. Error: ${error.message}`);
         return null;
       }
-    },
+    }
 
-    /**
-     * Finds all elements using the specified locator strategy
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<import('@playwright/test').Locator>} Playwright locator for all matching elements
-     */
-    async findAllElements(type, value, options = {}) {
-      try {
-        const result = await this.findElement(type, value, options);
-        if (!result) return [];
-        return result.locator.all();
-      } catch (error) {
-        console.warn(`Failed to find all elements with ${type} locator: ${value}. Error: ${error.message}`);
-        return [];
-      }
-    },
+
 
     /**
      * Waits for an element to be visible using the specified locator strategy
@@ -104,49 +88,8 @@ function createLocatorHelper(page) {
       } catch (error) {
         throw new Error(`Failed to wait for element with ${type} locator: ${value}. Error: ${error.message}`);
       }
-    },
-
-    /**
-     * Stores a locator with a key for later use
-     * @param {string} key - Unique key to identify the locator
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<void>}
-     */
-    async storeLocator(key, type, value, options = {}) {
-      try {
-        const result = await this.findElement(type, value, options);
-        if (!result) {
-          throw new Error(`Cannot store null locator with key ${key}`);
-        }
-        locatorStorage.set(key, { type, value, options, locator: result.locator });
-      } catch (error) {
-        throw new Error(`Failed to store locator with key ${key}. Error: ${error.message}`);
-      }
-    },
-
-    /**
-     * Retrieves a stored locator by key
-     * @param {string} key - Key used to store the locator
-     * @returns {Promise<import('@playwright/test').Locator>} Stored Playwright locator
-     */
-    async getStoredLocator(key) {
-      const stored = locatorStorage.get(key);
-      if (!stored) {
-        throw new Error(`No locator found with key: ${key}`);
-      }
-      // Recreate locator to ensure it's fresh
-      const result = await this.findElement(stored.type, stored.value, stored.options);
-      return result ? result.locator : null;
-    },
-
-    /**
-     * Clears all stored locators
-     */
-    clearStoredLocators() {
-      locatorStorage.clear();
     }
+
   };
 }
 

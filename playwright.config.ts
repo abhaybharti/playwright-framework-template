@@ -49,8 +49,8 @@ export default defineConfig({
     headless: Config.HEADLESS_BROWSER,
     baseURL: Config.BASE_URL,
     screenshot: "on",
-    video: "on",    
-    storageState:"auth.json",
+    video: "on",
+    storageState: "auth.json",
   },
 
   /* Configure projects for major browsers */
@@ -112,9 +112,9 @@ export default defineConfig({
 
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run mock-data',
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   command: 'npm run mock-data',
+  //   url: 'http://localhost:3001',
+  //   reuseExistingServer: !process.env.CI,
+  // },
 });
