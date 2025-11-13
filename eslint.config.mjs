@@ -2,6 +2,8 @@ import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
 import playwright from 'eslint-plugin-playwright';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 const prettierConfig = {
   semi: true,
@@ -14,6 +16,8 @@ const prettierConfig = {
   arrowParens: 'always',
   proseWrap: 'preserve',
 };
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config = [
   {
@@ -36,8 +40,8 @@ const config = [
       playwright,
     },
     rules: {
-      ...((tseslint.configs.recommended as any).rules ?? {}),
-      ...((playwright.configs['flat/recommended'] as any).rules ?? {}),
+      ...(tseslint.configs.recommended?.rules ?? {}),
+      ...(playwright.configs['flat/recommended']?.rules ?? {}),
       'prettier/prettier': ['error', prettierConfig],
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
