@@ -73,7 +73,6 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-sonarjs": "^3.0.4",
     "eslint-plugin-unicorn": "^59.0.1",
-    "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "json-server": "^0.17.4",
     "lint-staged": "^16.2.6",
