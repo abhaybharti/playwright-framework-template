@@ -11,3 +11,4 @@ test('Launch Chrome', async () => {
     console.log(await page.title());
     await browser.close();
 })
+

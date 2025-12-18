@@ -1,7 +1,7 @@
 // Import all browser types from the Playwright library
 import { chromium, firefox, webkit, test } from "@playwright/test";
 
-const browserType = 'msedge'; // <-- CHANGE THIS VALUE
+let browserType = 'msedge'; // <-- CHANGE THIS VALUE
 
 test("Launch browser using config", async () => {
     let browser;
@@ -45,7 +45,7 @@ test("Launch browser using config", async () => {
     console.log(`${browserType} launched successfully and navigated to playwright.dev`);
 
     // Add a delay of 5 seconds so you can see the browser before it closes
-    await page.waitForTimeout(5000); 
+    await page.waitForTimeout(5000);
 })
 
 
