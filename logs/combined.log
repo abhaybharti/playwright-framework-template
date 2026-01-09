@@ -37,3 +37,29 @@
 {"level":"info","message":"Number of columns in row 4: 6","service":"job-posting-service","timestamp":"2025-11-08T04:32:17.697Z"}
 {"level":"info","message":"Row 4: Conway|Tim|tconway@earthlink.net|$50.00|http://www.timconway.com|\n          edit\n          delete\n        ","service":"job-posting-service","timestamp":"2025-11-08T04:32:17.836Z"}
 {"level":"info","message":"info","meta":"Test Case Completed : Read all data from table Status : passed","service":"job-posting-service","timestamp":"2025-11-08T04:32:22.991Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:26:49.401Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:26:53.055Z"}
+{"level":"info","message":"info","meta":"Test Case Started : iFrame example","service":"job-posting-service","timestamp":"2025-12-30T23:26:55.966Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : iFrame example Status : passed","service":"job-posting-service","timestamp":"2025-12-30T23:27:39.280Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:51:45.043Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:51:49.137Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:51:51.843Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:53:51.506Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:53:55.348Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:53:57.768Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:55:17.732Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:55:22.254Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:55:25.873Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:56:41.608Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:56:45.968Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:56:49.665Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:59:07.945Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:59:11.916Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:59:14.923Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-30T23:59:39.465Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-30T23:59:43.991Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-30T23:59:48.085Z"}
+{"level":"info","message":"playwright-framework-template undefined","service":"job-posting-service","timestamp":"2025-12-31T00:00:26.720Z"}
+{"level":"info","message":"info","meta":"Test Suite Started :  , 1 tests","service":"job-posting-service","timestamp":"2025-12-31T00:00:31.214Z"}
+{"level":"info","message":"info","meta":"Test Case Started : Mouse Events Example Using Playwright","service":"job-posting-service","timestamp":"2025-12-31T00:00:35.359Z"}
+{"level":"info","message":"info","meta":"Test Case Completed : Mouse Events Example Using Playwright Status : failed","service":"job-posting-service","timestamp":"2025-12-31T00:00:58.193Z"}
