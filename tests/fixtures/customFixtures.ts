@@ -87,9 +87,9 @@ export const test = base.extend<{
     const failedApis: any = [];
 
     // Add the response listener to the page
-    page.on('response', (response) => {
+    page.on('response', async (response) => {
       const request = response.request();
-      // Filter for API calls (XHR or fetch requests) and non-200 status codes
+
       if (['xhr', 'fetch'].includes(request.resourceType()) && response.status() !== 200) {
         failedApis.push({
           url: request.url(),
@@ -97,7 +97,15 @@ export const test = base.extend<{
           status: response.status(),
         });
       }
+      if (testInfo.status !== testInfo.expectedStatus) {
+        await testInfo.attach('API Logs', {
+          body: JSON.stringify(failedApis, null, 2),
+          contentType: 'application/json',
+        });
+      }
     });
+
+    //TO DO: Add a filter for request/request failed events to capture failed API calls that never receive a response (e.g., network errors)
 
     // Proceed with the actual test execution
     await use(page);
