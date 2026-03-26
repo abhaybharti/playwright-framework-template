@@ -3,11 +3,19 @@ import { logError, logInfo } from "../logger/Logger";
 import fs from "fs";
 import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
-import { step } from "@src/utils/report/ReportAction";
+import { step } from "../report/decorators/ReportActions";
+import { WaitFor } from "../../../config/waitFor";
 
 interface ChangedValueParams {
-    elementName: string;
-    valueToUse?: string; // Optional parameter for values
+    locatorName: string;
+    valueToUse?: string;
+    isTable?: boolean;
+}
+
+interface LocatorValueResult {
+    locatorName: string;
+    locatorType: string;
+    locatorValue: string;
 }
 
 export class WebHelper extends Helper {
@@ -28,8 +36,9 @@ export class WebHelper extends Helper {
 
     @step("changeValueOnUi")
     async changeValueOnUi(params: ChangedValueParams): Promise<any> {
-        let { elementName, valueToUse } = params;
+        let { locatorName, valueToUse } = params;
 
+        const locator = await this.findElement("testid", locatorName);
         const objType: string = await this.json.getJsonValue(
             elementName,
             "objType"
@@ -110,73 +119,50 @@ export class WebHelper extends Helper {
      * @returns { Promise<{ locator: import('@playwright/test').Locator, isDisplayed: boolean, isEnabled: boolean } | null> } Playwright locator with status or null
      */
     @step("findElement")
-    async findElement(type: string, value: string): Promise<Locator | null> {
+    async findElement(
+        locatorValue: string,
+        locatorType: string = "xpath",
+        mandatory = true,
+        all = false,
+        visibleOnly = true
+    ): Promise<Locator | null> {
+        if (!locatorValue || !locatorType) {
+            logError(
+                `Locator value and type must be provided. Received value: '${locatorValue}', type: '${locatorType}'`
+            );
+            expect(
+                false,
+                "locatorValue and locatorType must be provided"
+            ).toBeTruthy();
+            return null;
+        }
+
+        const type = locatorType.trim().toLowerCase();
+        const value = locatorValue.trim().toLowerCase();
+
+        let locator: Locator;
+
         try {
-            let locator: Locator;
-            switch (type.toLowerCase()) {
-                case "css":
-                    locator = this.webPage
-                        .locator(value)
-                        .describe("css" + value);
-                    break;
-                case "xpath":
-                    locator = this.webPage
-                        .locator(`xpath=${value}`)
-                        .describe("xpath" + value);
-                    break;
-                case "text":
-                    locator = this.webPage
-                        .getByText(value)
-                        .describe("text" + value);
-                    break;
-                case "testid":
-                    locator = this.webPage
-                        .getByTestId(value)
-                        .describe("testid" + value);
-                    break;
-                case "role":
-                // locator = this.webPage.getByRole(value as Role,{name:value,exact:false});
-                // break;
-                case "label":
-                    locator = this.webPage
-                        .getByLabel(value)
-                        .describe("label" + value);
-                    break;
-                case "placeholder":
-                    locator = this.webPage
-                        .getByPlaceholder(value)
-                        .describe("placeholder" + value);
-                    break;
-                default:
-                    logError(`Unsupported locator type: ${type}`);
-                    return null;
-            }
+            const locatorBuilders: Record<string, () => Locator> = {
+                css: () => this.webPage.locator(value),
+                xpath: () => this.webPage.locator(`xpath=${value}`),
+                text: () => this.webPage.getByText(value, { exact: true }),
+                testid: () => this.webPage.locator(`[data-testid=${value}]`),
+                role: () => this.webPage.locator(`role=${value}`),
+                label: () => this.webPage.getByLabel(value),
+                placeholder: () => this.webPage.getByPlaceholder(value),
+            };
+            const builder = locatorBuilders[type];
 
-            // Check if element exists
-            const count = await locator.count();
-            if (count === 0) {
-                logError(`Element not found with ${type} locator: ${value}`);
+            if (!builder) {
+                logError(`Unsupported locator type: ${type}`);
+                expect(false, `Unsupported locator type: ${type}`).toBeTruthy();
                 return null;
             }
 
-            // Check visibility and enabled status
-            const becameVisible = await locator
-                .waitFor({ state: "visible" })
-                .then(() => true)
-                .catch(() => false);
-
-            const isEnabled = becameVisible ? await locator.isEnabled() : false;
-
-            if (!locator) {
-                logInfo(`Element ${type} ${value} is not found`);
-                return null;
-            }
-
-            if (!becameVisible || !isEnabled) {
-                logInfo(`Element ${type} ${value} is not visible or enabled`);
-                return null;
-            }
-            return locator;
+            locator = builder()
+                .describe(`${type}:${value}`)
+                .filter({ visible: visibleOnly });
         } catch (error) {
             const errorMessage =
                 error instanceof Error ? error.message : String(error);
@@ -185,6 +171,52 @@ export class WebHelper extends Helper {
             );
             return null;
         }
+
+        const WAIT_TIMEOUT_MS = 8_000; // 8 seconds
+        const state = visibleOnly ? "visible" : "attached";
+        for (
+            let attempt = 1;
+            attempt <= WaitFor.MEDIUM_RETRY_COUNT;
+            attempt++
+        ) {
+            try {
+                await locator.first().waitFor({
+                    state: state as "attached" | "visible",
+                    timeout: WAIT_TIMEOUT_MS,
+                });
+
+                const count = await locator.count();
+                if (count > 0) {
+                    logInfo(
+                        `findElement()->  Found [${count}] elements(s) on attempt ${attempt}: ${type}=${value}`
+                    );
+                    return all ? locator : locator.first();
+                }
+                logInfo(
+                    `findElement()->  Count = 0 on attempt ${attempt}: ${type}=${value}`
+                );
+            } catch {
+                logInfo(
+                    `findElement()->  Timeout on attempt ${attempt}/${WaitFor.FIND_ELEMENT_RETRY}: ${type}=${value}`
+                );
+            }
+
+            if (attempt < WaitFor.FIND_ELEMENT_RETRY) {
+                const backOffSec = Math.pow(2, attempt - 1); //1s -> 2s
+                logInfo(`findElement()->  Retrying after ${backOffSec}s...`);
+                await this.delay(backOffSec);
+            }
+        }
+        if (mandatory) {
+            expect
+                .soft(
+                    false,
+                    `findElement()-> Failed to find element with ${type} = ${value}`
+                )
+                .toBeTruthy();
+        }
+
+        return null;
     }
 
     /**
@@ -194,43 +226,29 @@ export class WebHelper extends Helper {
      * @param {Object} [options] - Optional locator options
      * @returns {Promise<import('@playwright/test').Locator>} Playwright locator for all matching elements
      */
-    async findAllElements(type: string, value: string, options = {}) {
+    async findAllElements(
+        locatorValue: string,
+        locatorType: string = "xpath",
+        mandatory: boolean = true,
+        all: boolean = true
+    ): Promise<Locator[]> {
         try {
-            const result = await this.findElement(type, value, options);
+            const result = await this.findElement(
+                locatorValue,
+                locatorType,
+                mandatory,
+                all
+            );
             if (!result) return [];
-            return result.locator.all();
+            return result.all();
         } catch (error) {
-            logError(
-                `Failed to find all elements with ${type} locator: ${value}. Error: ${error.message}`
-            );
+            const errorMessage =
+                error instanceof Error ? error.message : String(error);
+            expect(
+                false,
+                `Failed to find all elments with locator :${locatorValue}. Error: ${errorMessage}`
+            ).toBeTruthy();
             return [];
-        }
-    }
-
-    /**
-     * Stores a locator with a key for later use
-     * @param {string} key - Unique key to identify the locator
-     * @param {string} type - Locator type
-     * @param {string} value - Locator value
-     * @param {Object} [options] - Optional locator options
-     * @returns {Promise<void>}
-     */
-    async storeLocator(key, type, value, options = {}) {
-        try {
-            const result = await this.findElement(type, value, options);
-            if (!result) {
-                throw new Error(`Cannot store null locator with key ${key}`);
-            }
-            this.locatorStorage.set(key, {
-                type,
-                value,
-                options,
-                locator: result.locator,
-            });
-        } catch (error) {
-            throw new Error(
-                `Failed to store locator with key ${key}. Error: ${error.message}`
-            );
         }
     }
 
@@ -247,19 +265,74 @@ export class WebHelper extends Helper {
         await this.webPage.getByText(text, { exact: exact }).click();
     }
 
+    async rightClickButton(selector: string): Promise<void>;
+    async rightClickButton(locator: Locator): Promise<void>;
     @step("rightClickButton")
-    async rightClickButton(locator: string): Promise<void> {
-        await this.webPage.locator(locator).click({ button: "right" });
+    async rightClickButton(selectorOrLocator: string | Locator): Promise<void> {
+        if (typeof selectorOrLocator === "string") {
+            const locator = await this.findElement(
+                selectorOrLocator,
+                "xpath",
+                true
+            );
+            await locator?.click({ button: "right" });
+        } else {
+            await selectorOrLocator.click({ button: "right" });
+        }
     }
 
+    async leftClickButton(selector: string): Promise<void>;
+    async leftClickButton(locator: Locator): Promise<void>;
     @step("leftClickButton")
-    async leftClickButton(locator: string): Promise<void> {
-        await this.webPage.locator(locator).click({ button: "left" });
+    async leftClickButton(selectorOrLocator: string | Locator): Promise<void> {
+        if (typeof selectorOrLocator === "string") {
+            const locator = await this.findElement(
+                selectorOrLocator,
+                "xpath",
+                true
+            );
+            await locator?.click();
+        } else {
+            await selectorOrLocator.click();
+        }
+    }
+
+    async click(selector: string): Promise<void>;
+    async click(locator: Locator): Promise<void>;
+    @step("click")
+    async click(selectorOrLocator: string | Locator): Promise<void> {
+        if (typeof selectorOrLocator === "string") {
+            const locator = await this.findElement(
+                selectorOrLocator,
+                "xpath",
+                true
+            );
+            await locator?.click();
+        } else {
+            await selectorOrLocator.click();
+        }
+    }
+
+    async hover(selector: string): Promise<void>;
+    async hover(locator: Locator): Promise<void>;
+    @step("hover")
+    async hover(selectorOrLocator: string | Locator): Promise<void> {
+        if (typeof selectorOrLocator === "string") {
+            const locator = await this.findElement(
+                selectorOrLocator,
+                "xpath",
+                true
+            );
+            await locator?.hover();
+        } else {
+            await selectorOrLocator.hover();
+        }
     }
 
     @step("navigateToUrl : {url}")
     async navigateToUrl(url: string): Promise<void> {
-        await this.webPage.goto(url);
+        await this.webPage.goto(url, { waitUntil: "domcontentloaded" });
+        await this.webPage.waitForLoadState("load");
     }
 
     @step("verifyDragAndDrop")
@@ -350,7 +423,10 @@ export class WebHelper extends Helper {
     async takeFullPageScreenshot(
         imageName: string = `screenshot.png`
     ): Promise<void> {
-        await this.webPage.screenshot({ path: `${imageName}`, fullPage: true });
+        const buffer = await this.webPage.screenshot({
+            path: `${imageName}`,
+            fullPage: true,
+        });
     }
 
     @step("takePageScreenshot")
