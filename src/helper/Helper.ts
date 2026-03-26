@@ -1,9 +1,10 @@
 
+import { test } from "pw-api-plugin";
 import { step } from "../utils/report/ReportAction";
 
 export class Helper {
   // Internal storage for locators
-  const locatorStorage = new Map();
+  locatorStorage = new Map();
 
   /**
  * The `delay` function is an asynchronous function that waits for a specified amount of time before
@@ -38,6 +39,13 @@ export class Helper {
     */
   clearStoredLocators() {
     this.locatorStorage.clear();
+  }
+
+  @step('getValueFromArray')
+  getValueFromArray(testData:string[],preVal:string){
+     const currentIndex = testData.indexOf(preVal);
+     const nextIndex = currentIndex + 1%testData.length;
+     return testData[nextIndex];
   }
 
 

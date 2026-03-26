@@ -1,8 +1,10 @@
-import { test, expect } from "../../fixtures/customFixtures"
-import type { TestInfo } from "../../fixtures/customFixtures"
-import { logInfo } from '../../../src/utils/report/Logger';
+import { test, expect } from "../../fixtures/customFixtures";
+import type { TestInfo } from "../../fixtures/customFixtures";
+import { logInfo } from "../../../src/helper/logger/Logger";
 
-test("Perform operation on Input field using fill()", async ({ web }, testInfo: TestInfo) => {
+test("Perform operation on Input field using fill()", async ({
+    web,
+}, testInfo: TestInfo) => {
     //Navigate to URL
     await web.navigateToUrl("https://test-edzotech.web.app/index.html");
 
@@ -17,7 +19,7 @@ test("Perform operation on Input field using fill()", async ({ web }, testInfo: 
     const isInputFieldVisible = await nameInputField.isVisible();
     logInfo("Is input field visible?", isInputFieldVisible); //returns true
 
-    //Fill data 
+    //Fill data
     await nameInputField.fill("ABCD123");
 
     //Read value using textContent()
@@ -45,7 +47,7 @@ test("Perform operation on Input field using fill()", async ({ web }, testInfo: 
     logInfo("Read value using inputValue()", textFour); //returns ABCD123
 
     // Assertion to verify the value was set correctly
-    await expect(nameInputField).toHaveValue('ABCD123');
+    await expect(nameInputField).toHaveValue("ABCD123");
 
     //Clear input field
     await nameInputField.clear();
@@ -54,11 +56,12 @@ test("Perform operation on Input field using fill()", async ({ web }, testInfo: 
     textFour = await nameInputField.inputValue();
 
     //Log value using inputValue() after clear()
-    logInfo("Read value using inputValue() after clear()", textFour); //returns ''        
+    logInfo("Read value using inputValue() after clear()", textFour); //returns ''
 });
 
-
-test("Perform operation on Input field using pressSequentially()", async ({ web }, testInfo: TestInfo) => {
+test("Perform operation on Input field using pressSequentially()", async ({
+    web,
+}, testInfo: TestInfo) => {
     //Navigate to URL
     await web.navigateToUrl("https://test-edzotech.web.app/index.html");
 
@@ -66,14 +69,15 @@ test("Perform operation on Input field using pressSequentially()", async ({ web 
     const nameInputField = await web.webPage.locator("//input[@id='name']");
 
     //Enter text on interval of 1 second
-    await nameInputField.pressSequentially("ABCD123",{delay:1000});
+    await nameInputField.pressSequentially("ABCD123", { delay: 1000 });
 
     //Assertion to verify the value was set correctly
-    expect(nameInputField).toHaveValue('ABCD123');
-})
+    expect(nameInputField).toHaveValue("ABCD123");
+});
 
-
-test.only('Perofrm operation on Input field using press',async({web},testInfo:TestInfo)=>{
+test.only("Perofrm operation on Input field using press", async ({
+    web,
+}, testInfo: TestInfo) => {
     //Navigate to URL
     await web.navigateToUrl("https://test-edzotech.web.app/index.html");
 
@@ -82,4 +86,4 @@ test.only('Perofrm operation on Input field using press',async({web},testInfo:Te
 
     //Press the Enter key
     await nameInputField.press("Enter");
-})
+});

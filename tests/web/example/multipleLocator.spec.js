@@ -1,5 +1,5 @@
 import test from '@playwright/test';
-import {logInfo, logError, logWarn} from "../../../src/utils/report/Logger"
+import {logInfo, logError, logWarn} from "../../../src/helper/logger/Logger"
 
 test('find multiple elements', async ({ page }) => {
     await page.goto('https://timesofindia.indiatimes.com/');

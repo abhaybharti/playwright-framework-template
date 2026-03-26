@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { logInfo } from '../report/Logger';
+import * as fs from "fs";
+import * as path from "path";
+import { logInfo } from "../../helper/logger/Logger";
 
 export class JsonReader {
     private filePath: string;
@@ -9,8 +9,17 @@ export class JsonReader {
     constructor(filePath: string) {
         // Resolve the path relative to the project root
         // Adjust the path resolution based on where the file is located
-        this.filePath = path.resolve(__dirname, '..', '..', '..', 'tests', 'resources', 'uiMap', filePath);
-        logInfo('Reading JSON from:', this.filePath);
+        this.filePath = path.resolve(
+            __dirname,
+            "..",
+            "..",
+            "..",
+            "tests",
+            "resources",
+            "uiMap",
+            filePath
+        );
+        logInfo("Reading JSON from:", this.filePath);
         this.readJsonFile();
     }
 
@@ -25,7 +34,7 @@ export class JsonReader {
                 return false;
             }
 
-            const fileContent = fs.readFileSync(this.filePath, 'utf-8');
+            const fileContent = fs.readFileSync(this.filePath, "utf-8");
             this.jsonData = JSON.parse(fileContent);
             logInfo(this.jsonData);
         } catch (error) {
@@ -44,12 +53,12 @@ export class JsonReader {
      */
     getJsonValue(path: string, key: string): string | undefined {
         if (!this.jsonData) {
-            logInfo("No Json Data loaded")
+            logInfo("No Json Data loaded");
             return undefined;
         }
 
         // First navigate to the parent object using the path
-        const parentObject = path.split('.').reduce((acc, part) => {
+        const parentObject = path.split(".").reduce((acc, part) => {
             if (acc && acc[part] !== undefined) {
                 return acc[part];
             }
@@ -66,9 +75,7 @@ export class JsonReader {
     }
 }
 
-
 // Example usage
-
 
 // function readData() {
 //     const jsonReader = new JsonReader('./orangeHRM.json'); // Update with your actual JSON file path
