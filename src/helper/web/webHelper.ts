@@ -5,6 +5,7 @@ import { Helper } from "@src/helper/Helper";
 import { JsonReader } from "@src/utils/reader/jsonReader";
 import { step } from "../report/decorators/ReportActions";
 import { WaitFor } from "../../../config/waitFor";
+import { log } from "console";
 
 interface ChangedValueParams {
     locatorName: string;
@@ -13,7 +14,8 @@ interface ChangedValueParams {
 }
 
 interface LocatorValueResult {
-    locatorName: string;
+    objName: string;
+    objType: string;
     locatorType: string;
     locatorValue: string;
 }
@@ -36,80 +38,158 @@ export class WebHelper extends Helper {
 
     @step("changeValueOnUi")
     async changeValueOnUi(params: ChangedValueParams): Promise<any> {
-        let { locatorName, valueToUse } = params;
+        const { locatorName, valueToUse } = params;
+        const { locatorType, locatorValue, objName, objType } =
+            await this.createLocatorValue(params);
 
-        const locator = await this.findElement("testid", locatorName);
-        const objType: string = await this.json.getJsonValue(
-            elementName,
-            "objType"
-        );
-        const locatorType: string = await this.json.getJsonValue(
-            elementName,
-            "locatorType"
-        );
-        const locatorValue: string = await this.json.getJsonValue(
-            elementName,
-            "locatorValue"
-        );
+        let retVal = false;
 
-        const elementInfo = await this.findElement(locatorType, locatorValue);
+        const locator = await this.findElement(objName, locatorType, true);
 
-        if (null === elementInfo) {
-            logInfo(`Element ${locatorType} ${locatorValue} is not found`);
-            return null;
+        if (!locator) {
+            expect(false, `Locator not found: ${locatorName}`).toBeTruthy();
+            return false;
         }
 
         let testData: string[] = [];
         if (typeof valueToUse === "undefined") {
-            const raw = this.json.getJsonValue(elementName, "saveTestData");
+            const raw = this.json.getJsonValue(objName, "saveTestData");
             testData = raw !== undefined ? raw.split("|") : [];
         }
 
         try {
-            let result: string;
-
-            switch (objType.toLowerCase()) {
+            switch (objType?.toLowerCase()) {
                 case "toggle":
+                    retVal = await this.changeToggleStatus(
+                        locator!,
+                        locatorName,
+                        valueToUse
+                    );
                     break;
                 case "checkbox":
-                    let currentStatus = (await this.getCheckBoxStatus(
-                        elementInfo
-                    ))
-                        ? "true"
-                        : "false";
-                    if (currentStatus !== valueToUse) {
-                        await this.setCheckBoxStatus(elementInfo, valueToUse);
+                    const currentStatus = await this.isChecked(locator!);
+                    if (valueToUse === "true" && !currentStatus) {
+                        await this.check(locator!);
+                    } else if (valueToUse === "false" && currentStatus) {
+                        await this.uncheck(locator);
+                    } else {
+                        logInfo(
+                            `Checkbox ${locatorName} already in desired state: currentStatus: [${currentStatus}], valueToUse: [${valueToUse}]`
+                        );
                     }
-
+                    await this.isChecked(locator!);
+                    expect(String(await this.isChecked(locator!))).toBe(
+                        valueToUse
+                    );
                     break;
                 case "textbox":
                 case "textarea":
-                    let currentValue = await this.getText(elementInfo);
-                    if (testData.length !== 0) {
-                        valueToUse = this.getValueFromArray(
-                            testData,
-                            currentValue
-                        );
-                    }
-
-                    if (currentValue !== valueToUse) {
-                        await this.enterText(elementInfo, valueToUse || "");
-                    }
-                    let afterChangeValue = await this.getText(elementInfo);
+                    retVal = await this.enterText(locator, valueToUse!);
                     break;
                 case "dropdown":
+                    await this.selectItemInDropdown(locator, valueToUse);
+                    const currentSelectedVal = await this.getText(locator);
+                    if (currentSelectedVal === valueToUse) {
+                        expect(currentSelectedVal).toBe(valueToUse);
+                        retVal = true;
+                    }
                     break;
                 case "radiobutton":
+                    let letCurrentRadioVal = await this.getRadioValue(
+                        locator,
+                        objName
+                    );
+                    if (
+                        letCurrentRadioVal !== null &&
+                        letCurrentRadioVal !== valueToUse
+                    ) {
+                        await this.changeRadioStatus(
+                            locator,
+                            objName,
+                            valueToUse
+                        );
+                    }
+                    letCurrentRadioVal = await this.getRadioValue(
+                        locator,
+                        objName
+                    );
+                    if (letCurrentRadioVal !== valueToUse) {
+                        expect
+                            .soft(
+                                false,
+                                `Radio field [${objName}] is not set to [${valueToUse}], current value is [${letCurrentRadioVal}]`
+                            )
+                            .toBeTruthy();
+                    } else {
+                        retVal = true;
+                    }
                     break;
-
                 default:
-                    throw new Error(`Unsupported Object type: ${objType}`);
+                    expect(
+                        false,
+                        `Unsupported Object type: ${objType}`
+                    ).toBeTruthy();
             }
         } catch (error) {
-            throw new Error(`Unsupported operation type: ${objType}`);
+            const errorMessage =
+                error instanceof Error ? error.message : String(error);
+            expect(
+                false,
+                `Failed to find element with locator :${locatorType}. Error: ${errorMessage}`
+            ).toBeTruthy();
+            return null;
         }
     }
 
+    async createLocatorValue(
+        params: ChangedValueParams
+    ): Promise<LocatorValueResult> {
+        const { locatorName, valueToUse, isTable } = params;
+        const isRawXPath =
+            locatorName.includes("//") ||
+            locatorName.startsWith("xpath=") ||
+            locatorName.startsWith("//");
+        const isRawCSS =
+            locatorName.includes(".") ||
+            locatorName.startsWith("#") ||
+            locatorName.startsWith("css=");
+
+        const isRawLocator = isRawXPath || isRawCSS;
+
+        if (isRawXPath) {
+            return {
+                objName: locatorName,
+                objType: "raw",
+                locatorType: isRawLocator ? "xpath" : "css",
+                locatorValue: locatorName,
+            };
+        }
+
+        const locatorType = this.json.getJsonValue(locatorName, "locatorType");
+        const locatorValue = this.json.getJsonValue(
+            locatorName,
+            "locatorValue"
+        );
+        const objType = this.json.getJsonValue(locatorName, "objType");
+
+        if (!locatorType || !locatorValue || !objType) {
+            expect
+                .soft(false, `Missing JSON data for element: ${locatorName}`)
+                .toBeTruthy();
+            return {
+                objName: `Missing JSON Data for element: ${locatorName}`,
+                locatorType,
+                locatorValue,
+                objType,
+            };
+        }
+        return {
+            objName: locatorName,
+            locatorType,
+            locatorValue,
+            objType,
+        };
+    }
     /**
      * Finds a single element using the specified locator strategy
      * Checks if element is displayed and enabled
@@ -252,6 +332,140 @@ export class WebHelper extends Helper {
         }
     }
 
+    async changeToggleStatus(
+        toggleLocator: Locator,
+        name: string,
+        expectedStatus: string
+    ): Promise<boolean>;
+    async changeToggleStatus(
+        toggleLocator: string,
+        name: string,
+        expectedStatus: string
+    ): Promise<boolean>;
+    @step("changeToggleStatus")
+    async changeToggleStatus(
+        toggleLocator: string | Locator,
+        toggleName: string,
+        expectedStatus: string
+    ): Promise<boolean> {
+        let retVal = true;
+        let locator: Locator | null = null;
+        if (typeof toggleLocator === "string") {
+            locator = await this.findElement(toggleLocator, "xpath", true);
+        } else {
+            locator = toggleLocator;
+        }
+
+        let actualStatus = await this.getToggleElementStatus(
+            locator!,
+            toggleName
+        );
+        let i = 1;
+        while (actualStatus !== expectedStatus) {
+            try {
+                if (typeof toggleLocator === "string") {
+                    locator = await this.findElement(
+                        toggleLocator,
+                        "xpath",
+                        true
+                    );
+                    if (locator === null) {
+                        break;
+                    }
+                }
+
+                await this.leftClickButton(locator!);
+
+                actualStatus = await this.getToggleElementStatus(
+                    locator!,
+                    toggleName
+                );
+
+                if (actualStatus === expectedStatus) {
+                    expect
+                        .soft(
+                            true,
+                            `Toggled ${toggleName} to ${actualStatus} successfully`
+                        )
+                        .toBeTruthy();
+                    break;
+                }
+            } catch (error) {
+                const errorMessage =
+                    error instanceof Error ? error.message : String(error);
+                logError(
+                    `Error while toggling ${toggleName} to ${expectedStatus}. Error: ${errorMessage}`
+                );
+            }
+
+            if (i === WaitFor.LOW_RETRY_COUNT) {
+                logError(
+                    `Failed to toggle ${toggleName} to ${expectedStatus} after ${i} attempts.`
+                );
+                break;
+            }
+            i++;
+        }
+        return retVal;
+    }
+
+    async getToggleElementStatus(
+        locator: Locator,
+        name: string
+    ): Promise<string>;
+    async getToggleElementStatus(
+        locator: string,
+        name: string
+    ): Promise<string>;
+    @step("getToggleElementStatus")
+    async getToggleElementStatus(
+        locatorOrLocatorValue: string | Locator,
+        name: string
+    ) {
+        let toggleStatus: string | null = null;
+        try {
+            let toggleElement: Locator | null = null;
+            if (typeof locatorOrLocatorValue === "string") {
+                toggleElement = await this.findElement(
+                    locatorOrLocatorValue,
+                    "xpath",
+                    true
+                );
+            } else {
+                toggleElement = locatorOrLocatorValue;
+            }
+
+            if (toggleElement === null) {
+                logError(
+                    `Failed to get toggle status for ${name}. Element not found.`
+                );
+                return null;
+            }
+
+            const ariaChecked =
+                await toggleElement.getAttribute("aria-checked");
+            const classAttr = await toggleElement.getAttribute("class");
+            if (
+                ariaChecked !== null &&
+                (ariaChecked === "true" || ariaChecked?.includes("checked"))
+            ) {
+                toggleStatus = "Enable";
+            } else if (classAttr?.includes("checked")) {
+                toggleStatus = "Enable";
+            } else {
+                toggleStatus = "Disable";
+            }
+        } catch (error) {
+            const errorMessage =
+                error instanceof Error ? error.message : String(error);
+            logError(
+                `Error while getting toggle status for ${name}. Error: ${errorMessage}`
+            );
+        }
+
+        logInfo(`Toggle status for ${name}: ${toggleStatus}`);
+        return toggleStatus;
+    }
     /**
      * The function clicks on an element on a web page based on its text content.
      * @param {string} text - The text parameter is a string that represents the text content of an element
@@ -764,9 +978,39 @@ export class WebHelper extends Helper {
     }
 
     @step("enterText")
-    async enterText(el: Locator, value: string) {
-        // await el.clear();
-        await el.fill(value);
+    async enterText(el: Locator | string, value: string) {
+        let locator: Locator | null = null;
+        if (typeof el === "string") {
+            locator = await this.findElement(el, "xpath", true);
+        }
+        if (!locator) {
+            logError(`Element not found: ${el}`);
+            return false;
+        }
+
+        for (let attempt = 1; attempt <= WaitFor.LOW_RETRY_COUNT; attempt++) {
+            try {
+                await locator.clear();
+                await locator.fill(value);
+                const filledValue = await locator.inputValue().catch((=>null));
+
+                if (filledValue === value) {
+                    logInfo(`Text entered successfully: ${value}`);
+                    expect(filledValue).toBe(value);
+                    return true;
+                }
+                logInfo(`Value mismatch on attempt ${attempt}: Expected : [${value}], Actual : [${filledValue}], Retrying ...`);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                logError(errorMessage);
+            }
+
+            if (attempt === WaitFor.LOW_RETRY_COUNT) {
+                expect.soft(false, `Failed to enter text after ${WaitFor.LOW_RETRY_COUNT} attempts.`).toBeTruthy();
+            }
+            
+        }
+        return false;
     }
 
     @step("setCheckBoxStatus")
@@ -795,6 +1039,57 @@ export class WebHelper extends Helper {
     @step("getCheckBoxStatus")
     async getCheckBoxStatus(el: Locator): Promise<boolean> {
         return await el.isChecked();
+    }
+
+    async isChecked(selector: string): Promise<boolean>;
+    async isChecked(locator: Locator): Promise<boolean>;
+    async isChecked(selectorOrLocator: Locator | string): Promise<boolean> {
+        let status = false;
+        let value: string = "";
+        if (typeof selectorOrLocator === "string") {
+            const el = await this.findElement(selectorOrLocator, "xpath", true);
+            value = (await el?.getAttribute("class")) || "";
+        } else {
+            value = (await selectorOrLocator.getAttribute("class")) || "";
+        }
+
+        if (value?.includes("checked")) {
+            status = true;
+        }
+        logInfo(`Element is checked: ${status}`);
+        return status;
+    }
+
+    async check(selectorOrLocator: Locator | string): Promise<boolean> {
+        let locator: Locator | null = null;
+        if (typeof selectorOrLocator === "string") {
+            locator = await this.findElement(selectorOrLocator, "xpath", true);
+        }
+        locator = selectorOrLocator as Locator;
+
+        if (!locator) {
+            expect(false, "Locator not found").toBeTruthy();
+            return false;
+        }
+
+        const value = (await locator.getAttribute("class")) || "";
+
+        if (value?.includes("disable")) {
+            logInfo("Element is disabled, cannot check");
+            return false;
+        }
+
+        let isChecked = await this.isChecked(locator);
+        if (isChecked) {
+            logInfo("Element is already checked");
+            return true;
+        } else {
+            await locator.check();
+        }
+
+        isChecked = await this.isChecked(locator);
+
+        return isChecked;
     }
 
     @step("getValueFromArray")
