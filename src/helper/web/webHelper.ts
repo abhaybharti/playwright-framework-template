@@ -63,7 +63,7 @@ export class WebHelper extends Helper {
                     retVal = await this.changeToggleStatus(
                         locator!,
                         locatorName,
-                        valueToUse
+                        valueToUse!
                     );
                     break;
                 case "checkbox":
@@ -96,7 +96,7 @@ export class WebHelper extends Helper {
                     break;
                 case "radiobutton":
                     let letCurrentRadioVal = await this.getRadioValue(
-                        locator,
+                        locatorValue,
                         objName
                     );
                     if (
@@ -110,7 +110,7 @@ export class WebHelper extends Helper {
                         );
                     }
                     letCurrentRadioVal = await this.getRadioValue(
-                        locator,
+                        locatorValue,
                         objName
                     );
                     if (letCurrentRadioVal !== valueToUse) {
@@ -319,7 +319,9 @@ export class WebHelper extends Helper {
                 mandatory,
                 all
             );
-            if (!result) return [];
+            if (!result) {
+                return [];
+            }
             return result.all();
         } catch (error) {
             const errorMessage =
@@ -1013,6 +1015,79 @@ export class WebHelper extends Helper {
         return false;
     }
 
+    @step("getRadioValue")
+    async getRadioValue(locator: string, fieldName:string): Promise<string| null> {
+        let value = '';
+        try{
+        const radioElements = await this.findAllElements(locator);
+        if (!radioElements || radioElements.length === 0) {
+            logError(`No radio elements found for locator: ${locator}`);
+            return value;
+        }
+
+        for (const radioElement of radioElements) {
+            //To Do : Add code to select radio button
+        }
+        return value || null
+        }catch(error){  
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logError(`Error in getRadioValue for locator [${locator}]: ${fieldName}. Error: ${errorMessage}`);
+            return null;
+        }
+        
+    }
+
+    @step("changeRadioStatus")
+    async changeRadioStatus(radioLocator: string, radioName: string,expectedStatus: string): Promise<boolean> {
+        let retVal = true;
+        let actualStatus = await this.getRadioValue(radioLocator, radioName);
+        let i = 1;
+        while (actualStatus !== expectedStatus) {
+            try {
+                const radioElements = await this.findAllElements(radioLocator);
+                if (!radioElements || radioElements.length === 0) {
+                    logError(`No radio elements found for locator: ${radioLocator}`);
+                    return false;
+                }
+
+                let found = false;
+                for (const radioElement of radioElements) {
+                    const radioText = (await radioElement.textContent())?.trim() || "";
+                    if (radioText.toLowerCase() === expectedStatus.toLowerCase()) {
+                        await this.click(radioElement);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found){
+                    logInfo(`Radio not found with expected status: ${expectedStatus}. Retrying... (Attempt ${i})`);
+                }
+                await this.delay(1);
+                actualStatus = await this.getRadioValue(radioLocator, radioName);
+                if (actualStatus === expectedStatus) {
+                    retVal = true;
+                    break;                
+                }
+                i++;
+
+                
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                logError(`Error in changeRadioStatus for locator [${radioLocator}]: ${radioName}. Error: ${errorMessage}`);
+            }
+
+            if (i === WaitFor.LOW_RETRY_COUNT) {
+                logError(`Failed to change radio status to ${expectedStatus} after ${i} attempts.`);
+                expect.soft(false, `Failed to change radio status to ${expectedStatus} after ${i} attempts.`).toBeTruthy();
+                retVal = false;
+                break;             
+            }
+    }
+    logInfo(`Radio status changed to ${expectedStatus}`);
+    return retVal;
+}
+
     @step("setCheckBoxStatus")
     async setCheckBoxStatus(el: Locator, state: string = "true") {
         let isChecked = await el.isChecked();
@@ -1064,8 +1139,9 @@ export class WebHelper extends Helper {
         let locator: Locator | null = null;
         if (typeof selectorOrLocator === "string") {
             locator = await this.findElement(selectorOrLocator, "xpath", true);
+        }else{
+            locator = selectorOrLocator as Locator;
         }
-        locator = selectorOrLocator as Locator;
 
         if (!locator) {
             expect(false, "Locator not found").toBeTruthy();
@@ -1089,6 +1165,39 @@ export class WebHelper extends Helper {
 
         isChecked = await this.isChecked(locator);
 
+        return isChecked;
+    }
+
+    @step("uncheck")
+    async uncheck(selectorOrLocator: Locator | string): Promise<boolean> {
+        let locator: Locator | null = null;
+        if (typeof selectorOrLocator === "string") {
+            locator = await this.findElement(selectorOrLocator, "xpath", true);
+        }else{
+         locator = selectorOrLocator as Locator;
+        }
+
+        if (!locator) {
+            expect(false, "Locator not found").toBeTruthy();
+            return false;
+        }
+        const value = await locator.getAttribute("class")||"";
+        if (value?.includes("disable")) {
+            logInfo("Element is disabled, cannot uncheck");
+            expect.soft(false, "Element is disabled, cannot uncheck").toBeTruthy();
+            return false;
+        }
+
+        let isChecked = await this.isChecked(locator);
+        if (!isChecked) {
+            logInfo("Element is already unchecked");
+            return true;
+        } else {
+            await locator.click();
+        }         
+
+        isChecked = await this.isChecked(locator);
+        logInfo(`Element is unchecked: ${isChecked}`);
         return isChecked;
     }
 
