@@ -15,9 +15,9 @@ interface ChangedValueParams {
 
 interface LocatorValueResult {
     objName: string;
-    objType: string;
-    locatorType: string;
-    locatorValue: string;
+    objType: string|undefined;
+    locatorType: string|undefined;
+    locatorValue: string|undefined;
 }
 
 export class WebHelper extends Helper {
@@ -87,8 +87,8 @@ export class WebHelper extends Helper {
                     retVal = await this.enterText(locator, valueToUse!);
                     break;
                 case "dropdown":
-                    await this.selectItemInDropdown(locator, valueToUse);
-                    const currentSelectedVal = await this.getText(locator);
+                    await this.selectItemInDropdown(locatorValue!, valueToUse!);
+                    const currentSelectedVal = await this.getText(locatorValue!, locatorType!);
                     if (currentSelectedVal === valueToUse) {
                         expect(currentSelectedVal).toBe(valueToUse);
                         retVal = true;
@@ -173,6 +173,9 @@ export class WebHelper extends Helper {
         const objType = this.json.getJsonValue(locatorName, "objType");
 
         if (!locatorType || !locatorValue || !objType) {
+            logInfo(
+                `Missing JSON data for element: ${locatorName}. locatorType: ${locatorType}, locatorValue: ${locatorValue}, objType: ${objType}`
+            );
             expect
                 .soft(false, `Missing JSON data for element: ${locatorName}`)
                 .toBeTruthy();
@@ -467,6 +470,33 @@ export class WebHelper extends Helper {
 
         logInfo(`Toggle status for ${name}: ${toggleStatus}`);
         return toggleStatus;
+    }
+
+    async selectItemInDropdown(dropdownLocator: string, valueToSelect: string,locatorType:string='xpath',exactMatch:boolean=false): Promise<boolean> {
+        let retVal = false;
+        let options:Locator[] = [];
+        for (let attempt = 1; attempt <= WaitFor.LOW_RETRY_COUNT; attempt++) {
+            try{
+                const dropDownElement = await this.findElement(dropdownLocator,locatorType,true);
+                if (dropDownElement === null) {
+                    logError(`Dropdown element not found with locator: ${dropdownLocator}`);
+                    return false;
+                }
+
+                await this.click(dropDownElement);
+                await this.delay(1); //wait for options to be visible
+
+                const searchInputBoxLocator = `${dropdownLocator}//input[@type='search']`;
+                const searchInputBox = await this.findElement(searchInputBoxLocator,'xpath',true);
+                if(searchInputBox !== null){
+                    await searchInputBox.fill(valueToSelect);
+                    await this.delay(0.5);
+                }
+                
+            }catch(error){
+            }
+        }
+        
     }
     /**
      * The function clicks on an element on a web page based on its text content.
@@ -953,9 +983,20 @@ export class WebHelper extends Helper {
     }
 
     @step("getText")
-    async getText(el: Locator): Promise<string> {
-        // Check if it's an input element
-        const isInput = await el.evaluate(
+    async getText(el: Locator|string): Promise<string> {
+        let locator: Locator | null = null;
+        if (typeof el === "string") {
+            locator = await this.findElement(el, "xpath", true);
+        }else{
+            locator = el;
+        }
+
+        if (!locator) {
+            return '';
+        }
+
+
+        const isInput = await locator.evaluate(
             (el) =>
                 el.tagName === "INPUT" ||
                 el.tagName === "TEXTAREA" ||
@@ -963,15 +1004,15 @@ export class WebHelper extends Helper {
                 el.tagName === "TEXTBOX"
         );
 
+        let value = "";
         if (isInput) {
             // For input elements, get the value
-            const value = await el.inputValue();
-            return value ?? "";
+            value = (await locator.inputValue()).trim();            
         } else {
             // For other elements, get the text content
-            const value = await el.textContent();
-            return value ?? "";
+             value = (await locator.textContent())?.trim() || "";            
         }
+        return value ?? "";
     }
 
     @step("press")

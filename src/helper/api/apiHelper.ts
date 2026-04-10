@@ -2,8 +2,9 @@ import { Helper } from "@src/helper/Helper";
 import type { APIRequestContext, APIResponse } from "@playwright/test";
 import { ApiError } from "@src/utils/error/ErrorManager";
 import { validateSchema } from "playwright-ajv-schema-validator";
-import { step } from "@src/utils/report/ReportAction";
-import { logError, logInfo } from "@src/helper/logger/Logger";
+import { step } from "../report/decorators/ReportActions";
+import { logError, logInfo, logWarn } from "@src/helper/logger/Logger";
+import { WaitFor } from "config/waitFor";
 
 enum methodType {
     GET = "get",
@@ -33,8 +34,8 @@ export class ApiHelper extends Helper {
     ) {
         super();
         this.apiRequest = apiRequest;
-        this.timeout = config?.timeout || 30000;
-        this.retries = config?.retries || 3;
+        this.timeout = WaitFor.API_TIMEOUT || 30000;
+        this.retries = WaitFor.API_RETRY_COUNT || 3;
     }
 
     /**
@@ -50,8 +51,8 @@ export class ApiHelper extends Helper {
      *    - `status`: The HTTP status code returned by the server.
      *    - `body`: The parsed JSON response body from the server.
      */
-    @step("hitApiEndPoint")
-    async hitApiEndPoint({
+    @step("makeApiRequest")
+    async makeApiRequest({
         method,
         endPoint,
         body = null,
@@ -62,9 +63,19 @@ export class ApiHelper extends Helper {
         endPoint: string;
         body?: string | null;
         headers?: string;
-        statusCode: number;
+        statusCode: string | number;
     }): Promise<{ status: number; body: unknown }> {
         let response: APIResponse | null = null;
+
+        const expectedStatusCodes = new Set(
+            String(statusCode)
+                .split("|")
+                .map((code) => parseInt(code.trim()))
+        );
+
+        logInfo(
+            `Making ${method} request to ${BASE_URL}${endPoint} with body: ${body} with headers: ${headers} and expecting status code(s): ${[...expectedStatusCodes].join("| ")}`
+        );
 
         const options: {
             data?: Record<string, unknown> | null;
@@ -72,7 +83,7 @@ export class ApiHelper extends Helper {
         } = {};
 
         if (body) {
-            options.data = body;
+            options.data = JSON.parse(body);
         }
 
         if (headers) {
@@ -86,21 +97,36 @@ export class ApiHelper extends Helper {
             };
         }
 
-        switch (method.toLowerCase()) {
-            case methodType.GET:
-                response = await this.invokeGetApi(endPoint, options);
+        const executeRequset = async (): Promise<APIResponse> => {
+            switch (method.toLowerCase()) {
+                case methodType.GET:
+                    return await this.apiRequest.get(endPoint, options);
+                case methodType.POST:
+                    return await this.apiRequest.post(endPoint, options);
+                case methodType.DELETE:
+                    return await this.apiRequest.delete(endPoint, options);
+                case methodType.PUT:
+                    return await this.apiRequest.put(endPoint, options);
+                default:
+                    throw new Error(`Unsupported operation type: ${method}`);
+            }
+        };
+
+        for (let attempt = 1; attempt <= this.retries; attempt++) {
+            try {
+                response = await executeRequset();
+            } catch (error) {
+                const backOffSec = Math.pow(2, attempt - 1); //1s -> 2s
+                logWarn(
+                    `Attempt ${attempt} failed for ${method} ${endPoint}: ${error}. Retrying in ${backOffSec} seconds...`
+                );
+                await this.delay(backOffSec);
+                continue;
+            }
+
+            if (response && expectedStatusCodes.has(response.status())) {
                 break;
-            case methodType.POST:
-                response = await this.invokePostApi(endPoint, body, options);
-                break;
-            case methodType.DELETE:
-                response = await this.invokeDeleteApi(endPoint, options);
-                break;
-            case methodType.PUT:
-                response = await this.invokePutApi(endPoint, body, options);
-                break;
-            default:
-                logError(`Unsupported operation type: ${method}`);
+            }
         }
 
         if (!response) {
