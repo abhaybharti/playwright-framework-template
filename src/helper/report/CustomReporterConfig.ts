@@ -9,22 +9,36 @@ import {
     TestStep,
 } from "@playwright/test/reporter";
 import { logError, logInfo } from "../logger/Logger";
+import {
+    APIRequestContext,
+    request as PlaywrightRequset,
+} from "@playwright/test";
+import { IniConfigReader } from "@src/utils/reader/iniConfigReader";
 
 interface TestResultData {
     testCase: string;
     status: string;
     duration: number;
+    skipReason?: string;
     error?: string;
+    stack?: string;
 }
 
 export default class CustomReporterConfig implements Reporter {
     private curreentTestNumber: number = 0;
     private totalTests: number = 0;
+    private startedTestIds: Set<string> = new Set();
     private testResults: TestResultData[] = [];
     private testStartTime: number = 0;
+    private apiContext: APIRequestContext | null = null;
+
+    private testConfigReader: IniConfigReader;
+    private env: string;
 
     constructor(options: { customOption?: string } = {}) {
         logInfo(`playwright-framework-template ${options.customOption}`);
+        this.testConfigReader = new IniConfigReader("testConfig.ini");
+        this.env = this.testConfigReader.get("env") || "dev";
     }
 
     onBegin(config: FullConfig, suite: Suite): void {

@@ -57,7 +57,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.34.0",
-    "@playwright/test": "^1.56.0",
+    "@playwright/test": "^1.59.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^20.17.24",
     "@types/ssh2": "^1.15.4",
@@ -82,7 +82,9 @@
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.7",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.42.0"
+    "typescript-eslint": "^8.42.0",
+    "playwright":"1.59.1",
+    "husky": "9.1.7"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",

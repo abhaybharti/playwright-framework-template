@@ -37,7 +37,7 @@ export default defineConfig({
   reporter: [
     [`./src/utils/report/CustomReporterConfig.ts`],
     ["html", { open: "always", host: "127.0.0.1", port: 5723 }],
-    //["OrtoniReport", { outputFolder: "reports" }],
+     ['@testdino/playwright', { token: process.env.TESTDINO_TOKEN }],    
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -49,7 +49,7 @@ export default defineConfig({
     headless: Config.HEADLESS_BROWSER,
     baseURL: Config.BASE_URL,
     screenshot: "on",
-    video: "on",
+    video: "retain-on-failure",
     storageState: "auth.json",
   },
 
