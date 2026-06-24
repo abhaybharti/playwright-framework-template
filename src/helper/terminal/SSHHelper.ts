@@ -3,14 +3,14 @@
  * Install dependency: npm install ssh2
  */
 
-import { Client, ConnectConfig } from 'ssh2';
-import { step } from "@src/utils/report/ReportAction";
+import { Client, ConnectConfig } from "ssh2";
+import { step } from "@src/helper/report/decorators/ReportActions";
 
 export class SshHelper {
     private conn: Client;
     private isConnected: boolean = false;
-    private stdout: string = '';
-    private stderr: string = '';
+    private stdout: string = "";
+    private stderr: string = "";
 
     constructor() {
         this.conn = new Client();
@@ -20,17 +20,17 @@ export class SshHelper {
      * Establish SSH Connection
      * @param config - SSH connection details
      */
-    @step('openConnection')
+    @step("openConnection")
     public async openConnection(config: ConnectConfig): Promise<void> {
         return new Promise((resolve, reject) => {
             this.conn
-                .on('ready', () => {
-                    console.log('SSH Connection Established');
+                .on("ready", () => {
+                    console.log("SSH Connection Established");
                     this.isConnected = true;
                     resolve();
                 })
-                .on('error', (err) => {
-                    console.error('SSH Connection Error:', err);
+                .on("error", (err) => {
+                    console.error("SSH Connection Error:", err);
                     reject(err);
                 })
                 .connect(config);
@@ -42,27 +42,29 @@ export class SshHelper {
      * @param command - Command to execute
      * @returns Command output as a string
      */
-    @step('runCommand')
+    @step("runCommand")
     public async runCommand(command: string): Promise<string> {
         return new Promise((resolve, reject) => {
             if (!this.isConnected) {
-                return reject(new Error('SSH session is not connected'));
+                return reject(new Error("SSH session is not connected"));
             }
 
             this.conn.exec(command, (err, stream) => {
                 if (err) return reject(err);
 
-                let output = '';
+                let output = "";
                 stream
-                    .on('close', (code: string, signal: string) => {
-                        console.log(`Command execution completed. Exit code: ${code}, Signal: ${signal}`);
+                    .on("close", (code: string, signal: string) => {
+                        console.log(
+                            `Command execution completed. Exit code: ${code}, Signal: ${signal}`
+                        );
                         resolve(output);
                     })
-                    .on('data', (data: string) => {
+                    .on("data", (data: string) => {
                         output += data.toString();
                     })
-                    .stderr.on('data', (data) => {
-                        console.error('Error:', data.toString());
+                    .stderr.on("data", (data) => {
+                        console.error("Error:", data.toString());
                     });
             });
         });
@@ -71,31 +73,30 @@ export class SshHelper {
     /**
      * Close the SSH Connection
      */
-    @step('closeConnection')
+    @step("closeConnection")
     public closeConnection(): void {
         if (this.conn && this.isConnected) {
             this.conn.end();
             this.isConnected = false;
-            console.log('SSH Connection Closed');
+            console.log("SSH Connection Closed");
         }
     }
 
     /**
-  * Get last command output
-  */
-    @step('getStdout')
+     * Get last command output
+     */
+    @step("getStdout")
     getStdout(): string {
         return this.stdout;
     }
 
     /**
-    * Verify output contains string
-    */
-    @step('verifyOutputContains')
+     * Verify output contains string
+     */
+    @step("verifyOutputContains")
     verifyOutputContains(text: string): boolean {
         return this.stdout.includes(text);
     }
-
 }
 
 //Example code
