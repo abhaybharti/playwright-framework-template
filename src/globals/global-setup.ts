@@ -1,7 +1,7 @@
 import { logDebug, logError } from "@src/helper/logger/Logger";
 import { extractFirstProjectFrame } from "@src/utils/errorLocation";
 import {validateReportConfig} from "@src/utils/report/reportPaths";
-import { readdirSync, unlinkSync } from "node:fs";
+import { readdirSync, statSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 
 function registerProcessErrorHandlers(): void {
@@ -45,4 +45,58 @@ export default function globalSetup() {
             );
         }
     } catch {}
+    pruneOldReportFiles(logDir,5);
+}
+
+function pruneOldReportFiles(logsDir: string, maxReports: number): void {
+    const TIMESTAMP_PATTERN = /(\d{2})_(\d{2})_(\d{4})_(\d{2})(\d{2})(\d{2})/;
+
+    let entries:string[];
+    try{
+        entries = readdirSync(logsDir)
+    }catch (error) {
+        logError(`Failed to read directory ${logsDir}: ${error}`);
+        return;
+    }
+
+    const reportFiles = entries.filter((fileName) => {
+        if (!fileName.endsWith("playwright-report-")) return false;
+
+        try{
+            return statSync(join(logsDir, fileName)).isDirectory();
+        }
+        catch (error) {
+            logError(`Failed to stat file ${fileName}: ${error}`);
+            return false;
+        }
+    });
+
+    if (reportFiles.length <= maxReports) {
+        return;
+    }
+
+    const withTimestamps = reportFiles.map((fileName) => {
+        const match = fileName.match(TIMESTAMP_PATTERN);
+        if (!match) return null;
+        const [,dd,mm,yyyy,hh,min,ss] = match;
+        const timestamp = new Date(Number(yyyy), Number(mm) - 1, Number(dd), Number(hh), Number(min), Number(ss)).getTime();
+        return { file: fileName, timestamp };
+    }).filter((entry): entry is { file: string; timestamp: number } => entry !== null);
+
+
+    //Sort descending - newest first
+    withTimestamps.sort((a, b) => b.timestamp - a.timestamp);
+
+    const filesToDelete = withTimestamps.slice(maxReports);
+
+    for (const { file } of filesToDelete) {
+        try {
+            const filePath = join(logsDir, file);
+            unlinkSync(filePath);
+            logDebug(`Deleted old report file: ${filePath}`);
+        } catch (error) {
+            logError(`Failed to delete old report file ${file}: ${error}`);
+        }
+    }
+
 }
